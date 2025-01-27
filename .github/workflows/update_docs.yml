@@ -69,7 +69,6 @@ jobs:
           
           # Copy built documentation
           cp -r ../_build/* .
-          cp -r ../_build/html docs
           
           # Configure git
           git config user.name "${GIT_USER_NAME}"

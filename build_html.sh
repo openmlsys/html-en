@@ -9,3 +9,4 @@ d2lbook build html
 cp -r static/image _build/html/_static
 cp -r static/* _build/html/_static
 python3 tools/format_tables.py
+cp -r html docs
