@@ -90,9 +90,3 @@ jobs:
           # Clean up the worktree
           cd ..
           git worktree remove openmlsys-book-en
-
-      - name: Clean up
-        if: always()
-        run: |
-          rm -rf venv
-          rm -rf d2l-book
