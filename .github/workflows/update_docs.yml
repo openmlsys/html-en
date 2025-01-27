@@ -1,0 +1,97 @@
+name: Update Docs
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.8'
+  GIT_USER_NAME: 'GitHub Actions Bot'
+  GIT_USER_EMAIL: 'github-actions[bot]@users.noreply.github.com'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Updated to v3
+        with:
+          fetch-depth: 0  # Fetch all history for better versioning
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'  # Enable pip caching
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+        
+      - name: Setup Python virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+
+      - name: Install Python dependencies
+        run: |
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install sphinx-mathjax-offline
+
+      - name: Install d2l-book
+        run: |
+          source venv/bin/activate
+          git clone https://github.com/openmlsys/d2l-book.git
+          cd d2l-book
+          pip install .
+          cd ..
+
+      - name: Build documentation
+        run: |
+          source venv/bin/activate
+          sh build_html.sh
+      - name: Deploy to pages branch
+        run: |
+          # Create and switch to a new worktree for the pages branch
+          git worktree add --detach pages
+          cd pages
+          
+          # Delete pages branch if it exists and create a new orphan branch
+          git fetch origin pages || true
+          git branch -D pages || true
+          git checkout --orphan pages
+          git rm -rf . || true
+          
+          # Copy built documentation
+          cp -r ../_build/html/* .
+          
+          # Configure git
+          git config user.name "${GIT_USER_NAME}"
+          git config user.email "${GIT_USER_EMAIL}"
+          
+          # Add and commit all changes
+          git add .
+          git commit -m "docs: update documentation
+          
+          Automated update by GitHub Actions
+          Workflow: ${{ github.workflow }}
+          Run ID: ${{ github.run_id }}
+          Triggered by: ${{ github.event_name }}"
+          
+          # Force push to pages branch
+          git push -f origin pages
+          
+          # Clean up the worktree
+          cd ..
+          git worktree remove pages
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -rf venv
+          rm -rf d2l-book
