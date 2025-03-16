@@ -266,7 +266,7 @@ be written using matrices as Equation
 reference="equ:ch-deploy/conv-matmul-one-dimension"}, which contains six
 multiplications and four additions.
 
-$$\label{equ:ch-deploy/conv-matmul-one-dimension}
+$$[equ:ch-deploy/conv-matmul-one-dimension]
 \textit{\textbf{F}}(2, 3)=
 \left[ \begin{matrix} d_0 & d_1 & d_2 \\ d_1 & d_2 & d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
 \left[ \begin{matrix} y_0 \\ y_1 \end{matrix} \right]$$
@@ -279,7 +279,7 @@ computing an intermediate variable $m_0-m_3$, as shown in Equation
 [\[equ:ch-deploy/conv-2-winograd\]](#equ:ch-deploy/conv-2-winograd){reference-type="ref"
 reference="equ:ch-deploy/conv-2-winograd"}:
 
-$$\label{equ:ch-deploy/conv-2-winograd}
+$$[equ:ch-deploy/conv-2-winograd]
 \textit{\textbf{F}}(2, 3)=
 \left[ \begin{matrix} d_0 & d_1 & d_2 \\ d_1 & d_2 & d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
 \left[ \begin{matrix} m_0+m_1+m_2 \\ m_1-m_2+m_3 \end{matrix} \right]$$
@@ -288,7 +288,7 @@ where $m_0-m_3$ are computed as Equation
 [\[equ:ch-deploy/winograd-param\]](#equ:ch-deploy/winograd-param){reference-type="ref"
 reference="equ:ch-deploy/winograd-param"}:
 
-$$\label{equ:ch-deploy/winograd-param}
+$$[equ:ch-deploy/winograd-param]
 \begin{aligned}
 m_0=(d_0-d_2) \times g_0 \\
 m_1=(d_1+d_2) \times (\frac{g_0+g_1+g_2}{2}) \\
@@ -319,18 +319,18 @@ provided in Equation
 [\[equ:ch-deploy/winograd-param\]](#equ:ch-deploy/winograd-param){reference-type="ref"
 reference="equ:ch-deploy/winograd-param"}.
 
-$$\label{equ:ch-deploy/winograd-matrix}
+$$[equ:ch-deploy/winograd-matrix]
 \textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g) \odot (\textit{\textbf{B}}^{\rm T}d)$$
 
-$$\label{equ:ch-deploy/winograd-matrix-bt}
+$$[equ:ch-deploy/winograd-matrix-bt]
 \textit{\textbf{B}}^{\rm T}=
 \left[ \begin{matrix} 1 & 0 & -1 & 0 \\ 0 & 1 & 1 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 1 & 0 & -1 \end{matrix} \right]$$
 
-$$\label{equ:ch-deploy/winograd-matrix-g}
+$$[equ:ch-deploy/winograd-matrix-g]
 \textit{\textbf{G}}=
 \left[ \begin{matrix} 1 & 0 & 0 \\ 0.5 & 0.5 & 0.5 \\ 0.5 & -0.5 & 0.5 \\ 0 & 0 & 1 \end{matrix} \right]$$
 
-$$\label{equ:ch-deploy/winograd-matrix-at}
+$$[equ:ch-deploy/winograd-matrix-at]
 \textit{\textbf{A}}^{\rm T}=
 \left[ \begin{matrix} 1 & 1 & -1 & 0 \\ 0 & 1 & -1 & -1  \end{matrix} \right] \\$$
 
@@ -343,7 +343,7 @@ reference="equ:ch-deploy/winograd-two-dimension-matrix"}. In this case,
 Winograd has 16 multiplications, reducing the computation complexity by
 2.25 times compared with 36 multiplications of the original convolution.
 
-$$\label{equ:ch-deploy/winograd-two-dimension-matrix}
+$$[equ:ch-deploy/winograd-two-dimension-matrix]
 \textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g\textit{\textbf{G}}^{\rm T}) \odot (\textit{\textbf{B}}^{\rm T}d\textit{\textbf{B}})\textit{\textbf{A}}$$
 
 The logical process of Winograd can be divided into four steps, as shown
