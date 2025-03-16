@@ -54,7 +54,7 @@ reference="equ:ch-deploy/quantization-q"}, assume that $r$ represents
 the floating-point number before quantization. We are then able to
 obtain the integer $q$ after quantization.
 
-$$\label{equ:ch-deploy/quantization-q}q=clip(round(\frac{r}{s}+z),q_{min},q_{max})$$
+$$[equ:ch-deploy/quantization-q]q=clip(round(\frac{r}{s}+z),q_{min},q_{max})$$
 
 $clip(\cdot)$ and $round(\cdot)$ indicate the truncation and rounding
 operations, and $q_{min}$ and $q_{max}$ indicate the minimum and maximum
@@ -174,7 +174,7 @@ $||\hat{w_c}-E(\hat{w_c})||$, respectively. Equation
 reference="equ:ch-deploy/post-quantization"} is the calibration of the
 weight:
 
-$$\label{equ:ch-deploy/post-quantization}
+$$[equ:ch-deploy/post-quantization]
 \begin{aligned}
 \hat{w_c}\leftarrow\zeta_c(\hat{w_c}+u_c) \\
 u_c=E(w_c)-E(\hat{w_c})   \\
@@ -327,7 +327,7 @@ classification result of the teacher network, that is, Equation
 reference="c2Fcn:distill"}.
 
 $$\mathcal{L}_{KD}(\theta_S) = \mathcal{H}(o_S,\mathbf{y}) +\lambda\mathcal{H}(\tau(o_S),\tau(o_T)),
-\label{c2Fcn:distill}$$
+[c2Fcn:distill]$$
 
 where $\mathcal{H}(\cdot,\cdot)$ is the cross-entropy function, $o_S$
 and $o_T$ are outputs of the student network and the teacher network,
