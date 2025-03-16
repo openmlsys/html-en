@@ -95,14 +95,14 @@ Convolution is expressed as Equation
 [\[equ:ch-deploy/conv-equation\]](#equ:ch-deploy/conv-equation){reference-type="ref"
 reference="equ:ch-deploy/conv-equation"}.
 
-$$\tag{equ:ch-deploy/conv-equation}
-\bm{Y_{\rm conv}}=\bm{W_{\rm conv}}\cdot\bm{X_{\rm conv}}+\bm{B_{\rm conv}}$$
+$$[equ:ch-deploy/conv-equation]
+\mathbf{Y_{\rm conv}}=\mathbf{W_{\rm conv}}\cdot\mathbf{X_{\rm conv}}+\mathbf{B_{\rm conv}}$$
 
 Here, we do not need to understand what each variable means. Instead, we
 only need to keep in mind that Equation
 [\[equ:ch-deploy/conv-equation\]](#equ:ch-deploy/conv-equation){reference-type="ref"
 reference="equ:ch-deploy/conv-equation"} is an equation for
-$\bm{Y_{\rm conv}}$ with respect to $\bm{X_{\rm conv}}$, and other
+$\mathbf{Y_{\rm conv}}$ with respect to $\mathbf{X_{\rm conv}}$, and other
 symbols are constants.
 
 Equation
@@ -110,26 +110,26 @@ Equation
 reference="equ:ch-deploy/bn-equation"} is about the computation of
 Batchnorm:
 
-$$\tag{equ:ch-deploy/bn-equation}
-\bm{Y_{\rm bn}}=\gamma\frac{\bm{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$
+$$[equ:ch-deploy/bn-equation]:
+\mathbf{Y_{\rm bn}}=\gamma\frac{\mathbf{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$
 
-Similarly, it is an equation for $\bm{Y_{\rm bn}}$ with respect to
-$\bm{X_{\rm bn}}$. Other symbols in the equation represent constants.
+Similarly, it is an equation for $\mathbf{Y_{\rm bn}}$ with respect to
+$\mathbf{X_{\rm bn}}$. Other symbols in the equation represent constants.
 
 As shown in Figure
 [2](#fig:ch-deploy/conv-bn-fusion){reference-type="ref"
 reference="fig:ch-deploy/conv-bn-fusion"}, when the output of
 Convolution is used as the input of Batchnorm, the formula of Batchnorm
-is a function for $\bm{Y_{\rm bn}}$ with respect to $\bm{X_{\rm conv}}$.
-After substituting $\bm{Y_{\rm conv}}$ into $\bm{X_{\rm bn}}$ and
+is a function for $\mathbf{Y_{\rm bn}}$ with respect to $\mathbf{X_{\rm conv}}$.
+After substituting $\mathbf{Y_{\rm conv}}$ into $\mathbf{X_{\rm bn}}$ and
 uniting and extracting the constants, we obtain Equation
 [\[equ:ch-deploy/conv-bn-equation-3\]](#equ:ch-deploy/conv-bn-equation-3){reference-type="ref"
 reference="equ:ch-deploy/conv-bn-equation-3"}.
 
-$$\tag{equ:ch-deploy/conv-bn-equation-3}
-\bm{Y_{\rm bn}}=\bm{A}\cdot\bm{X_{\rm conv}}+\bm{B}$$
+$$[equ:ch-deploy/conv-bn-equation-3]
+\mathbf{Y_{\rm bn}}=\mathbf{A}\cdot\mathbf{X_{\rm conv}}+\mathbf{B}$$
 
-Here, $\bm{A}$ and $\bm{B}$ are two matrices. It can be noticed that
+Here, $\mathbf{A}$ and $\mathbf{B}$ are two matrices. It can be noticed that
 Equation
 [\[equ:ch-deploy/conv-bn-equation-3\]](#equ:ch-deploy/conv-bn-equation-3){reference-type="ref"
 reference="equ:ch-deploy/conv-bn-equation-3"} is a formula for computing
@@ -196,8 +196,8 @@ folding the constants, Batchnorm is defined as Equation
 [\[equ:ch-deploy/replace-scale\]](#equ:ch-deploy/replace-scale){reference-type="ref"
 reference="equ:ch-deploy/replace-scale"}
 
-$$\tag{equ:ch-deploy/replace-scale}
-\bm{Y_{bn}}=scale\cdot\bm{X_{bn}}+offset$$
+$$[equ:ch-deploy/replace-scale]
+\mathbf{Y_{bn}}=scale\cdot\mathbf{X_{bn}}+offset$$
 
 where **scale** and **offsets** are scalars. This simplified formula can
 be mapped to a Scale operator.
