@@ -164,14 +164,14 @@ after the fusion --- by 8.5% and 11.7% respectively. Such improvements
 are achieved without bringing side effects and without requiring
 additional hardware or operator libraries.
 
-::: {#tab:ch09/ch09-conv-bn-fusion}
-  Fusion           Sample   Mobilenet-v2
-  --------------- -------- --------------
-  Before fusion    0.035       15.415
-  After fusion     0.031       13.606
-
-  : Convolution + Batchnorm inference performance before and after
-  fusion (unit: ms)
+::: {#tab:ch09/ch09-conv-bn-fusion} <br>
+  Fusion           Sample   Mobilenet-v2 <br>
+  --------------- -------- -------------- <br>
+  Before fusion    0.035       15.415 <br>
+  After fusion     0.031       13.606 <br>
+<br>
+  : Convolution + Batchnorm inference performance before and after <br>
+  fusion (unit: ms) <br>
 :::
 
 ## Operator Replacement
