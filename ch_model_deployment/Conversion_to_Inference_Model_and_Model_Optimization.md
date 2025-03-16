@@ -95,7 +95,7 @@ Convolution is expressed as Equation
 [\[equ:ch-deploy/conv-equation\]](#equ:ch-deploy/conv-equation){reference-type="ref"
 reference="equ:ch-deploy/conv-equation"}.
 
-$$\label{equ:ch-deploy/conv-equation}
+$$\tag{equ:ch-deploy/conv-equation}
 \bm{Y_{\rm conv}}=\bm{W_{\rm conv}}\cdot\bm{X_{\rm conv}}+\bm{B_{\rm conv}}$$
 
 Here, we do not need to understand what each variable means. Instead, we
@@ -110,7 +110,7 @@ Equation
 reference="equ:ch-deploy/bn-equation"} is about the computation of
 Batchnorm:
 
-$$\label{equ:ch-deploy/bn-equation}
+$$\tag{equ:ch-deploy/bn-equation}
 \bm{Y_{\rm bn}}=\gamma\frac{\bm{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$
 
 Similarly, it is an equation for $\bm{Y_{\rm bn}}$ with respect to
@@ -126,7 +126,7 @@ uniting and extracting the constants, we obtain Equation
 [\[equ:ch-deploy/conv-bn-equation-3\]](#equ:ch-deploy/conv-bn-equation-3){reference-type="ref"
 reference="equ:ch-deploy/conv-bn-equation-3"}.
 
-$$\label{equ:ch-deploy/conv-bn-equation-3}
+$$\tag{equ:ch-deploy/conv-bn-equation-3}
 \bm{Y_{\rm bn}}=\bm{A}\cdot\bm{X_{\rm conv}}+\bm{B}$$
 
 Here, $\bm{A}$ and $\bm{B}$ are two matrices. It can be noticed that
@@ -196,7 +196,7 @@ folding the constants, Batchnorm is defined as Equation
 [\[equ:ch-deploy/replace-scale\]](#equ:ch-deploy/replace-scale){reference-type="ref"
 reference="equ:ch-deploy/replace-scale"}
 
-$$\label{equ:ch-deploy/replace-scale}
+$$\tag{equ:ch-deploy/replace-scale}
 \bm{Y_{bn}}=scale\cdot\bm{X_{bn}}+offset$$
 
 where **scale** and **offsets** are scalars. This simplified formula can
