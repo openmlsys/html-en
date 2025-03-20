@@ -95,8 +95,7 @@ Convolution is expressed as Equation
 [\[equ:ch-deploy/conv-equation\]](#equ:ch-deploy/conv-equation){reference-type="ref"
 reference="equ:ch-deploy/conv-equation"}.
 
-$$[equ:ch-deploy/conv-equation]
-\mathbf{Y_{\rm conv}}=\mathbf{W_{\rm conv}}\cdot\mathbf{X_{\rm conv}}+\mathbf{B_{\rm conv}}$$
+$$\mathbf{Y_{\rm conv}}=\mathbf{W_{\rm conv}}\cdot\mathbf{X_{\rm conv}}+\mathbf{B_{\rm conv}}, \text{equ:ch-deploy/conv-equation}$$
 
 Here, we do not need to understand what each variable means. Instead, we
 only need to keep in mind that Equation
@@ -110,8 +109,8 @@ Equation
 reference="equ:ch-deploy/bn-equation"} is about the computation of
 Batchnorm:
 
-$$[equ:ch-deploy/bn-equation]:
-\mathbf{Y_{\rm bn}}=\gamma\frac{\mathbf{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$
+**equ:ch-deploy/bn-equation:**\
+$$\mathbf{Y_{\rm bn}}=\gamma\frac{\mathbf{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$
 
 Similarly, it is an equation for $\mathbf{Y_{\rm bn}}$ with respect to
 $\mathbf{X_{\rm bn}}$. Other symbols in the equation represent constants.
@@ -126,8 +125,7 @@ uniting and extracting the constants, we obtain Equation
 [\[equ:ch-deploy/conv-bn-equation-3\]](#equ:ch-deploy/conv-bn-equation-3){reference-type="ref"
 reference="equ:ch-deploy/conv-bn-equation-3"}.
 
-$$[equ:ch-deploy/conv-bn-equation-3]
-\mathbf{Y_{\rm bn}}=\mathbf{A}\cdot\mathbf{X_{\rm conv}}+\mathbf{B}$$
+$$\mathbf{Y_{\rm bn}}=\mathbf{A}\cdot\mathbf{X_{\rm conv}}+\mathbf{B}, \text{equ:ch-deploy/conv-bn-equation-3}$$
 
 Here, $\mathbf{A}$ and $\mathbf{B}$ are two matrices. It can be noticed that
 Equation
@@ -195,8 +193,7 @@ folding the constants, Batchnorm is defined as Equation
 [\[equ:ch-deploy/replace-scale\]](#equ:ch-deploy/replace-scale){reference-type="ref"
 reference="equ:ch-deploy/replace-scale"}
 
-$$[equ:ch-deploy/replace-scale]
-\mathbf{Y_{bn}}=scale\cdot\mathbf{X_{bn}}+offset$$
+$$\mathbf{Y_{bn}}=scale\cdot\mathbf{X_{bn}}+offset, \text{equ:ch-deploy/replace-scale} $$
 
 where **scale** and **offsets** are scalars. This simplified formula can
 be mapped to a Scale operator.
