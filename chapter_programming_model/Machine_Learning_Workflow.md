@@ -125,5 +125,5 @@ APIs are defined to facilitate customization within the workflow
         # For debugging, you can print logs inside the training or evaluation loop, or use python debugger.
     ```
 
-![Workflow within a machine learningsystem](ch03/workflow.pdf)
+![Workflow within a machine learningsystem](../img/ch03/workflow.pdf)
 :label:`ch03/workflow`
