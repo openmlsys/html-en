@@ -51,11 +51,10 @@ models can run while still being obfuscated, thereby ensuring the
 confidentiality while they are running. Obfuscation does not affect the
 inference results and brings only a low performance overhead.
 
-![Procedure of model
-obfuscation](../img/ch08/model_obfuscate.png){#fig:ch-deploy/model_obfuscate}
+![Procedure of modelobfuscation](../img/ch08/model_obfuscate.png)
+:label:`ch-deploy/model_obfuscate`
 
-Figure [1](#fig:ch-deploy/model_obfuscate){reference-type="ref"
-reference="fig:ch-deploy/model_obfuscate"} depicts the model obfuscation
+Figure :numref:`ch-deploy/model_obfuscate` depicts the model obfuscation
 procedure, which is described as follows.
 
 1.  **Interpret the given model into a computational graph:** Based on

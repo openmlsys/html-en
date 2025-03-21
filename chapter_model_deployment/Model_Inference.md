@@ -75,11 +75,10 @@ partitioned, and multiple threads are used to process different data
 partitions. This allows operators to be computed in parallel, thereby
 multiplying the operator performance.
 
-![Data partitioning for matrix
-multiplication](../img/ch08/ch09-parallel.png){#figs:ch09_parallel}
+![Data partitioning for matrixmultiplication](../img/ch08/ch09-parallel.png)
+:label:`ch09_parallel`
 
-In Figure [1](#figs:ch09_parallel){reference-type="ref"
-reference="figs:ch09_parallel"}, the matrix in the multiplication can be
+In Figure :numref:`ch09_parallel`, the matrix in the multiplication can be
 partitioned according to the rows of matrix A. Three threads can then be
 used to compute A1 \* B, A2 \* B, and A3 \* B (one thread per
 computation), implementing multi-thread parallel execution of the matrix
@@ -139,13 +138,12 @@ hardware instructions.
 **2) Registers and NEON instructions**
 
 Each ARMv8 CPU has 32 NEON registers, that is, v0 to v31. As shown in
-Figure [2](#fig:ch-deploy/register){reference-type="ref"
-reference="fig:ch-deploy/register"}, NEON register v0 can store 128
+Figure :numref:`ch-deploy/register`, NEON register v0 can store 128
 bits, which is equal to the capacity of 4 float32, 8 float16, or 16
 int8.
 
-![Structure of the NEON register v0 of an ARMv8
-CPU](../img/ch08/ch09-register.png){#fig:ch-deploy/register}
+![Structure of the NEON register v0 of an ARMv8CPU](../img/ch08/ch09-register.png)
+:label:`ch-deploy/register`
 
 The single instruction multiple data (SIMD) method can be used to
 improve the data access and computing speed on this CPU. Compared with
@@ -153,13 +151,12 @@ single data single instruction (SISD), the NEON instruction can process
 multiple data values in the NEON register at a time. For example, the
 `fmla` instruction for floating-point data is used as
 `fmla v0.4s, v1.4s, v2.4s`. As depicted in Figure
-[3](#fig:ch-deploy/fmla){reference-type="ref"
-reference="fig:ch-deploy/fmla"}, the products of the corresponding
+:numref:`ch-deploy/fmla`, the products of the corresponding
 floating-point values in registers v1 and v2 are added to the value in
 v0.
 
-![fmla instruction
-computing](../img/ch08/ch09-fmla.png){#fig:ch-deploy/fmla}
+![fmla instructioncomputing](../img/ch08/ch09-fmla.png)
+:label:`ch-deploy/fmla`
 
 **3) Assembly language optimization**
 
@@ -167,8 +164,7 @@ For assembly language programs with known functions, computational
 instructions are usually fixed. In this case, non-computational
 instructions are the source the performance bottleneck. The structure of
 computer storage devices resembles a pyramid, as shown in Figure
-[\[fig:ch-deploy/fusion-storage\]](#fig:ch-deploy/fusion-storage){reference-type="ref"
-reference="fig:ch-deploy/fusion-storage"}. The top layer has the fastest
+:numref:`ch-deploy/fusion-storage`. The top layer has the fastest
 speed but the smallest space; conversely, the bottom layer has the
 largest space but the slowest speed. L1 to L3 are referred to as caches.
 When accessing data, the CPU first attempts to access the data from one
@@ -217,28 +213,25 @@ hardware's computing power, thereby improving the inference performance.
 
 Img2col is often used to convert convolution into matrix multiplication.
 Convolutional layers typically operate on 4D inputs in NHWC format.
-Figure [4](#fig:ch-deploy/conv_nhwc){reference-type="ref"
-reference="fig:ch-deploy/conv_nhwc"} is a diagram of convolution. The
+Figure :numref:`ch-deploy/conv_nhwc` is a diagram of convolution. The
 input shape is (1, IH, IW, IC), the convolution kernel shape is (OC, KH,
 KW, IC), and the output shape is (1, OH, OW, OC).
 
-![General
-convolution](../img/ch08/ch09-conv_nhwc.png){#fig:ch-deploy/conv_nhwc}
+![Generalconvolution](../img/ch08/ch09-conv_nhwc.png)
+:label:`ch-deploy/conv_nhwc`
 
 As shown in Figure
-[5](#fig:ch-deploy/img2col_input){reference-type="ref"
-reference="fig:ch-deploy/img2col_input"}, the Img2col rules for
+:numref:`ch-deploy/img2col_input`, the Img2col rules for
 convolution are as follows: The input is reordered to obtain the matrix
 on the right. The number of rows corresponds to the number of OH \* OW
 outputs. For a row vector, Img2col processes KH \* KW data points of
 each input channel in sequence, from the first channel to channel IC.
 
-![Img2col on the convolution
-input](../img/ch08/ch09-img2col_input.png){#fig:ch-deploy/img2col_input}
+![Img2col on the convolutioninput](../img/ch08/ch09-img2col_input.png)
+:label:`ch-deploy/img2col_input`
 
 As shown in Figure
-[6](#fig:ch-deploy/img2col_weight){reference-type="ref"
-reference="fig:ch-deploy/img2col_weight"}, the weights are rearranged.
+:numref:`ch-deploy/img2col_weight`, the weights are rearranged.
 One convolution kernel is expanded into one column of the weight matrix.
 This means that there are OC columns in total. On each column vector, KH
 \* KW data values on the first input channel are arranged first, and
@@ -247,8 +240,8 @@ convolution operation is converted into the multiplication of two
 matrices. In practice, the data rearrangement of Img2col and GEMM is
 performed simultaneously to save time.
 
-![Img2col on the convolution
-kernel](../img/ch08/ch09-img2col_weight.png){#fig:ch-deploy/img2col_weight}
+![Img2col on the convolutionkernel](../img/ch08/ch09-img2col_weight.png)
+:label:`ch-deploy/img2col_weight`
 
 **(2) Winograd**
 
@@ -262,39 +255,39 @@ of convolution kernels. The input is
 $\textit{\textbf{d}}=[d_0 \ d_1 \ d_2 \ d_3]$, and the convolution
 kernel is $g=[g_0 \ g_1 \ g_2]^{\rm T}$. The convolution operation may
 be written using matrices as Equation
-[\[equ:ch-deploy/conv-matmul-one-dimension\]](#equ:ch-deploy/conv-matmul-one-dimension){reference-type="ref"
-reference="equ:ch-deploy/conv-matmul-one-dimension"}, which contains six
+:eqref:`ch-deploy/conv-matmul-one-dimension`, which contains six
 multiplications and four additions.
 
-$$[equ:ch-deploy/conv-matmul-one-dimension]
+$$
 \textit{\textbf{F}}(2, 3)=
 \left[ \begin{matrix} d_0 & d_1 & d_2 \\ d_1 & d_2 & d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
-\left[ \begin{matrix} y_0 \\ y_1 \end{matrix} \right]$$
+\left[ \begin{matrix} y_0 \\ y_1 \end{matrix} \right]$$ 
+:eqlabel:`equ:ch-deploy/conv-matmul-one-dimension`
 
 In the preceding equation, there are repeated elements $d_1$ and $d_2$
 in the input matrix. As such, there is space for optimization for matrix
 multiplication converted from convolution compared with general matrix
 multiplication. The matrix multiplication result may be obtained by
 computing an intermediate variable $m_0-m_3$, as shown in Equation
-[\[equ:ch-deploy/conv-2-winograd\]](#equ:ch-deploy/conv-2-winograd){reference-type="ref"
-reference="equ:ch-deploy/conv-2-winograd"}:
+:eqref:`ch-deploy/conv-2-winograd`:
 
-$$[equ:ch-deploy/conv-2-winograd]
+$$
 \textit{\textbf{F}}(2, 3)=
 \left[ \begin{matrix} d_0 & d_1 & d_2 \\ d_1 & d_2 & d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
-\left[ \begin{matrix} m_0+m_1+m_2 \\ m_1-m_2+m_3 \end{matrix} \right]$$
+\left[ \begin{matrix} m_0+m_1+m_2 \\ m_1-m_2+m_3 \end{matrix} \right]$$ 
+:eqlabel:`equ:ch-deploy/conv-2-winograd`
 
 where $m_0-m_3$ are computed as Equation
-[\[equ:ch-deploy/winograd-param\]](#equ:ch-deploy/winograd-param){reference-type="ref"
-reference="equ:ch-deploy/winograd-param"}:
+:eqref:`ch-deploy/winograd-param`:
 
-$$[equ:ch-deploy/winograd-param]
+$$
 \begin{aligned}
 m_0=(d_0-d_2) \times g_0 \\
 m_1=(d_1+d_2) \times (\frac{g_0+g_1+g_2}{2}) \\
 m_2=(d_0-d_2) \times (\frac{g_0-g_1+g_2}{2}) \\
 m_3=(d_1-d_3) \times g_2
-\end{aligned}$$
+\end{aligned}$$ 
+:eqlabel:`equ:ch-deploy/winograd-param`
 
 The indirect computation of r1 and r2 by computing $m_0-m_3$ involves
 four additions of the input $d$ and four multiplications and four
@@ -309,49 +302,50 @@ Decreasing the number of multiplications while adding a small number of
 additions can accelerate computation.
 
 In a matrix form, the computation can be written as Equation
-[\[equ:ch-deploy/winograd-matrix\]](#equ:ch-deploy/winograd-matrix){reference-type="ref"
-reference="equ:ch-deploy/winograd-matrix"}, where $\odot$ indicates the
+:eqref:`ch-deploy/winograd-matrix`, where $\odot$ indicates the
 multiplication of corresponding locations, and ***A***, ***B***, and
 ***G*** are all constant matrices. The matrix here is used to facilitate
 clarity --- in real-world use, faster computation can be achieved if the
 matrix computation is performed based on the handwritten form, as
 provided in Equation
-[\[equ:ch-deploy/winograd-param\]](#equ:ch-deploy/winograd-param){reference-type="ref"
-reference="equ:ch-deploy/winograd-param"}.
+:eqref:`ch-deploy/winograd-param`.
 
-$$[equ:ch-deploy/winograd-matrix]
-\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g) \odot (\textit{\textbf{B}}^{\rm T}d)$$
+$$
+\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g) \odot (\textit{\textbf{B}}^{\rm T}d)$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix`
 
-$$[equ:ch-deploy/winograd-matrix-bt]
+$$
 \textit{\textbf{B}}^{\rm T}=
-\left[ \begin{matrix} 1 & 0 & -1 & 0 \\ 0 & 1 & 1 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 1 & 0 & -1 \end{matrix} \right]$$
+\left[ \begin{matrix} 1 & 0 & -1 & 0 \\ 0 & 1 & 1 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 1 & 0 & -1 \end{matrix} \right]$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix-bt`
 
-$$[equ:ch-deploy/winograd-matrix-g]
+$$
 \textit{\textbf{G}}=
-\left[ \begin{matrix} 1 & 0 & 0 \\ 0.5 & 0.5 & 0.5 \\ 0.5 & -0.5 & 0.5 \\ 0 & 0 & 1 \end{matrix} \right]$$
+\left[ \begin{matrix} 1 & 0 & 0 \\ 0.5 & 0.5 & 0.5 \\ 0.5 & -0.5 & 0.5 \\ 0 & 0 & 1 \end{matrix} \right]$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix-g`
 
-$$[equ:ch-deploy/winograd-matrix-at]
+$$
 \textit{\textbf{A}}^{\rm T}=
-\left[ \begin{matrix} 1 & 1 & -1 & 0 \\ 0 & 1 & -1 & -1  \end{matrix} \right] \\$$
+\left[ \begin{matrix} 1 & 1 & -1 & 0 \\ 0 & 1 & -1 & -1  \end{matrix} \right] \\$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix-at`
 
 In deep learning, 2D convolution is typically used. When ***F***(2, 3)
 is extended to ***F***(2$\times$`<!-- -->`{=html}2,
 3$\times$`<!-- -->`{=html}3), it can be written in a matrix form, as
 shown in Equation
-[\[equ:ch-deploy/winograd-two-dimension-matrix\]](#equ:ch-deploy/winograd-two-dimension-matrix){reference-type="ref"
-reference="equ:ch-deploy/winograd-two-dimension-matrix"}. In this case,
+:eqref:`ch-deploy/winograd-two-dimension-matrix`. In this case,
 Winograd has 16 multiplications, reducing the computation complexity by
 2.25 times compared with 36 multiplications of the original convolution.
 
-$$[equ:ch-deploy/winograd-two-dimension-matrix]
-\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g\textit{\textbf{G}}^{\rm T}) \odot (\textit{\textbf{B}}^{\rm T}d\textit{\textbf{B}})\textit{\textbf{A}}$$
+$$
+\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g\textit{\textbf{G}}^{\rm T}) \odot (\textit{\textbf{B}}^{\rm T}d\textit{\textbf{B}})\textit{\textbf{A}}$$ 
+:eqlabel:`equ:ch-deploy/winograd-two-dimension-matrix`
 
 The logical process of Winograd can be divided into four steps, as shown
-in Figure [7](#fig:ch-deploy/winograd){reference-type="ref"
-reference="fig:ch-deploy/winograd"}.
+in Figure :numref:`ch-deploy/winograd`.
 
-![Winograd
-steps](../img/ch08/ch09-winograd.png){#fig:ch-deploy/winograd}
+![Winogradsteps](../img/ch08/ch09-winograd.png)
+:label:`ch-deploy/winograd`
 
 To use Winograd of ***F***(2$\times$`<!-- -->`{=html}2,
 3$\times$`<!-- -->`{=html}3) for any output size, we need to divide the

@@ -55,10 +55,8 @@ performed (depending on the backend hardware support) once the
 compilation is complete. However, some optimization operations can only
 be performed in their entirety during the deployment phase.
 
-![Layered computer storage
-architecture](../img/ch08/ch09-storage.png){#fig:ch-deploy/fusion-storage}
-
-## Operator Fusion {#sec:ch-deploy/kernel-fusion}
+![Layered computer storagearchitecture](../img/ch08/ch09-storage.png)
+:label:`ch-deploy/fusion-storage}## Operator Fusion {#sec:ch-deploy/kernel-fusion`
 
 Operator fusion involves combining multiple operators in a deep neural
 network (DNN) model into a new operator based on certain rules, reducing
@@ -69,8 +67,7 @@ The two main performance benefits brought by operator fusion are as
 follows: First, it maximizes the utilization of registers and caches.
 And second, because it combines operators, the load/store time between
 the CPU and memory is reduced. Figure
-[1](#fig:ch-deploy/fusion-storage){reference-type="ref"
-reference="fig:ch-deploy/fusion-storage"} shows the architecture of a
+:numref:`ch-deploy/fusion-storage` shows the architecture of a
 computer's storage system. While the storage capacity increases from the
 level-1 cache (L1) to hard disk, so too does the time for reading data.
 After operator fusion is performed, the previous computation result can
@@ -80,57 +77,55 @@ operations on the memory. Furthermore, operator fusion allows some
 computation to be completed in advance, eliminating redundant or even
 cyclic redundant computing during forward computation.
 
-![Convolution + Batchnorm operator
-fusion](../img/ch08/ch09-conv-bn-fusion.png){#fig:ch-deploy/conv-bn-fusion}
+![Convolution + Batchnorm operatorfusion](../img/ch08/ch09-conv-bn-fusion.png)
+:label:`ch-deploy/conv-bn-fusion`
 
 To describe the principle of operator fusion, we will use two operators,
 Convolution and Batchnorm, as shown in Figure
-[2](#fig:ch-deploy/conv-bn-fusion){reference-type="ref"
-reference="fig:ch-deploy/conv-bn-fusion"}. In the figure, the
+:numref:`ch-deploy/conv-bn-fusion`. In the figure, the
 solid-colored boxes indicate operators, the resulting operators after
 fusion is performed are represented by hatched boxes, and the weights or
 constant tensors of operators are outlined in white. The fusion can be
 understood as the simplification of an equation. The computation of
 Convolution is expressed as Equation
-[\[equ:ch-deploy/conv-equation\]](#equ:ch-deploy/conv-equation){reference-type="ref"
-reference="equ:ch-deploy/conv-equation"}.
+:eqref:`ch-deploy/conv-equation`.
 
-$$\mathbf{Y_{\rm conv}}=\mathbf{W_{\rm conv}}\cdot\mathbf{X_{\rm conv}}+\mathbf{B_{\rm conv}}, \text{equ:ch-deploy/conv-equation}$$
+$$
+\bm{Y_{\rm conv}}=\bm{W_{\rm conv}}\cdot\bm{X_{\rm conv}}+\bm{B_{\rm conv}}$$ 
+:eqlabel:`equ:ch-deploy/conv-equation`
 
 Here, we do not need to understand what each variable means. Instead, we
 only need to keep in mind that Equation
-[\[equ:ch-deploy/conv-equation\]](#equ:ch-deploy/conv-equation){reference-type="ref"
-reference="equ:ch-deploy/conv-equation"} is an equation for
-$\mathbf{Y_{\rm conv}}$ with respect to $\mathbf{X_{\rm conv}}$, and other
+:eqref:`ch-deploy/conv-equation` is an equation for
+$\bm{Y_{\rm conv}}$ with respect to $\bm{X_{\rm conv}}$, and other
 symbols are constants.
 
 Equation
-[\[equ:ch-deploy/bn-equation\]](#equ:ch-deploy/bn-equation){reference-type="ref"
-reference="equ:ch-deploy/bn-equation"} is about the computation of
+:eqref:`ch-deploy/bn-equation` is about the computation of
 Batchnorm:
 
-**equ:ch-deploy/bn-equation:**\
-$$\mathbf{Y_{\rm bn}}=\gamma\frac{\mathbf{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$
+$$
+\bm{Y_{\rm bn}}=\gamma\frac{\bm{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$ 
+:eqlabel:`equ:ch-deploy/bn-equation`
 
-Similarly, it is an equation for $\mathbf{Y_{\rm bn}}$ with respect to
-$\mathbf{X_{\rm bn}}$. Other symbols in the equation represent constants.
+Similarly, it is an equation for $\bm{Y_{\rm bn}}$ with respect to
+$\bm{X_{\rm bn}}$. Other symbols in the equation represent constants.
 
 As shown in Figure
-[2](#fig:ch-deploy/conv-bn-fusion){reference-type="ref"
-reference="fig:ch-deploy/conv-bn-fusion"}, when the output of
+:numref:`ch-deploy/conv-bn-fusion`, when the output of
 Convolution is used as the input of Batchnorm, the formula of Batchnorm
-is a function for $\mathbf{Y_{\rm bn}}$ with respect to $\mathbf{X_{\rm conv}}$.
-After substituting $\mathbf{Y_{\rm conv}}$ into $\mathbf{X_{\rm bn}}$ and
+is a function for $\bm{Y_{\rm bn}}$ with respect to $\bm{X_{\rm conv}}$.
+After substituting $\bm{Y_{\rm conv}}$ into $\bm{X_{\rm bn}}$ and
 uniting and extracting the constants, we obtain Equation
-[\[equ:ch-deploy/conv-bn-equation-3\]](#equ:ch-deploy/conv-bn-equation-3){reference-type="ref"
-reference="equ:ch-deploy/conv-bn-equation-3"}.
+:eqref:`ch-deploy/conv-bn-equation-3`.
 
-$$\mathbf{Y_{\rm bn}}=\mathbf{A}\cdot\mathbf{X_{\rm conv}}+\mathbf{B}, \text{equ:ch-deploy/conv-bn-equation-3}$$
+$$
+\bm{Y_{\rm bn}}=\bm{A}\cdot\bm{X_{\rm conv}}+\bm{B}$$ 
+:eqlabel:`equ:ch-deploy/conv-bn-equation-3`
 
-Here, $\mathbf{A}$ and $\mathbf{B}$ are two matrices. It can be noticed that
+Here, $\bm{A}$ and $\bm{B}$ are two matrices. It can be noticed that
 Equation
-[\[equ:ch-deploy/conv-bn-equation-3\]](#equ:ch-deploy/conv-bn-equation-3){reference-type="ref"
-reference="equ:ch-deploy/conv-bn-equation-3"} is a formula for computing
+:eqref:`ch-deploy/conv-bn-equation-3` is a formula for computing
 Convolution. The preceding example shows that the computation of
 Convolution and Batchnorm can be fused into an equivalent Convolution
 operator. Such fusion is referred to as formula fusion.
@@ -162,13 +157,14 @@ after the fusion --- by 8.5% and 11.7% respectively. Such improvements
 are achieved without bringing side effects and without requiring
 additional hardware or operator libraries.
 
-::: {#tab:ch09/ch09-conv-bn-fusion} <br>
-  Fusion         | Sample  | Mobilenet-v2 |
-  ---------------| --------|-------------- |
-  Before fusion  | 0.035   |  15.415 |
-  After fusion   | 0.031   |   13.606 |
+::: {#tab:ch09/ch09-conv-bn-fusion}
+  Fusion           Sample   Mobilenet-v2
+  --------------- -------- --------------
+  Before fusion    0.035       15.415
+  After fusion     0.031       13.606
 
-Convolution + Batchnorm inference performance before and after fusion (unit: ms) 
+  : Convolution + Batchnorm inference performance before and after
+  fusion (unit: ms)
 :::
 
 ## Operator Replacement
@@ -180,20 +176,19 @@ type of operators that have the same computational logic but are more
 suitable for online deployment. In this way, we can reduce the
 computation workload and compress the model.
 
-![Replacement of
-Batchnorm](../img/ch08/ch09-bn-replace.png){#fig:ch-deploy/bn-replace}
+![Replacement ofBatchnorm](../img/ch08/ch09-bn-replace.png)
+:label:`ch-deploy/bn-replace`
 
-Figure [3](#fig:ch-deploy/bn-replace){reference-type="ref"
-reference="fig:ch-deploy/bn-replace"} depicts the replacement of
+Figure :numref:`ch-deploy/bn-replace` depicts the replacement of
 Batchnorm with Scale, which is used as an example to describe the
 principle of operator replacement. After decomposing Equation
-[\[equ:ch-deploy/bn-equation\]](#equ:ch-deploy/bn-equation){reference-type="ref"
-reference="equ:ch-deploy/bn-equation"} (the Batchnorm formula) and
+:eqref:`ch-deploy/bn-equation` (the Batchnorm formula) and
 folding the constants, Batchnorm is defined as Equation
-[\[equ:ch-deploy/replace-scale\]](#equ:ch-deploy/replace-scale){reference-type="ref"
-reference="equ:ch-deploy/replace-scale"}
+:eqref:`ch-deploy/replace-scale`
 
-$$\mathbf{Y_{bn}}=scale\cdot\mathbf{X_{bn}}+offset, \text{equ:ch-deploy/replace-scale} $$
+$$
+\bm{Y_{bn}}=scale\cdot\bm{X_{bn}}+offset$$ 
+:eqlabel:`equ:ch-deploy/replace-scale`
 
 where **scale** and **offsets** are scalars. This simplified formula can
 be mapped to a Scale operator.
@@ -218,13 +213,12 @@ Common methods of operator reordering include moving cropping operators
 (e.g., Slice, StrideSlice, and Crop) forward, and reordering Reshape,
 Transpose, and BinaryOp.
 
-![Reordering of
-Crop](../img/ch08/ch09-crop-reorder.png){#fig:ch-deploy/crop-reorder}
+![Reordering ofCrop](../img/ch08/ch09-crop-reorder.png)
+:label:`ch-deploy/crop-reorder`
 
 Crop is used to cut a part out of the input feature map as the output.
 After Crop is executed, the size of the feature map is reduced. As shown
-in Figure [4](#fig:ch-deploy/crop-reorder){reference-type="ref"
-reference="fig:ch-deploy/crop-reorder"}, moving Crop forward to cut the
+in Figure :numref:`ch-deploy/crop-reorder`, moving Crop forward to cut the
 feature map before other operators reduces the computation workload of
 subsequent operators, thereby improving the inference performance in the
 deployment phase. Such improvement is related to the operator

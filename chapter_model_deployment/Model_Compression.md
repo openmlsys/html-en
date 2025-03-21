@@ -14,16 +14,15 @@ Model quantization is a technique that approximates floating-point
 weights of contiguous values (usually float32 or many possibly discrete
 values) at the cost of slightly reducing accuracy to a limited number of
 discrete values (usually int8). As shown in Figure
-[1](#fig:ch-deploy/quant-minmax){reference-type="ref"
-reference="fig:ch-deploy/quant-minmax"}, $T$ represents the data range
+:numref:`ch-deploy/quant-minmax`, $T$ represents the data range
 before quantization. In order to reduce the model size, model
 quantization represents floating-point data with fewer bits. As such,
 the memory usage during inference can be reduced, and the inference on
 processors that are good at processing low-precision operations can be
 accelerated.
 
-![Principles of
-quantization](../img/ch08/ch09-quant-minmax.png){#fig:ch-deploy/quant-minmax}
+![Principles ofquantization](../img/ch08/ch09-quant-minmax.png)
+:label:`ch-deploy/quant-minmax`
 
 The number of bits and the range of data represented by different data
 types in a computer are different. Based on service requirements, a
@@ -49,12 +48,12 @@ that linear quantization is more commonly used. The following therefore
 focuses on the principles of linear quantization.
 
 In Equation
-[\[equ:ch-deploy/quantization-q\]](#equ:ch-deploy/quantization-q){reference-type="ref"
-reference="equ:ch-deploy/quantization-q"}, assume that $r$ represents
+:eqref:`ch-deploy/quantization-q`, assume that $r$ represents
 the floating-point number before quantization. We are then able to
 obtain the integer $q$ after quantization.
 
-$$q=clip(round(\frac{r}{s}+z),q_{min},q_{max}), \text{equ:ch-deploy/quantization-q}$$
+$$q=clip(round(\frac{r}{s}+z),q_{min},q_{max})$$ 
+:eqlabel:`equ:ch-deploy/quantization-q`
 
 $clip(\cdot)$ and $round(\cdot)$ indicate the truncation and rounding
 operations, and $q_{min}$ and $q_{max}$ indicate the minimum and maximum
@@ -170,8 +169,7 @@ before quantization. Assume that the mean value and variance of the
 weight of a channel are $E(w_c)$ and $||w_c-E(w_c)||$, and the mean
 value and variance after quantization are $E(\hat{w_c})$ and
 $||\hat{w_c}-E(\hat{w_c})||$, respectively. Equation
-[\[equ:ch-deploy/post-quantization\]](#equ:ch-deploy/post-quantization){reference-type="ref"
-reference="equ:ch-deploy/post-quantization"} is the calibration of the
+:eqref:`ch-deploy/post-quantization` is the calibration of the
 weight:
 
 $$
@@ -179,7 +177,8 @@ $$
 \hat{w_c}\leftarrow\zeta_c(\hat{w_c}+u_c) \\
 u_c=E(w_c)-E(\hat{w_c})   \\
 \zeta_c=\frac{||w_c-E(w_c)||}{||\hat{w_c}-E(\hat{w_c})||}
-\end{aligned}, \text{equ:ch-deploy/post-quantization}$$
+\end{aligned}$$ 
+:eqlabel:`equ:ch-deploy/post-quantization`
 
 As a general model compression method, quantization can significantly
 improve the memory and compression efficiency of neural networks, and
@@ -281,15 +280,14 @@ identified more efficiently. As such, iterative pruning is widely used.
 To illustrate how to prune a network, we will use Deep
 Compression [@han2015deep] as an example. Removing most weights leads to
 a loss of accuracy of the neural network, as shown in Figure
-[2](#fig:ch-deploy/deepcomp){reference-type="ref"
-reference="fig:ch-deploy/deepcomp"}. Fine-tuning a pruned sparse neural
+:numref:`ch-deploy/deepcomp`. Fine-tuning a pruned sparse neural
 network can help improve model accuracy, and the pruned network may be
 quantized to represent weights using fewer bits. In addition, using
 Huffman coding can further reduce the memory cost of the deep neural
 network.
 
-![Deep Compression
-algorithm](../img/ch08/ch09-deepcomp.png){#fig:ch-deploy/deepcomp}
+![Deep Compressionalgorithm](../img/ch08/ch09-deepcomp.png)
+:label:`ch-deploy/deepcomp`
 
 In addition to removing redundant neurons, a dictionary learning-based
 method can be used to remove unnecessary weights on a deep convolutional
@@ -326,7 +324,9 @@ classification result of the teacher network, that is, Equation
 [\[c2Fcn:distill\]](#c2Fcn:distill){reference-type="ref"
 reference="c2Fcn:distill"}.
 
-$$\mathcal{L}_{KD}(\theta_S) = \mathcal{H}(o_S,\mathbf{y}) +\lambda\mathcal{H}(\tau(o_S),\tau(o_T)), \text{c2Fcn:distill}$$
+$$\mathcal{L}_{KD}(\theta_S) = \mathcal{H}(o_S,\mathbf{y}) +\lambda\mathcal{H}(\tau(o_S),\tau(o_T)),
+$$ 
+:eqlabel:`c2Fcn:distill`
 
 where $\mathcal{H}(\cdot,\cdot)$ is the cross-entropy function, $o_S$
 and $o_T$ are outputs of the student network and the teacher network,
@@ -357,8 +357,7 @@ module. The attention module generates an attention map, which
 identifies the importance of different areas of an input image to the
 classification result. The attention map is then transferred from the
 teacher network to the student network, as depicted in Figure
- [3](#fig:ch-deploy/attentionTS){reference-type="ref"
-reference="fig:ch-deploy/attentionTS"}.
+ :numref:`ch-deploy/attentionTS`.
 
 KD is an effective method to optimize small networks. It can be combined
 with other compression methods such as pruning and quantization to train

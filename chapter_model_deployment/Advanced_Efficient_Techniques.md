@@ -22,8 +22,7 @@ based on insights provided by Leviathan et al. [@leviathan2023fast].
     is achieved by processing them with the outputs from the
     approximation models in parallel.
 
-Figure [1](#fig:ch-deploy/sd){reference-type="ref"
-reference="fig:ch-deploy/sd"} is a brief overview of Speculative
+Figure :numref:`ch-deploy/sd` is a brief overview of Speculative
 Decoding. It involves initially generating a series of tokens using a
 draft model, which is a smaller and less complex model. These generated
 tokens are then verified in parallel with the target model, which is a
@@ -53,8 +52,9 @@ $M_{\text{target}}(\text{prefix} + [x_1 + ... + x_{\gamma}])$. If the
 condition $q(x) < p(x)$ is met, the token is retained. In contrast, if
 not met, the token faces a rejection chance of $1 - \frac{p(x)}{q(x)}$,
 following which it is reselected from an adjusted distribution:
-$$\label{equ:sd_adjusted}
-p'(x) = norm(max(0, p(x) - q(x)))$$ In the paper [@leviathan2023fast],
+$$
+p'(x) = norm(max(0, p(x) - q(x)))$$ 
+:eqlabel:`equ:sd_adjusted` In the paper [@leviathan2023fast],
 Leviathan et al. have proved the correctness of this adjusted
 distribution for resampling.
 
@@ -154,24 +154,25 @@ algorithm designed to minimize the intensive access to the GPU's high
 bandwidth memory (HBM). This innovation led to significant gains in both
 computational speed and throughput.
 
-Figure [2](#fig:ch-deploy/memory){reference-type="ref"
-reference="fig:ch-deploy/memory"} shows the memory hierarchy with
+Figure :numref:`ch-deploy/memory` shows the memory hierarchy with
 corresponding bandwidths. The main goal of FlashAttention is to avoid
 reading and writing the large attention matrix to and from HBM. And
 perform computation in SRAM as much as possible.
 
 The standard Scaled Dot-Product Attention [@attention] formula is
-$$\label{equ:std_attn}
-\textbf{A} = Softmax(\frac{\textbf{QK}^T}{\sqrt{d_k}})\textbf{V}$$
+$$
+\textbf{A} = Softmax(\frac{\textbf{QK}^T}{\sqrt{d_k}})\textbf{V}$$ 
+:eqlabel:`equ:std_attn`
 
 As $d_k$ is a scalar, we can simplify it into three parts:
 
-$$\label{equ:attn_sep}
+$$
 \begin{aligned}
     \textbf{S} = \textbf{QK}^T\\
     \textbf{P} = Softmax(\textbf{S})\\
     \textbf{O} = \textbf{PV}
-\end{aligned}$$
+\end{aligned}$$ 
+:eqlabel:`equ:attn_sep`
 
 The matrices **K**, **Q**, **V** are all stored in HBM. The standard
 implementation of attention follows these steps:
@@ -214,8 +215,7 @@ s(x) = e^{m(x_{1})-m(x)}s_{1}(x_1) + e^{m(x_2)-m(x)}s_{1}(x_2)\\
 Softmax(x) = \frac{l(x)}{s(x)}
 \end{aligned}$$
 
-Figure [3](#fig:ch-deploy/flashattn){reference-type="ref"
-reference="fig:ch-deploy/flashattn"} shows a brief overview of
+Figure :numref:`ch-deploy/flashattn` shows a brief overview of
 FlashAttention with two blocks. Following decomposition, Softmax
 calculations can be executed block by block. Therefore, **K, Q** and
 **V** are initially divided into blocks. Subsequently, compute the
