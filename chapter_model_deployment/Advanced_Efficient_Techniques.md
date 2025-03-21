@@ -52,8 +52,7 @@ $M_{\text{target}}(\text{prefix} + [x_1 + ... + x_{\gamma}])$. If the
 condition $q(x) < p(x)$ is met, the token is retained. In contrast, if
 not met, the token faces a rejection chance of $1 - \frac{p(x)}{q(x)}$,
 following which it is reselected from an adjusted distribution:
-$$
-p'(x) = norm(max(0, p(x) - q(x)))$$ 
+$$p'(x) = norm(max(0, p(x) - q(x)))$$ 
 :eqlabel:`equ:sd_adjusted` In the paper [@leviathan2023fast],
 Leviathan et al. have proved the correctness of this adjusted
 distribution for resampling.
@@ -160,14 +159,12 @@ reading and writing the large attention matrix to and from HBM. And
 perform computation in SRAM as much as possible.
 
 The standard Scaled Dot-Product Attention [@attention] formula is
-$$
-\textbf{A} = Softmax(\frac{\textbf{QK}^T}{\sqrt{d_k}})\textbf{V}$$ 
+$$\textbf{A} = Softmax(\frac{\textbf{QK}^T}{\sqrt{d_k}})\textbf{V}$$ 
 :eqlabel:`equ:std_attn`
 
 As $d_k$ is a scalar, we can simplify it into three parts:
 
-$$
-\begin{aligned}
+$$\begin{aligned}
     \textbf{S} = \textbf{QK}^T\\
     \textbf{P} = Softmax(\textbf{S})\\
     \textbf{O} = \textbf{PV}

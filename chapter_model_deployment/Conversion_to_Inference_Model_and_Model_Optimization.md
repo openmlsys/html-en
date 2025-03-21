@@ -90,8 +90,7 @@ understood as the simplification of an equation. The computation of
 Convolution is expressed as Equation
 :eqref:`ch-deploy/conv-equation`.
 
-$$
-\bm{Y_{\rm conv}}=\bm{W_{\rm conv}}\cdot\bm{X_{\rm conv}}+\bm{B_{\rm conv}}$$ 
+$$\bm{Y_{\rm conv}}=\bm{W_{\rm conv}}\cdot\bm{X_{\rm conv}}+\bm{B_{\rm conv}}$$ 
 :eqlabel:`equ:ch-deploy/conv-equation`
 
 Here, we do not need to understand what each variable means. Instead, we
@@ -104,8 +103,7 @@ Equation
 :eqref:`ch-deploy/bn-equation` is about the computation of
 Batchnorm:
 
-$$
-\bm{Y_{\rm bn}}=\gamma\frac{\bm{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$ 
+$$\bm{Y_{\rm bn}}=\gamma\frac{\bm{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$ 
 :eqlabel:`equ:ch-deploy/bn-equation`
 
 Similarly, it is an equation for $\bm{Y_{\rm bn}}$ with respect to
@@ -119,8 +117,7 @@ After substituting $\bm{Y_{\rm conv}}$ into $\bm{X_{\rm bn}}$ and
 uniting and extracting the constants, we obtain Equation
 :eqref:`ch-deploy/conv-bn-equation-3`.
 
-$$
-\bm{Y_{\rm bn}}=\bm{A}\cdot\bm{X_{\rm conv}}+\bm{B}$$ 
+$$\bm{Y_{\rm bn}}=\bm{A}\cdot\bm{X_{\rm conv}}+\bm{B}$$ 
 :eqlabel:`equ:ch-deploy/conv-bn-equation-3`
 
 Here, $\bm{A}$ and $\bm{B}$ are two matrices. It can be noticed that
@@ -186,8 +183,7 @@ principle of operator replacement. After decomposing Equation
 folding the constants, Batchnorm is defined as Equation
 :eqref:`ch-deploy/replace-scale`
 
-$$
-\bm{Y_{bn}}=scale\cdot\bm{X_{bn}}+offset$$ 
+$$\bm{Y_{bn}}=scale\cdot\bm{X_{bn}}+offset$$ 
 :eqlabel:`equ:ch-deploy/replace-scale`
 
 where **scale** and **offsets** are scalars. This simplified formula can

@@ -172,8 +172,7 @@ $||\hat{w_c}-E(\hat{w_c})||$, respectively. Equation
 :eqref:`ch-deploy/post-quantization` is the calibration of the
 weight:
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \hat{w_c}\leftarrow\zeta_c(\hat{w_c}+u_c) \\
 u_c=E(w_c)-E(\hat{w_c})   \\
 \zeta_c=\frac{||w_c-E(w_c)||}{||\hat{w_c}-E(\hat{w_c})||}
