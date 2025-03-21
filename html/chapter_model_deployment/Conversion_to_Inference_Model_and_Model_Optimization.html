@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>Conversion to Inference Model and Model Optimization {#sec:ch-deploy/model-optimization} &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link is-active">Conversion to Inference Model and Model Optimization {#sec:ch-deploy/model-optimization}</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational_graph/index.html">2. Computational Graph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/background_and_functionality.html">2.1. Computational Graph Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/components_of_computational_graph.html">2.2. Computational Graph Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/generation_of_computational_graph.html">2.3. Generating a Computational Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/schedule_of_computational_graph.html">2.4. Scheduling and Executing Computational Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html">2.5. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html#further-reading">2.6. Further Reading</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational_graph/index.html">2. Computational Graph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/background_and_functionality.html">2.1. Computational Graph Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/components_of_computational_graph.html">2.2. Computational Graph Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/generation_of_computational_graph.html">2.3. Generating a Computational Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/schedule_of_computational_graph.html">2.4. Scheduling and Executing Computational Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html">2.5. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html#further-reading">2.6. Further Reading</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="conversion-to-inference-model-and-model-optimization-sec-ch-deploy-model-optimization">
+<h1>Conversion to Inference Model and Model Optimization {#sec:ch-deploy/model-optimization}<a class="headerlink" href="#conversion-to-inference-model-and-model-optimization-sec-ch-deploy-model-optimization" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="model-conversion">
+<h2>Model Conversion<a class="headerlink" href="#model-conversion" title="Permalink to this heading">¶</a></h2>
+<p>As mentioned earlier, TensorFlow, PyTorch, MindSpore, MXNet, and CNTK
+define their own model data structures. This means that the inference
+system needs to convert these structures to a unified one. Open Neural
+Network Exchange (ONNX) is designed to implement such conversion. It
+supports an extensive range of machine learning operators and converts
+models from various frameworks (e.g., TensorFlow and PyTorch) into ONNX
+models. Because models are structured data, the conversion process
+involves converting the data structure. It starts by analyzing the
+similarities and differences between two data structures. If they are
+the same, data is transferred; if the structures are similar but with
+slight differences, data is mapped; if the structures differ
+significantly, extra semantics conversion might be required; and if they
+are totally incompatible, the conversion will fail. ONNX features strong
+expressive power, meaning that it can convert models from most
+frameworks in the industry to compatible ONNX models. If a model is
+abstracted as a graph, its data structure can be defined as follows:</p>
+<ol class="arabic simple">
+<li><p><strong>Topological expression of model:</strong> The topological connections of a
+model are represented as edges in a graph. From the perspective of a
+model, these edges define the data flows and control flows in the
+model. Based on such definitions, we can extend to the expressions of
+the subgraphs, model inputs and outputs, and control flow structures.
+For example, the control flow on TensorFlow 1.x is expressed as a
+cyclic graph. To prevent the formation of cycles, TensorFlow 1.x uses
+operators such as Enter, Exit, Switch, LoopCond, and NextIteration,
+whereas ONNX uses operators such as Loop and If. As such, when
+converting a TensorFlow1.x control flow model into an ONNX model, the
+control flow graph structure in the TensorFlow model must be merged
+into a While or If operator on ONNX.</p></li>
+<li><p><strong>Operator prototype definition:</strong> Operators can be regarded as data
+processing or control flow nodes in a model or as vertices in a
+graph. An operator prototype defines the type, inputs, outputs, and
+attributes of an operator. For instance, Slice has different
+semantics on Caffe and ONNX. To convert a Caffe model into an ONNX
+model, we need to map Slice on Caffe to Split on ONNX. FusedBatchnorm
+on TensorFlow does not have a mapping operator on Caffe. Rather,
+Batchnorm and Scale on Caffe need to be combined to express the same
+semantics of FusedBatchnorm on TensorFlow. Generally, the model
+conversion process involves converting the topological relationships
+and mapping the operator prototypes between models.</p></li>
+</ol>
+<p>Following model conversion, some input-agnostic operations are conducted
+for optimization purposes prior to model deployment, including constant
+folding, operator fusion, operator replacement, and operator reordering
+— optimization methods discussed earlier in this book. For instance,
+constant folding is usually performed during the compilation executed on
+the compiler frontend, whereas, operator fusion and partition are often
+performed (depending on the backend hardware support) once the
+compilation is complete. However, some optimization operations can only
+be performed in their entirety during the deployment phase.</p>
+<p><img alt="Layered computer storagearchitecture" src="../_images/ch09-storage.png" />
+:label:<code class="docutils literal notranslate"><span class="pre">ch-deploy/fusion-storage}##</span> <span class="pre">Operator</span> <span class="pre">Fusion</span> <span class="pre">{#sec:ch-deploy/kernel-fusion</span></code></p>
+<p>Operator fusion involves combining multiple operators in a deep neural
+network (DNN) model into a new operator based on certain rules, reducing
+the inference latency and power consumption by lowering the computation
+workload and load/store overhead during online inference.</p>
+<p>The two main performance benefits brought by operator fusion are as
+follows: First, it maximizes the utilization of registers and caches.
+And second, because it combines operators, the load/store time between
+the CPU and memory is reduced. Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch-deploy/fusion-storage</span></code> shows the architecture of a
+computer’s storage system. While the storage capacity increases from the
+level-1 cache (L1) to hard disk, so too does the time for reading data.
+After operator fusion is performed, the previous computation result can
+be temporarily stored in the CPU’s register or cache where the next
+computation can directly read the result, reducing the number of I/O
+operations on the memory. Furthermore, operator fusion allows some
+computation to be completed in advance, eliminating redundant or even
+cyclic redundant computing during forward computation.</p>
+<div class="figure align-default" id="id1">
+<span id="ch-deploy-conv-bn-fusion"></span><img alt="../_images/ch09-conv-bn-fusion.png" src="../_images/ch09-conv-bn-fusion.png" />
+<p class="caption"><span class="caption-text">Convolution + Batchnorm operatorfusion</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>To describe the principle of operator fusion, we will use two operators,
+Convolution and Batchnorm, as shown in Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch-deploy/conv-bn-fusion</span></code>. In the figure, the solid-colored
+boxes indicate operators, the resulting operators after fusion is
+performed are represented by hatched boxes, and the weights or constant
+tensors of operators are outlined in white. The fusion can be understood
+as the simplification of an equation. The computation of Convolution is
+expressed as Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/conv-equation</span></code>.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-0">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-0" title="Permalink to this equation">¶</a></span>\[\bf{Y_{\rm conv}}=\bf{W_{\rm conv}}\cdot\bf{X_{\rm conv}}+\bf{B_{\rm conv}}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/conv-equation</span></code></p>
+<p>Here, we do not need to understand what each variable means. Instead, we
+only need to keep in mind that Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/conv-equation</span></code> is an equation for
+<span class="math notranslate nohighlight">\(\bf{Y_{\rm conv}}\)</span> with respect to <span class="math notranslate nohighlight">\(\bf{X_{\rm conv}}\)</span>, and
+other symbols are constants.</p>
+<p>Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/bn-equation</span></code> is about the computation of
+Batchnorm:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-1">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-1" title="Permalink to this equation">¶</a></span>\[\bf{Y_{\rm bn}}=\gamma\frac{\bf{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/bn-equation</span></code></p>
+<p>Similarly, it is an equation for <span class="math notranslate nohighlight">\(\bf{Y_{\rm bn}}\)</span> with respect to
+<span class="math notranslate nohighlight">\(\bf{X_{\rm bn}}\)</span>. Other symbols in the equation represent
+constants.</p>
+<p>As shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch-deploy/conv-bn-fusion</span></code>, when the output
+of Convolution is used as the input of Batchnorm, the formula of
+Batchnorm is a function for <span class="math notranslate nohighlight">\(\bf{Y_{\rm bn}}\)</span> with respect to
+<span class="math notranslate nohighlight">\(\bf{X_{\rm conv}}\)</span>. After substituting <span class="math notranslate nohighlight">\(\bf{Y_{\rm conv}}\)</span>
+into <span class="math notranslate nohighlight">\(\bf{X_{\rm bn}}\)</span> and uniting and extracting the constants,
+we obtain Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/conv-bn-equation-3</span></code>.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-2">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-2" title="Permalink to this equation">¶</a></span>\[\bf{Y_{\rm bn}}=\bf{A}\cdot\bf{X_{\rm conv}}+\bf{B}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/conv-bn-equation-3</span></code></p>
+<p>Here, <span class="math notranslate nohighlight">\(\bf{A}\)</span> and <span class="math notranslate nohighlight">\(\bf{B}\)</span> are two matrices. It can be
+noticed that Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/conv-bn-equation-3</span></code> is a
+formula for computing Convolution. The preceding example shows that the
+computation of Convolution and Batchnorm can be fused into an equivalent
+Convolution operator. Such fusion is referred to as formula fusion.</p>
+<p>The fusion of Convolution and Batchnorm eliminates a Batchnorm
+operation, thereby reducing the quantity of parameters and computation
+workload are reduced, and thereby the load/store operations are also
+reduced. In general, this fusion not only optimizes the power
+consumption and performance during model deployment, but also brings
+certain benefits in compressing the model size.</p>
+<p>Symbols that are considered as constants in the Convolution and
+Batchnorm formulas during fusion are considered as parameters during
+training. Performing fusion during the training process will result in
+missing model parameters. Because the fusion eliminates a Batchnorm
+operator and corresponding parameters from the network, the algorithm of
+the DNN is changed, degrading the accuracy to unacceptable levels.
+Therefore, the fusion of Convolution and Batchnorm is an optimization
+method typically used during deployment. To evaluate the optimization
+effect, we constructed a sample network with Convolution and Batchnorm
+using MindSpore Lite. We ran the sample network and mobilenet-v2 network
+for inference in dual threads on a Huawei Mate 30 smartphone to compare
+the time of running 3,000 inference epochs before and after the fusion.
+As shown in Table <a class="reference external" href="#tab:ch09/ch09-conv-bn-fusion">1</a>, the inference
+performance of the sample network and mobilenet-v2 network is improved
+considerably after the fusion — by 8.5% and 11.7% respectively. Such
+improvements are achieved without bringing side effects and without
+requiring additional hardware or operator libraries.</p>
+<div class="tab-ch09-ch09-conv-bn-fusion docutils container">
+<p>after fusion (unit: ms)</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 19%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Fusion</p></th>
+<th class="head"><p>Sample</p></th>
+<th class="head"><p>Mobilenet-v2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Before fusion</p></td>
+<td><p>0.035</p></td>
+<td><p>15.415</p></td>
+</tr>
+<tr class="row-odd"><td><p>After fusion</p></td>
+<td><p>0.031</p></td>
+<td><p>13.606</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="operator-replacement">
+<h2>Operator Replacement<a class="headerlink" href="#operator-replacement" title="Permalink to this heading">¶</a></h2>
+<p>The principle of operator replacement is to simplify an operator formula
+by uniting like terms, extracting common factors, and employing other
+mathematical methods, and then map the simplified formula to a certain
+type of operators that have the same computational logic but are more
+suitable for online deployment. In this way, we can reduce the
+computation workload and compress the model.</p>
+<div class="figure align-default" id="id2">
+<span id="ch-deploy-bn-replace"></span><img alt="../_images/ch09-bn-replace.png" src="../_images/ch09-bn-replace.png" />
+<p class="caption"><span class="caption-text">Replacement ofBatchnorm</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch-deploy/bn-replace</span></code> depicts the replacement of
+Batchnorm with Scale, which is used as an example to describe the
+principle of operator replacement. After decomposing Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/bn-equation</span></code> (the Batchnorm formula) and folding the
+constants, Batchnorm is defined as Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/replace-scale</span></code></p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-3">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-model-deployment-conversion-to-inference-model-and-model-optimization-3" title="Permalink to this equation">¶</a></span>\[\bf{Y_{bn}}=scale\cdot\bf{X_{bn}}+offset\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/replace-scale</span></code></p>
+<p>where <strong>scale</strong> and <strong>offsets</strong> are scalars. This simplified formula can
+be mapped to a Scale operator.</p>
+<p>Compared with the original Batchnorm formula, the simplified formula has
+fewer parameters and involves less computation workload. This indicates
+that operator replacement is an effective approach to optimizing the
+power consumption and performance of a model during deployment. Symbols
+that are considered as constants in Batchnorm during deployment are not
+considered as constants during training, meaning that the replacement
+can be performed only during deployment. Operator replacement reduces
+the quantity of parameters and changes the structure of the model,
+weakening the expressive power and reducing the accuracy of the model
+during convergence.</p>
+</div>
+<div class="section" id="operator-reordering">
+<h2>Operator Reordering<a class="headerlink" href="#operator-reordering" title="Permalink to this heading">¶</a></h2>
+<p>Another way of reducing the computation workload of an inference model
+is to adjust the topological order of its operators according to certain
+rules, on the condition that the inference accuracy is not degraded.
+Common methods of operator reordering include moving cropping operators
+(e.g., Slice, StrideSlice, and Crop) forward, and reordering Reshape,
+Transpose, and BinaryOp.</p>
+<div class="figure align-default" id="id3">
+<span id="ch-deploy-crop-reorder"></span><img alt="../_images/ch09-crop-reorder.png" src="../_images/ch09-crop-reorder.png" />
+<p class="caption"><span class="caption-text">Reordering ofCrop</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>Crop is used to cut a part out of the input feature map as the output.
+After Crop is executed, the size of the feature map is reduced. As shown
+in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch-deploy/crop-reorder</span></code>, moving Crop forward to cut
+the feature map before other operators reduces the computation workload
+of subsequent operators, thereby improving the inference performance in
+the deployment phase. Such improvement is related to the operator
+parameters. Note, however, that Crop can be moved forward only along
+element-wise operators.</p>
+<p>The experiment result above proves that optimizing models before
+inference makes it possible to significantly reduce the latency, power
+consumption, and memory usage.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Conversion to Inference Model and Model Optimization {#sec:ch-deploy/model-optimization}</a><ul>
+<li><a class="reference internal" href="#model-conversion">Model Conversion</a></li>
+<li><a class="reference internal" href="#operator-replacement">Operator Replacement</a></li>
+<li><a class="reference internal" href="#operator-reordering">Operator Reordering</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

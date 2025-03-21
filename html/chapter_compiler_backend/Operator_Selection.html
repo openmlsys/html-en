@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>Operator Selection &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link is-active">Operator Selection</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_compiler_backend/Operator_Selection.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational_graph/index.html">2. Computational Graph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/background_and_functionality.html">2.1. Computational Graph Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/components_of_computational_graph.html">2.2. Computational Graph Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/generation_of_computational_graph.html">2.3. Generating a Computational Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/schedule_of_computational_graph.html">2.4. Scheduling and Executing Computational Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html">2.5. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html#further-reading">2.6. Further Reading</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational_graph/index.html">2. Computational Graph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/background_and_functionality.html">2.1. Computational Graph Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/components_of_computational_graph.html">2.2. Computational Graph Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/generation_of_computational_graph.html">2.3. Generating a Computational Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/schedule_of_computational_graph.html">2.4. Scheduling and Executing Computational Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html">2.5. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational_graph/summary.html#further-reading">2.6. Further Reading</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="operator-selection">
+<h1>Operator Selection<a class="headerlink" href="#operator-selection" title="Permalink to this heading">¶</a></h1>
+<p>Following graph optimization, the compiler backend generates a sequence
+of operators that can be executed on hardware. This is achieved by
+selecting the most suitable operators from a set of candidate operators
+for each node in the IR. Since these candidate operators have diverse
+specifications, their execution efficiency varies depending on the
+scenario. Therefore, the primary objective of operator selection is to
+choose the operators that are most appropriate for the target device
+based on the information provided by the IR.</p>
+<div class="section" id="basic-concepts-of-operator-selection">
+<h2>Basic Concepts of Operator Selection<a class="headerlink" href="#basic-concepts-of-operator-selection" title="Permalink to this heading">¶</a></h2>
+<p>We can think of the nodes in a backend-optimized IR as being units of
+execution that are visible to the user, and each unit represents a
+hardware-agnostic operation in the user code. In essence, operator
+selection involves selecting appropriate hardware information, which is
+referred to as operator information. Such information defines the
+following:</p>
+<ol class="arabic simple">
+<li><p>The format of an operator, which is a determinant of the operator’s
+performance on the target platform. Machine learning systems commonly
+use NCHW and NHWC formats.</p></li>
+<li><p>The data type (such as float32, float16, or int32) of an operator on
+the target platform. The operators selected are those with data types
+close to (or the same as) user definitions.</p></li>
+</ol>
+<div class="section" id="data-formats">
+<h3>Data Formats<a class="headerlink" href="#data-formats" title="Permalink to this heading">¶</a></h3>
+<p>In machine learning systems, many operations are converted into matrix
+multiplication (e.g., convolution) for faster computation. Matrix
+multiplication in the form of
+<span class="math notranslate nohighlight">\(\textit{\textit{A}}\times \textit{\textit{B}} = \textit{\textit{C}}\)</span>
+is essentially a row-by-column multiplication. Specifically, the entry
+<em>ij</em> of <strong>C</strong> is obtained by multiplying the entries in the <em>i</em>th row
+of <strong>A</strong> and the corresponding entries in the <em>j</em>th column of <strong>B</strong>
+and then adding the results together. Consider the example shown in
+Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch07/ch07-compiler-backend-06</span></code>. Matrix data is stored
+in row-major order by default, as shown at the top of the figure.
+However, matrix <strong>B</strong> is read in column-major order in the matrix
+multiplication process, as shown at the bottom.</p>
+<div class="figure align-default" id="id1">
+<span id="ch07-ch07-compiler-backend-06"></span><img alt="../_images/matmuldatalayout.png" src="../_images/matmuldatalayout.png" />
+<p class="caption"><span class="caption-text">Matrix data layouts in matrixmultiplication</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>Storing matrix <strong>B</strong> in the reading order increases the computation
+efficiency because access to contiguous blocks of memory is faster. We
+can therefore see that data formats play an important role in
+performance improvement.</p>
+<p>There are two major formats in machine learning systems: NCHW and NHWC.
+For an image input, N denotes the batch size, C denotes the number of
+channels, and H and W denote the height and width respectively. Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch07/ch07-compiler-backend-07</span></code> depicts the logical diagram of
+an input with batch size 2, channels 16, height 5, and width 4.</p>
+<div class="figure align-default" id="id2">
+<span id="ch07-ch07-compiler-backend-07"></span><img alt="../_images/data_format.png" src="../_images/data_format.png" />
+<p class="caption"><span class="caption-text">Formatdiagram</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>A multidimensional matrix is flattened into 1D format before it is
+written to memory. This involves indexing, which maps logical data to
+physical memory.</p>
+<p>Access to machine learning data is performed in an axis-wise order from
+the last axis forward. For instance, data in NCHW format is read in the
+axis order of W, H, C, and N. Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch05/equation-01</span></code>
+denotes the mapping between logical memory and physical memory for this
+format of data.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-backend-operator-selection-0">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-compiler-backend-operator-selection-0" title="Permalink to this equation">¶</a></span>\[\text{offsetnchw}(n,c,h,w) = n \times \textit{C} \times \textit{H} \times \textit{W} + c \times \textit{H} \times \textit{W} + h \times \textit{W} + w\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equation:ch05/equation-01</span></code></p>
+<p>As shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch07/ch07-compiler-backend-08</span></code>, matrix
+elements are flattened from the lowest dimension (i.e., W axis) forward,
+and neighboring elements of an axis reside next to each other in memory.
+To take the same element on the next image in the same location, the
+whole image size (<span class="math notranslate nohighlight">\(C*H*W\)</span>) has to be jumped. Assume we have a
+batch of eight RGB images of size 32<span class="math notranslate nohighlight">\(\times\)</span>32, or a matrix
+with <span class="math notranslate nohighlight">\(N=8,C=3,H=32,W=32\)</span>. Memory storage of these images begins
+from the first channel of the first image by flattening the matrix along
+axis W and then arranging matrix elements along axis H. This is
+performed before the next channel is processed. The same procedure is
+repeated until the last channel of the last image is processed. NCHW is
+the default format on PyTorch and MindSpore.</p>
+<div class="figure align-default" id="id3">
+<span id="ch07-ch07-compiler-backend-08"></span><img alt="../_images/nchw.png" src="../_images/nchw.png" />
+<p class="caption"><span class="caption-text">RGB image data in NHWCformat</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>Access to data in NHWC format also begins at the lowest dimension (i.e.,
+C axis) forward. NHWC is the default format on TensorFlow (PyTorch
+refers to it as the channel-last format). Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch05/equation-02</span></code> denotes the mapping from logical memory to
+physical memory for this format of data.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-backend-operator-selection-1">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-compiler-backend-operator-selection-1" title="Permalink to this equation">¶</a></span>\[\text{offsetnchw}(n,h,w,c) = n \times \textit{H} \times \textit{W} \times \textit{C} + h \times  \textit{W} \times \textit{C} + w \times \textit{C} + c\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equation:ch05/equation-02</span></code></p>
+<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch07/ch07-compiler-backend-nchwandnhwc</span></code> compares the
+logical indexing of the NCHW and NHWC formats. The [x:1] marks refer to
+the jumps from the innermost axis to the next. For example, [a:1]
+indicates the jump from axis W to axis H, and [b:1] indicates the jump
+from axis C (the innermost) to axis W.</p>
+<div class="figure align-default" id="id4">
+<span id="ch07-ch07-compiler-backend-nchwandnhwc"></span><img alt="../_images/nchwandnhwc.png" src="../_images/nchwandnhwc.png" />
+<p class="caption"><span class="caption-text">NCHW and NHWCformats</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>These two formats offer a high degree of flexibility and are therefore
+used on many frameworks. However, to accelerate computing on hardware,
+further optimization is needed. In a machine learning system, if the
+size of the user input exceeds what the compute component can pass
+through the network at a time (which is often the case), the input will
+be batched before computation. For further optimization, many frameworks
+introduce blocked formats (which are more hardware-friendly), such as
+the nChw16c and nChw8c formats of the oneAPI Deep Neural Network Library
+(oneDNN) and the NC1HWC0 format on the Ascend platform. By leveraging
+hardware acceleration instructions to move and compute data, matrices
+can be quickly transformed into vectors, increasing the utilization of
+the on-chip cache.</p>
+</div>
+<div class="section" id="data-types">
+<h3>Data Types<a class="headerlink" href="#data-types" title="Permalink to this heading">¶</a></h3>
+<p>Single-precision (float32), occupying 32 bits in memory, is the most
+commonly used data type in machine learning systems. In applications
+where higher precision is not essential, the half-precision (float16)
+data type may be used, occupying 16 bits in memory. When used on
+hardware, float16 offers up to 7 times more arithmetic throughput with
+less memory footprint compared with the single-precision data type —
+this allows for larger batch sizes and consequently reduced training
+time. Next, we will look at the differences between half-precision
+floating-point numbers and single-precision floating-point numbers.</p>
+<p>In Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch07/ch07-float32andfloat16</span></code>, <em>Sig</em> refers to the
+sign bit that indicates the sign of a number, <em>Exponent</em> refers to the
+exponent bits, and <em>Mantissa</em> refers to the mantissa bits.</p>
+<div class="figure align-default" id="id5">
+<span id="ch07-ch07-float32andfloat16"></span><img alt="../_images/floatdtype.png" src="../_images/floatdtype.png" />
+<p class="caption"><span class="caption-text">Binary representation of floating-pointnumbers</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>Applying Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch05/equation-03</span></code> will convert a float16
+number in binary scientific notation to decimal format.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-backend-operator-selection-2">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-compiler-backend-operator-selection-2" title="Permalink to this equation">¶</a></span>\[(-1)^{\text{Sig}}\times 2^{\text{Exponent}-15}\times (\frac{\text{Mantissa}}{1024}+1)\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equation:ch05/equation-03</span></code></p>
+<p>If the exponent bits and mantissa bits are all 0s, the number is 0. If
+the exponent bits are all 0s but the mantissa bits are not, the number
+is very small. If the exponent bits are all 1s and the mantissa bits are
+all 0s, the number is an infinity, either positive or negative depending
+on the sign bit. Not a Number (NaN) is denoted by the exponent bits
+being all 1s while the mantissa bits are not all 0s. bfloat16 is a
+special data type developed by Google for machine learning on its tensor
+processing units (TPUs). Although bfloat16 is not an industry-standard
+IEEE 16-bit floating-point data type, it has the same exponent size as
+float32, meaning that it can be easily converted to and from float32.</p>
+</div>
+<div class="section" id="operator-information-library">
+<h3>Operator Information Library<a class="headerlink" href="#operator-information-library" title="Permalink to this heading">¶</a></h3>
+<p>Hardware devices support different operators based on their data format
+and data type requirements. Each device maintains an operator
+information library that contains a comprehensive list of operators
+supported by that device. During the operator selection process, the
+most suitable operators are chosen from this library. The library serves
+as a reference for determining which operators are compatible and can be
+efficiently executed on a particular hardware device.</p>
+</div>
+</div>
+<div class="section" id="process-of-operator-selection">
+<h2>Process of Operator Selection<a class="headerlink" href="#process-of-operator-selection" title="Permalink to this heading">¶</a></h2>
+<p>Operator selection involves selecting the most appropriate operator for
+each operation node in an IR. Operator information contains the
+supported device type, data type, and data format. After the compiler
+frontend completes type inference and static analysis, the data type of
+user code is derived from the IR.</p>
+<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch07/ch07-compiler-backend-select</span></code> shows the operator
+selection process. First, the target hardware needs to be selected (or
+this step can be skipped in order to keep the default hardware selection
+defined in the compiler backend). The implementation, supported data
+types, and execution efficiency of a given operator vary depending on
+the target hardware. Then, the compiler backend selects an operator
+based on the data type and data format derived from the IR.</p>
+<div class="figure align-default" id="id6">
+<span id="ch07-ch07-compiler-backend-select"></span><img alt="../_images/select_kernel.png" src="../_images/select_kernel.png" />
+<p class="caption"><span class="caption-text">Operator selection process (using GPU as anexample)</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>The result of the operator selection process might not be as expected
+due to software or hardware specifications. Sometimes, we might need to
+adjust the precision of a particular node to find an operator with the
+right data type. For example, the Conv2D operator supported by Ascend
+(i.e., the backend of MindSpore) allows only the float16 data type. When
+used on a float32 network on Ascend, the Conv2D operator is executable
+only when its input precision is reduced from float32 to float16.</p>
+<p>Converting operators from one format to another can be time-consuming
+and incur memory movement overheads. To avoid this, data should be
+transferred between operators of the same format whenever possible. In
+addition, data type inconsistency may lead to reduced precision,
+potentially slowing down or even preventing network convergence. As
+such, thorough operator analysis is needed to ensure that the right data
+type is selected.</p>
+<p>Simply put, an operator selection algorithm is considered optimal if it
+keeps the data type as consistent as possible with user settings while
+also minimizing data format conversion.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Operator Selection</a><ul>
+<li><a class="reference internal" href="#basic-concepts-of-operator-selection">Basic Concepts of Operator Selection</a><ul>
+<li><a class="reference internal" href="#data-formats">Data Formats</a></li>
+<li><a class="reference internal" href="#data-types">Data Types</a></li>
+<li><a class="reference internal" href="#operator-information-library">Operator Information Library</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#process-of-operator-selection">Process of Operator Selection</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>
