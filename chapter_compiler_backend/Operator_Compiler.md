@@ -33,7 +33,7 @@ shown in Figure
 pyramid, the storage elements have a higher cost but a faster access
 time.
 
-![Modern computer memoryhierarchy](figs/ch05/memory_architecture.png)
+![Modern computer memoryhierarchy](../img/ch05/memory_architecture.png)
 :label:`ch05/ch05-memory_architecture`
 
 Such hardware design leads to two basic types of locality:
@@ -57,7 +57,7 @@ data part from the logic part and generate a range of independent groups
 of data that can be executed in parallel, as shown in Figure
 :numref:`ch05/ch05-parallel_computing`.
 
-![Serial computing and parallelcomputing](figs/ch05/parallel_computing.png)
+![Serial computing and parallelcomputing](../img/ch05/parallel_computing.png)
 :label:`ch05/ch05-parallel_computing`
 
 These specific data-oriented operations performed at program runtime are
@@ -199,7 +199,7 @@ As shown in Figure :numref:`ch05/ch05-poly_test`, a memory access structure is f
 modeled by using the polyhedral model algorithm, and then dependencies
 (denoted by arrows) between instances (denoted by nodes) are analyzed.
 
-![Polyhedral model of the samplecode](figs/ch05/poly_test.png)
+![Polyhedral model of the samplecode](../img/ch05/poly_test.png)
 :label:`ch05/ch05-poly_test`
 
 Complex dependency analysis and schedule transformation are then
@@ -223,7 +223,7 @@ Specifically, parallel computing is possible when the loop dependencies
 are partitioned along the dashed lines based on the green blocks, as
 shown in Figure :numref:`ch05/ch05-poly`.
 
-![Optimization result with the polyhedralmodel](figs/ch05/poly.png)
+![Optimization result with the polyhedralmodel](../img/ch05/poly.png)
 :label:`ch05/ch05-poly`
 
 We have only introduced the Polyhedral Compilation technique in this
@@ -252,10 +252,10 @@ computing and vector instructions. When handling different programming
 models, an operator compiler adopts different optimization strategies,
 such as vectorization.
 
-![SIMD diagram](figs/ch05/SIMD.png)
+![SIMD diagram](../img/ch05/SIMD.png)
 :label:`ch05/ch05-SIMD`
 
-![SIMT diagram](figs/ch05/SIMT.png)
+![SIMT diagram](../img/ch05/SIMT.png)
 :label:`ch05/ch05-SIMT`
 
 Operator compilers place a strong emphasis on differentiated support in
