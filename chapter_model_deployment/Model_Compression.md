@@ -319,9 +319,7 @@ network has fewer parameters than the teacher network.
 
  [@Distill] proposed KD, which makes the classification result of the
 student network more closely resembles the ground truth as well as the
-classification result of the teacher network, that is, Equation
-[\[c2Fcn:distill\]](#c2Fcn:distill){reference-type="ref"
-reference="c2Fcn:distill"}.
+classification result of the teacher network, that is, Equation :eqref:`c2Fcn:distill`.
 
 $$\mathcal{L}_{KD}(\theta_S) = \mathcal{H}(o_S,\mathbf{y}) +\lambda\mathcal{H}(\tau(o_S),\tau(o_T)),
 $$ 
@@ -330,16 +328,14 @@ $$
 where $\mathcal{H}(\cdot,\cdot)$ is the cross-entropy function, $o_S$
 and $o_T$ are outputs of the student network and the teacher network,
 respectively, and $\mathbf{y}$ is the label. The first item in
-Equation [\[c2Fcn:distill\]](#c2Fcn:distill){reference-type="ref"
-reference="c2Fcn:distill"} makes the classification result of the
+Equation :eqref:`c2Fcn:distill` makes the classification result of the
 student network resemble the expected ground truth, and the second item
 aims to extract useful information from the teacher network and transfer
 the information to the student network, $\lambda$ is a weight parameter
 used to balance two objective functions, and $\tau(\cdot)$ is a soften
 function that smooths the network output.
 
-Equation [\[c2Fcn:distill\]](#c2Fcn:distill){reference-type="ref"
-reference="c2Fcn:distill"} only extracts useful information from the
+Equation :eqref:`c2Fcn:distill` only extracts useful information from the
 output of the teacher network classifier --- it does not mine
 information from other intermediate layers of the teacher network.
 Romero et al. [@FitNet] proposed an algorithm for transferring useful
