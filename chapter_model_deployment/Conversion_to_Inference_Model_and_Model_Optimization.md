@@ -96,7 +96,7 @@ $$\bf{Y_{\rm conv}}=\bf{W_{\rm conv}}\cdot\bf{X_{\rm conv}}+\bf{B_{\rm conv}}$$
 Here, we do not need to understand what each variable means. Instead, we
 only need to keep in mind that Equation
 :eqref:`ch-deploy/conv-equation` is an equation for
-$\bm{Y_{\rm conv}}$ with respect to $\bm{X_{\rm conv}}$, and other
+$\bf{Y_{\rm conv}}$ with respect to $\bf{X_{\rm conv}}$, and other
 symbols are constants.
 
 Equation
@@ -106,21 +106,21 @@ Batchnorm:
 $$\bf{Y_{\rm bn}}=\gamma\frac{\bf{X_{\rm bn}}-\mu_{\mathcal{B}}}{\sqrt{{\sigma_{\mathcal{B}}}^{2}+\epsilon}}+\beta$$ 
 :eqlabel:`equ:ch-deploy/bn-equation`
 
-Similarly, it is an equation for $\bm{Y_{\rm bn}}$ with respect to
-$\bm{X_{\rm bn}}$. Other symbols in the equation represent constants.
+Similarly, it is an equation for $\bf{Y_{\rm bn}}$ with respect to
+$\bf{X_{\rm bn}}$. Other symbols in the equation represent constants.
 
 As shown in Figure
 :numref:`ch-deploy/conv-bn-fusion`, when the output of
 Convolution is used as the input of Batchnorm, the formula of Batchnorm
-is a function for $\bm{Y_{\rm bn}}$ with respect to $\bm{X_{\rm conv}}$.
-After substituting $\bm{Y_{\rm conv}}$ into $\bm{X_{\rm bn}}$ and
+is a function for $\bf{Y_{\rm bn}}$ with respect to $\bf{X_{\rm conv}}$.
+After substituting $\bf{Y_{\rm conv}}$ into $\bf{X_{\rm bn}}$ and
 uniting and extracting the constants, we obtain Equation
 :eqref:`ch-deploy/conv-bn-equation-3`.
 
 $$\bf{Y_{\rm bn}}=\bf{A}\cdot\bf{X_{\rm conv}}+\bf{B}$$ 
 :eqlabel:`equ:ch-deploy/conv-bn-equation-3`
 
-Here, $\bm{A}$ and $\bm{B}$ are two matrices. It can be noticed that
+Here, $\bf{A}$ and $\bf{B}$ are two matrices. It can be noticed that
 Equation
 :eqref:`ch-deploy/conv-bn-equation-3` is a formula for computing
 Convolution. The preceding example shows that the computation of
