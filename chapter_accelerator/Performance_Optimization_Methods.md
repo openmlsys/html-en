@@ -56,8 +56,7 @@ Code [\[lst:gpu\]](#lst:gpu){reference-type="ref" reference="lst:gpu"}.
         C[m * N + n] = result;
     }
 
-Figure [1](#cuda_naive_gemm){reference-type="ref"
-reference="cuda_naive_gemm"} shows the layout of the implementation.
+Figure :numref:`cuda_naive_gemm` shows the layout of the implementation.
 Each element in matrix $C$ is computed by one thread. The row index $m$
 and column index $n$ of the element in matrix $C$ corresponding to the
 thread are computed in lines 5 and 6 of the GPU kernel. Then, in lines 9
@@ -66,9 +65,8 @@ row index and the column vector in matrix $B$ according to the column
 index, computes the vector inner product. The thread also stores the
 result back to $C$ matrix in line 17.
 
-![Simple implementation of
-GEMM](../img/ch06/practise/naive.png){#cuda_naive_gemm
-width=".8\\textwidth"}
+![Simple implementation ofGEMM](../img/ch06/practise/naive.png)
+:label:`cuda_naive_gemm`
 
 The method of launching the kernel function is shown in
 Code [\[lst:launch\]](#lst:launch){reference-type="ref"
@@ -169,23 +167,21 @@ one) from matrix $A$ and matrix $B$, requiring each thread to process
 $4\times 4$ blocks (`thread tile`) in matrix $C$. Each thread loads data
 from matrix $A$ and matrix $B$ from left to right and from top to
 bottom, computes the data, and stores the data to matrix $C$, as shown
-in Figure [2](#use_float4){reference-type="ref" reference="use_float4"}.
+in Figure :numref:`use_float4`.
 
-![Enhancing arithmetic
-intensity](../img/ch06/practise/use_float4.png){#use_float4
-width="\\textwidth"}
+![Enhancing arithmeticintensity](../img/ch06/practise/use_float4.png)
+:label:`use_float4`
 
 For details about the complete code, see
 [gemm_use_128.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_128.cu).
 We can further increase the amount of data processed by each thread in
 order to improve the arithmetic intensity more, as shown in
-Figure [3](#use_tile){reference-type="ref" reference="use_tile"}. For
+Figure :numref:`use_tile`. For
 details about the code used to achieve this, see
 [gemm_use_tile.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_tile.cu).
 
-![Further enhancement of the arithmetic intensity by adding matrix
-blocks processed by each
-thread](../img/ch06/practise/use_tile.png){#use_tile width="\\textwidth"}
+![Further enhancement of the arithmetic intensity by adding matrixblocks processed by eachthread](../img/ch06/practise/use_tile.png)
+:label:`use_tile`
 
 The test results are as follows:
 
@@ -238,16 +234,14 @@ number of enabled threads. Other hardware features need to be exploited
 in order to improve performance without compromising the degree of
 parallelism. In earlier code, several thread blocks are enabled, each of
 which processes one or more matrix blocks in matrix $C$. As shown in
-Figure [4](#duplicated_data){reference-type="ref"
-reference="duplicated_data"}, thread $x$ and thread $y$ process the same
+Figure :numref:`duplicated_data`, thread $x$ and thread $y$ process the same
 row in matrix $C$, so they load the same data from matrix $A$. The
 shared memory can be used to improve the program throughput by enabling
 different threads in the same thread block to load unique data and reuse
 shared data.
 
-![Threads loading redundant
-data](../img/ch06/practise/duplicated_data.png){#duplicated_data
-width=".8\\textwidth"}
+![Threads loading redundantdata](../img/ch06/practise/duplicated_data.png)
+:label:`duplicated_data`
 
 We have previously mentioned that the inner product can be computed by
 loading and accumulating data in $K$ loops. Specifically, in each loop,
@@ -257,14 +251,12 @@ the same data from matrix $B$. However, the code needs to be optimized
 by dividing $K$ loops into $\frac{K}{tileK}$ outer loops and $tileK$
 inner loops. In this way, an entire block of data is loaded in each
 outer loop and accumulated in each inner loop.
-Figure [5](#use_smem_store){reference-type="ref"
-reference="use_smem_store"} shows the process of moving data from the
+Figure :numref:`use_smem_store` shows the process of moving data from the
 global memory to the shared memory. Before each inner loop starts, the
 entire `tiles` in matrix $A$ and matrix $B$ is stored in the shared
 memory.
 
-Figure [6](#use_smem_load){reference-type="ref"
-reference="use_smem_load"} shows the process of moving data from the
+Figure :numref:`use_smem_load` shows the process of moving data from the
 shared memory to the register. In each inner loop, data is loaded from
 the shared memory and computed. An advantage of this design is that each
 thread does not need to load all the data it requires from the global
@@ -273,13 +265,11 @@ threads from the global memory and stores the data in the shared memory.
 During computational processes, each thread only needs to load the data
 it requires from the shared memory.
 
-![Writing data to the shared
-memory](../img/ch06/practise/use_smem_store.png){#use_smem_store
-width="\\textwidth"}
+![Writing data to the sharedmemory](../img/ch06/practise/use_smem_store.png)
+:label:`use_smem_store`
 
-![Loading data from the shared
-memory](../img/ch06/practise/use_smem_load.png){#use_smem_load
-width="\\textwidth"}
+![Loading data from the sharedmemory](../img/ch06/practise/use_smem_load.png)
+:label:`use_smem_load`
 
 For details about the complete code, see
 [gemm_use_smem.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_smem.cu).
@@ -333,27 +323,23 @@ time this instruction is issued during $tileK$ inner loops, the
 mathematical operation that requires the loaded data is performed
 immediately. However, the compute unit has to wait for the data to be
 loaded from the shared memory, as shown in
-Figure [7](#use_smem_pipeline){reference-type="ref"
-reference="use_smem_pipeline"}. Accessing the shared memory may take
+Figure :numref:`use_smem_pipeline`. Accessing the shared memory may take
 dozens of clock cycles, but computation instructions can often be
 completed within only a few clock cycles. In order to significantly
 accelerate memory access, we can hide the shared memory loading latency
 by optimizing the pipeline. Specifically, during $tileK$ inner loops,
 loading instructions that prepare data in the next loop can be loaded at
 the beginning of each loop, as shown in
-Figure [8](#hide_smem_latency){reference-type="ref"
-reference="hide_smem_latency"}. In this way, computation instructions in
+Figure :numref:`hide_smem_latency`. In this way, computation instructions in
 the current operation do not require the data in the next loop. As such,
 the execution of these computation instructions will not be blocked by
 the instructions that load the data for the next loop.
 
-![Pipeline of the previous GPU kernel
-function](../img/ch06/practise/use_smem_pipeline.png){#use_smem_pipeline
-width="\\textwidth"}
+![Pipeline of the previous GPU kernelfunction](../img/ch06/practise/use_smem_pipeline.png)
+:label:`use_smem_pipeline`
 
-![Pipeline that hides the shared memory loading
-latency](../img/ch06/practise/hide_smem_latency.png){#hide_smem_latency
-width="\\textwidth"}
+![Pipeline that hides the shared memory loadinglatency](../img/ch06/practise/hide_smem_latency.png)
+:label:`hide_smem_latency`
 
 For details about the complete code, see
 [gemm_hide_smem_latency.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_hide_smem_latency.cu).
@@ -388,12 +374,10 @@ wait for the read instruction to be completed, thereby hiding the global
 memory loading latency. We can also enable data in `buffer` to be
 written to `tile` in the last loop in the inner loop after $tileK - 1$
 loops are executed, further reducing the latency of writing data to
-`tile`. Figure [9](#hide_global_latency){reference-type="ref"
-reference="hide_global_latency"} shows the optimized pipeline.
+`tile`. Figure :numref:`hide_global_latency` shows the optimized pipeline.
 
-![Pipeline that hides the global memory loading
-latency](../img/ch06/practise/hide_global_latency.png){#hide_global_latency
-width="\\textwidth"}
+![Pipeline that hides the global memory loadinglatency](../img/ch06/practise/hide_global_latency.png)
+:label:`hide_global_latency`
 
 For details about the complete code, see
 [gemm_final.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_final.cu).

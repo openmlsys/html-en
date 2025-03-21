@@ -159,13 +159,16 @@ applications.
 
 A Tensor Core is capable of performing one $4\times4$ matrix
 multiply-accumulate operation per clock cycle, as shown in
-Figure [4](#fig:ch06/ch06-tensorcore){reference-type="ref"
-reference="fig:ch06/ch06-tensorcore"}.
+Figure :numref:`ch06/ch06-tensorcore`.
 
     D = A * B + C
 
 ![Tensor Core's $4\times4$ matrix multiply-accumulateoperation](../img/ch06/tensor_core.png)
-:label:`ch06/ch06-tensorcore}$\bf{A}$, $\bf{B}$, $\bf{C}$, and $\bf{D}$ are $4\times4$ matrices.Input matrices $\bf{A}$ and $\bf{B}$ are FP16 matrices, and accumulationmatrices $\bf{C}$ and $\bf{D`$ can be either FP16 or FP32 matrices.
+:label:`ch06/ch06-tensorcore`
+
+$\bf{A}$, $\bf{B}$, $\bf{C}$, and $\bf{D}$ are $4\times4$ matrices.
+Input matrices $\bf{A}$ and $\bf{B}$ are FP16 matrices, and accumulation
+matrices $\bf{C}$ and $\bf{D}$ can be either FP16 or FP32 matrices.
 Tesla V100's Tensor Cores are programmable matrix multiply-accumulate
 units that can deliver up to 125 Tensor Tera Floating-point Operations
 Per Second (TFLOPS) for training and inference applications, resulting
