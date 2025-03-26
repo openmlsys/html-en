@@ -25,21 +25,21 @@ Volta GV100 . This architecture has:
 
 1.  6 GPU processing clusters (GPCs), each containing:
 
-  1.  7 texture processing clusters (TPCs), each containing two
+    1.  7 texture processing clusters (TPCs), each containing two
         streaming multiprocessors (SMs).
 
-  2.  14 SMs.
+    2.  14 SMs.
 
 2.  84 SMs, each containing:
 
-  1.  64 32-bit floating-point arithmetic units
+    1.  64 32-bit floating-point arithmetic units
 
-  2.  64 32-bit integer arithmetic units
+    2.  64 32-bit integer arithmetic units
 
-  3.  32 64-bit floating-point arithmetic units
+    3.  32 64-bit floating-point arithmetic units
 
-  4.  8 Tensor Cores
+    4.  8 Tensor Cores
 
-  5.  4 texture units
+    5.  4 texture units
 
 3.  8 512-bit memory controllers.
