@@ -243,3 +243,104 @@ performed simultaneously to save time.
 ![Img2col on the convolutionkernel](../img/ch08/ch09-img2col_weight.png)
 :label:`ch-deploy/img2col_weight`
 
+**(2) Winograd**
+
+Convolution is essentially considered as matrix multiplication. The time
+complexity of multiplying two 2D matrices is $O(n^3)$. The Winograd
+algorithm can reduce the complexity of matrix multiplication.
+
+Assume that a 1D convolution operation is denoted as ***F***($m$, $r$),
+where $m$ indicates the number of outputs, and $r$ indicates the number
+of convolution kernels. The input is
+$\textit{\textbf{d}}=[d_0 \ d_1 \ d_2 \ d_3]$, and the convolution
+kernel is $g=[g_0 \ g_1 \ g_2]^{\rm T}$. The convolution operation may
+be written using matrices as Equation
+:eqref:`ch-deploy/conv-matmul-one-dimension`, which contains six
+multiplications and four additions.
+
+$$
+\textit{\textbf{F}}(2, 3)=
+\left[ \begin{matrix} d_0 & d_1 & d_2 \\ d_1 & d_2 & d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
+\left[ \begin{matrix} y_0 \\ y_1 \end{matrix} \right]
+$$ 
+:eqlabel:`equ:ch-deploy/conv-matmul-one-dimension`
+
+In the preceding equation, there are repeated elements $d_1$ and $d_2$
+in the input matrix. As such, there is space for optimization for matrix
+multiplication converted from convolution compared with general matrix
+multiplication. The matrix multiplication result may be obtained by
+computing an intermediate variable $m_0-m_3$, as shown in Equation
+:eqref:`ch-deploy/conv-2-winograd`:
+
+$$
+\textit{\textbf{F}}(2, 3)=
+\left[ \begin{matrix} d_0 & d_1 & d_2 \\ d_1 & d_2 & d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
+\left[ \begin{matrix} m_0+m_1+m_2 \\ m_1-m_2+m_3 \end{matrix} \right]
+$$ 
+:eqlabel:`equ:ch-deploy/conv-2-winograd`
+
+where $m_0-m_3$ are computed as Equation
+:eqref:`ch-deploy/winograd-param`:
+
+$$
+\begin{aligned}
+m_0=(d_0-d_2) \times g_0 \\
+m_1=(d_1+d_2) \times (\frac{g_0+g_1+g_2}{2}) \\
+m_2=(d_0-d_2) \times (\frac{g_0-g_1+g_2}{2}) \\
+m_3=(d_1-d_3) \times g_2
+\end{aligned}
+$$ 
+:eqlabel:`equ:ch-deploy/winograd-param`
+
+The indirect computation of r1 and r2 by computing $m_0-m_3$ involves
+four additions of the input $d$ and four multiplications and four
+additions of the output $m$. Because the weights are constant during
+inference, the operations on the convolution kernel can be performed
+during graph compilation, which is excluded from the online runtime. In
+total, there are four multiplications and eight additions --- fewer
+multiplications and more additions compared with direct computation
+(which has six multiplications and four additions). In computer systems,
+multiplications are generally more time-consuming than additions.
+Decreasing the number of multiplications while adding a small number of
+additions can accelerate computation.
+
+In a matrix form, the computation can be written as Equation
+:eqref:`ch-deploy/winograd-matrix`, where $\odot$ indicates the
+multiplication of corresponding locations, and ***A***, ***B***, and
+***G*** are all constant matrices. The matrix here is used to facilitate
+clarity --- in real-world use, faster computation can be achieved if the
+matrix computation is performed based on the handwritten form, as
+provided in Equation
+:eqref:`ch-deploy/winograd-param`.
+
+$$\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g) \odot (\textit{\textbf{B}}^{\rm T}d)$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix`
+
+$$\textit{\textbf{B}}^{\rm T}=
+\left[ \begin{matrix} 1 & 0 & -1 & 0 \\ 0 & 1 & 1 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 1 & 0 & -1 \end{matrix} \right]$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix-bt`
+
+$$\textit{\textbf{G}}=
+\left[ \begin{matrix} 1 & 0 & 0 \\ 0.5 & 0.5 & 0.5 \\ 0.5 & -0.5 & 0.5 \\ 0 & 0 & 1 \end{matrix} \right]$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix-g`
+
+$$\textit{\textbf{A}}^{\rm T}=
+\left[ \begin{matrix} 1 & 1 & -1 & 0 \\ 0 & 1 & -1 & -1  \end{matrix} \right] \\$$ 
+:eqlabel:`equ:ch-deploy/winograd-matrix-at`
+
+In deep learning, 2D convolution is typically used. When ***F***(2, 3)
+is extended to ***F***(2$\times$`<!-- -->`{=html}2,
+3$\times$`<!-- -->`{=html}3), it can be written in a matrix form, as
+shown in Equation
+:eqref:`ch-deploy/winograd-two-dimension-matrix`. In this case,
+Winograd has 16 multiplications, reducing the computation complexity by
+2.25 times compared with 36 multiplications of the original convolution.
+
+$$\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g\textit{\textbf{G}}^{\rm T}) \odot (\textit{\textbf{B}}^{\rm T}d\textit{\textbf{B}})\textit{\textbf{A}}$$ 
+:eqlabel:`equ:ch-deploy/winograd-two-dimension-matrix`
+
+The logical process of Winograd can be divided into four steps, as shown
+in Figure :numref:`ch-deploy/winograd`.
+
+![Winogradsteps](../img/ch08/ch09-winograd.png)
+:label:`ch-deploy/winograd`
