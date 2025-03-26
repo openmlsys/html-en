@@ -63,6 +63,18 @@ and $\alpha$ and $\beta$ are parameters provided by users.
 
 ### High-level Computation Operators {#sec-accelerator-use-cublas}
 
+Using an operator acceleration library directly is the most
+straightforward method. NVIDIA offers two types of operator libraries:
+cuBLAS and cuDNN. cuBLAS provides an interface for leveraging Tensor
+Cores to accelerate GEMM operations, while cuDNN offers an interface to
+hasten neural network operations. To utilize Tensor Cores via cuBLAS
+doing GEMM, we can use function `cublasGemmEx`, its signature is shown
+in Code [\[lst:cublasGemmEx\]](#lst:cublasGemmEx){reference-type="ref"
+reference="lst:cublasGemmEx"}.
+
+     [caption={Fragment types}, label={lst:cublasGemmEx}]
+    cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
+
 
 [^1]: available at
     <https://docs.nvidia.com/cuda/inline-ptx-assembly/index.html>
