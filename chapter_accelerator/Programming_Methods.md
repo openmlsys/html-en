@@ -147,3 +147,33 @@ be specified. NVIDIA's documentation provides information about
 using the PTX instruction set, helping programmers compile code based on
 the corresponding syntax rules, as shown in
 Code `lst:ptx`.
+
+**lst:ptx**
+```cpp
+    half_t *a, *b;
+    float *C, *D;
+    unsigned const* A = reinterpret_cast<unsigned const*>(a);
+    unsigned const* B = reinterpret_cast<unsigned const*>(b);
+
+    asm volatile(
+        "mma.sync.aligned.m8n8k4.row.row.f32.f16.f16.f32 "
+        "{%0,%1,%2,%3,%4,%5,%6,%7}, {%8,%9}, {%10,%11}, "
+        "{%12,%13,%14,%15,%16,%17,%18,%19};\n"
+        : "=f"(D[0]), "=f"(D[1]), "=f"(D[2]), "=f"(D[3]), "=f"(D[4]),
+        "=f"(D[5]), "=f"(D[6]), "=f"(D[7])
+        : "r"(A[0]), "r"(A[1]), "r"(B[0]), "r"(B[1]), "f"(C[0]),
+        "f"(C[1]), "f"(C[2]), "f"(C[3]), "f"(C[4]), "f"(C[5]),
+        "f"(C[6]), "f"(C[7]));
+```
+
+Data elements are directly used as the input (`unsigned` type is used
+for containing FP16 data elements). Moreover, NVIDIA provides the
+`ldmatrix` instruction to load data from the shared memory to fragments.
+
+A finer-grained instruction, `mma`, can form a warp-level WMMA API of
+more diversified shapes to control the mapping between threads and data
+in the warp. The PTX instructions offer greater flexibility than
+directly using CUDA C++ codes.
+
+[^1]: available at
+    <https://docs.nvidia.com/cuda/inline-ptx-assembly/index.html>
