@@ -51,14 +51,14 @@ source programs and generating optimized compiled code. Table
 different IR types. It is important to design IR structures carefully,
 considering the specific requirements of the compiler's design.
 
-:::: center
-:::
+: Types of IRs
+
 | IR Structure  | Characteristics                       | Examples |
 | --------------| --------------------------------------| ----------------------------------------------
 | Linear IR     | Based on linear code                  | Stack machine code, three-address code |
 | Graphical IR  | Based on graphs                       | Abstract syntax tree, directed acyclic graph |
 | Hybrid IR     | Based on both graphs and linear code  |LLVM IR |
 :label:`ch06/ch06-categorize`
-: Types of IRs
-:::
-::::
+
+
+
