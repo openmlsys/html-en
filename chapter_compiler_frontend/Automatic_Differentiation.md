@@ -233,3 +233,34 @@ leveraging the chain rule and established derivative evaluation rules
 (as depicted on the right). Thus, we can compute the final variables
 ${\bar{x}_1}=\frac{\partial y}{\partial x_1}$ and
 ${\bar{x}_2}=\frac{\partial y}{\partial x_2}$.
+
+![Illustration of reverse-mode automaticdifferentiation](../img/ch04/AD-backward_example.png)
+:label:`ch04/ch04-backward-mode-compute`
+
+Every reverse pass of function $f$ produces partial derivatives of asingle output with respect to all inputs, represented by the followingvectors. This corresponds to a single row of the Jacobian matrix.Consequently, executing $m$ reverse passes gives us the full Jacobianmatrix.
+
+$$
+\begin{bmatrix}        \frac{\partial y_j}{\partial x_1} & \cdots & \frac{\partial y_j}{\partial x_n}    \end{bmatrix}$$Similarly, we can compute vector-Jacobian products to obtain the resultsfor a single row.$$\mathbf{r}^{T}\mathbf{J}_{f}=    \begin{bmatrix}        r_1 & \cdots & r_m    \end{bmatrix}    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\        
+\vdots & \ddots & \vdots \\        
+\frac{\partial y_m}{\partial x_1} & \cdots & \frac{\partial y_m}{\partial x_n}    \end{bmatrix}
+$$
+
+The quantity of columns and rows in a Jacobian matrix directly
+influences the number of forward and reverse passes needed to solve it
+for a given function $f$. This characteristic is particularly
+significant when determining the most efficient method of automatic
+differentiation.
+
+When the function has significantly fewer inputs than outputs
+$(f:{\mathbf{R}^n}\to \mathbf{R}^m, n << m)$, the forward mode proves to
+be more efficient. Conversely, when the function has considerably more
+inputs than outputs $(f:{\mathbf{R}^n}\to \mathbf{R}^m, n >> m)$, the
+reverse mode becomes advantageous.
+
+For an extreme case where the function maps from $n$ inputs to a single
+output $f:{\mathbf{R}^n}\to \mathbf{R}$, we can evaluate all the
+derivatives of the output with respect to the inputs
+$(\frac{\partial y}{\partial x_1},\cdots,\frac{\partial y}{\partial n})$
+using a single reverse pass or $n$ forward passes. This is a situation
+akin to derivative evaluation for a multi-input, single-output network,
+a structure frequently encountered in machine learning.
