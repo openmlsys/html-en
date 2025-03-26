@@ -393,3 +393,70 @@ namespace AutoDiff
     }
 ```
 
+Operator overloading carries the advantage of tracing the program
+through function calls and control flows, resulting in an implementation
+process that is both simple and straightforward. However, the
+requirement to trace the program during runtime introduces certain
+challenges. Specifically, operator overloading is necessitated to
+execute reverse-mode differentiation along the trace, which can
+potentially cause a drop in performance, particularly for elementary
+operations that are executed swiftly. Furthermore, due to the
+constraints of runtime, operator overloading is unable to conduct
+compile-time graph optimization prior to execution, and the unfolding of
+control flows must be based on the information available at runtime.
+Despite these challenges, operator overloading is extensively employed
+in the PyTorch framework for automatic differentiation due to its
+inherent simplicity and adaptability.
+
+### Source Transformation
+
+Source transformation is a design pattern that enriches programming
+languages and scrutinizes a program's source code or its Abstract Syntax
+Tree (AST) to automatically deconstruct the program into a set of
+differentiable elementary operations, each with predefined
+differentiation rules. The chain rule is then employed to amalgamate the
+differential expressions of the elementary operations, resulting in a
+novel program expression that conducts the differentiation. Source
+Transformation is integral to machine learning frameworks such as
+TensorFlow and MindSpore.
+
+Unlike operator overloading, which functions within programming
+languages, source transformation necessitates parsers and tools that
+manipulate IRs. It also requires transformation rules for function calls
+and control flow statements, such as loops and conditions. The principal
+advantage of source transformation is that the automatic differentiation
+transformation occurs only once per program, thus eliminating runtime
+overhead. Additionally, the complete differentiation program is
+available during compilation, enabling ahead-of-time optimization using
+compilers.
+
+However, source transformation presents a higher implementation
+complexity compared to the other approaches. It must support a wider
+array of data types and operations, and it necessitates preprocessors,
+compilers, or interpreters of extended languages, along with a more
+robust type-checking system. Even though source transformation does not
+manage automatic differentiation transformation at runtime, it still
+must ensure that certain intermediate variables from the forward pass
+are accessible by the adjoint in reverse mode. Two modes are available
+to facilitate this:
+
+-   **Tape-based mode**: This mode requires a global tape that ensures
+    the accessibility of intermediate variables. In this method, the
+    primitive function is augmented so that intermediate variables are
+    written to functions in the tape during the forward pass, and the
+    adjoint program reads these intermediate variables from the tape
+    during the backward pass. The tape used in source transformation
+    primarily stores the intermediate variables, while the tape used in
+    operator overloading additionally stores the executed operation
+    types. Given that the tape is a data structure constructed at
+    runtime, custom compiler optimizations are required. Moreover, tape
+    read and write operations must be differentiable to support
+    higher-order differentiation, which involves multiple applications
+    of reverse mode. As most tape-based tools do not differentiate tape
+    read and write operations, such tools do not support
+    reverse-over-reverse automatic differentiation.
+
+-   **Closure-based mode**: This mode was proposed to mitigate some of
+    the limitations observed in the tape-based mode. Within functional
+    programming, closures can capture the execution environment of a
+    statement and identify the non-local use of intermediate variables.
