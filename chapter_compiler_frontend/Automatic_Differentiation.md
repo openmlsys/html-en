@@ -315,3 +315,81 @@ appropriate library functions:
     // The parameters include variables t, z, and a and their derivative variables dt, dz, and da.
     call ADDiv(t, dt, z, dz, a, da)
 ```
+
+The library functions, ADAdd and ADDiv, use the chain rule to define the
+Add and Div differential expressions, respectively. This is illustrated
+in Code `lst:diff`.
+
+**lst:diff**
+```
+def ADAdd(x, dx, y, dy, z, dz):
+    z = x + y
+    dz = dy + dx
+    
+    def ADDiv(x, dx, y, dy, z, dz):
+    z = x / y
+    dz = dx / y + (x / (y * y)) * dy
+```
+
+Elemental libraries constitute a simple and straightforward way of
+implementing automatic differentiation for programming languages.
+However, this approach requires users to manually decompose a program
+into elementary expressions before calling library functions for
+programming. Furthermore, it is not possible to use the native
+expressions found in programming languages.
+
+### Operator Overloading
+
+Leveraging the polymorphism characteristic inherent in modern
+programming languages, the Operator Overloading design pattern redefines
+the semantics of elementary operations and successfully encapsulates
+their differentiation rules. During the execution phase, it methodically
+documents the type, inputs, and outputs of every elementary operation
+within a data structure known as a 'tape'. These tapes have the ability
+to generate a trace, serving as a pathway for applying the chain rule.
+This makes it possible to aggregate elementary operations either in a
+forward or backward direction to facilitate differentiation. As depicted
+in Code `lst:OO`,
+we utilize the AutoDiff code from automatic differentiation libraries as
+a case in point to overload the basic arithmetic operators in
+programming languages.
+
+**lst:OO**
+```cpp
+namespace AutoDiff
+    {
+        public abstract class Term
+        {
+            // To overload and call operators (`+`, `*`, and `/`),
+            // TermBuilder records the types, inputs, and outputs of operations in tapes.
+            public static Term operator+(Term left, Term right)
+            {
+                return TermBuilder.Sum(left, right);
+            }
+            public static Term operator*(Term left, Term right)
+            {
+                return TermBuilder.Product(left, right);
+            }
+            public static Term operator/(Term numerator, Term denominator)
+            {
+                return TermBuilder.Product(numerator, TermBuilder.Power(denominator, -1));
+            }
+        }
+        
+        // Tape data structures include the following basic elements:
+        // 1) Arithmetic results of operations
+        // 2) Derivative evaluation results corresponding to arithmetic results of operations
+        // 3) Inputs of operations
+        // In addition, functions Eval and Diff are used to define the computation and differentiation rules of the arithmetic operations.
+        internal abstract class TapeElement
+        {
+            public double Value;
+            public double Adjoint;
+            public InputEdges Inputs;
+            
+            public abstract void Eval();
+            public abstract void Diff();
+        }
+    }
+```
+
