@@ -11,8 +11,7 @@ accelerating an FP32 GEMM program.
 
 ## Implementing General Matrix Multiplication {#sec-accelerator-naive}
 
-Code `lst:cpu`
-shows a reference implementation of GEMM in C++.
+Code `lst:cpu` shows a reference implementation of GEMM in C++.
 
 **lst:cpu**
 ```cpp
@@ -348,83 +347,3 @@ the instructions that load the data for the next loop.
 
 For details about the complete code, see
 [gemm_hide_smem_latency.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_hide_smem_latency.cu).
-
-The test results are as follows:
-
-    Max Error: 0.000092
-    Average Time: 0.585 ms, Average Throughput: 14686.179 GFLOPS
-
-Analysis by Nsight Compute shows that the value of
-`Stall Short Scoreboard` decreases by 67% when compared with that of the
-previous GPU kernel function. As mentioned before, after GPU memory
-load/store instructions are issued, the GPU executes the next
-instruction without waiting for the data to be landed in the register.
-However, it will set a flag on the Scoreboard and reset the flag after
-the data is landed. If instructions that require such data need to be
-executed, the GPU will execute them only after the data is landed. The
-decrease of `Stall Short Scoreboard` demonstrates that hiding the access
-latency of the shared memory is an effective method to better utilize
-the GPU.
-
-## Hiding Global Memory Loading Latency
-
-To load data from the global memory, a GPU uses the textttLDG
-instruction, the behavior of which is similar to the `LDS` instruction
-used to load data from the shared memory as discussed in the previous
-section. At the beginning of each of the $\frac{K}{tileK}$ outer loops,
-instructions that load the data tiles in matrix $A$ for the next loop
-are issued. Because this data is not required by any inner loop in a
-given outer loop, the computational processes in the inner loop will not
-wait for the read instruction to be completed, thereby hiding the global
-memory loading latency. We can also enable data in `buffer` to be
-written to `tile` in the last loop in the inner loop after $tileK - 1$
-loops are executed, further reducing the latency of writing data to
-`tile`. Figure :numref:`hide_global_latency` shows the optimized pipeline.
-
-![Pipeline that hides the global memory loadinglatency](../img/ch06/practise/hide_global_latency.png)
-:label:`hide_global_latency`
-
-For details about the complete code, see
-[gemm_final.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_final.cu).
-
-The test results are as follows:
-
-    Max Error: 0.000092
-    Average Time: 0.542 ms, Average Throughput: 15838.302 GFLOPS
-
-Similar to the `Stall Short Scoreboard` results obtained in the previous
-section, analysis by Nsight Compute shows that the value of
-`Stall Long Scoreboard` (a global memory indicator) decreases by 67%.
-Such a significant decrease demonstrates that prefetching data can hide
-the global memory to reduce the loading latency.
-
-## Performance Optimization Principles
-
-So far, we have discussed various methods to enhance the performance of
-an accelerator. Even though other methods exist, the principles of
-performance optimization generally adhere to the following:
-
--   Increasing parallelism through resource mapping: Multi-level
-    parallel resources (`blocks`, `warps`, and `threads`) are mapped to
-    the data needing computation and transfer to enhance program
-    parallelism.
-
--   Reducing memory access latency through memory structure
-    optimization: Based on the recognition of data reuse within the same
-    `block` during computation, the reused data is stored in local
-    memory (like shared memory and registers) to increase locality.
-
--   Reducing the instruction issue overhead through optimizing
-    instruction execution: The `#pragma unroll` function is used to
-    unroll loops in order to improve the degree of parallelism at the
-    instruction level and reduce logic judgment. The vectorized load
-    instruction is used to increase bandwidth. For the Ampere
-    architecture, the maximum vectorized load instruction is
-    `LDG.E.128`, and the data type for data loading is `float4`.
-
--   Hiding load/store latency by optimizing the memory access pipeline:
-    In instances where the in-memory data undergoes modifications (such
-    as the movement of matrix data), we can optimize the memory access
-    pipeline. This way, the accelerator performs computations during the
-    intervals between data movement, thereby concealing the latency
-    associated with data movement.
