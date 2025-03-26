@@ -51,3 +51,27 @@ while the primitives provided by task-specific hardware units provide a
 more detailed interface to hardware operations, and low-level assembly
 languages like PTX ISA provide the most detailed, low-level control over
 accelerator behavior.
+
+## Programming Examples
+
+We exemplify different programming methods by implementing the General
+Matrix Multiplication (GEMM) with each approach. The implementation
+targets an NVIDIA Volta GPU. GEMM follows the equation
+$\bf{C} = \alpha \bf{A}\times \bf{B} + \beta \bf{C}$, where
+$\bf{A}\in\mathbb{R}^{M\times K}, \bf{B}\in\mathbb{R}^{K\times N}, \bf{C}\in\mathbb{R}^{M\times N}$,
+and $\alpha$ and $\beta$ are parameters provided by users.
+
+### High-level Computation Operators {#sec-accelerator-use-cublas}
+
+Using an operator acceleration library directly is the most
+straightforward method. NVIDIA offers two types of operator libraries:
+cuBLAS and cuDNN. cuBLAS provides an interface for leveraging Tensor
+Cores to accelerate GEMM operations, while cuDNN offers an interface to
+hasten neural network operations. To utilize Tensor Cores via cuBLAS
+doing GEMM, we can use function `cublasGemmEx`, its signature is shown
+in Code `lst:cublasGemmEx`.
+
+**lst:cublasGemmEx**
+```cpp
+cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
+```
