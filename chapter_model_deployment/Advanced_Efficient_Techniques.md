@@ -223,3 +223,132 @@ s(x) = e^{m(x_{1})-m(x)}s_{1}(x_1) + e^{m(x_2)-m(x)}s_{1}(x_2)\\
 Softmax(x) = \frac{l(x)}{s(x)}
 \end{aligned}
 $$
+
+
+Figure :numref:`ch-deploy/flashattn` shows a brief overview of
+FlashAttention with two blocks. Following decomposition, Softmax
+calculations can be executed block by block. Therefore, **K, Q** and
+**V** are initially divided into blocks. Subsequently, compute the
+Softmax values together with the respective $s(x)$ and $m(x)$.
+Ultimately, aggregate **O** blocks, the outcomes of the block-wise
+Softmax values with the multiplication of corresponding **V** block
+vectors. To enhance the efficiency of these steps, it's necessary to
+load all the required matrix blocks from the HBM to the on-chip SRAM for
+the current step's computation. All the calculations take place on-chip,
+that is, within the SRAM. To ensure that all required blocks are
+sufficiently proper to fit within the on-chip SRAM, which has a capacity
+of 20MB, careful consideration must be given to setting the size of
+these blocks. For **K, Q** and **V** $\in\mathbb{R}^{N \times d}$, the
+block size is set to $\lfloor \frac{M}{4d} \rfloor$ where M is the SRAM
+size and the output block size is set to be
+$min(\lfloor \frac{M}{4d} \rfloor, d)$ [@dao2022flashattention].
+Post-computation of each block, the resulting output block along with
+the corresponding $s(x)$ and $m(x)$ are transferred back to the HBM.
+These blocks are sufficiently small for reads/writes to avoid causing
+significant latency; in addition, all related computations are
+implemented in one CUDA kernel using **kernel fusion**. This avoids
+repeatedly reading and writing from and to HBM.
+
+<figure id="fig:ch-deploy/memory">
+<div class="center">
+<img src="../img/ch08/Memory hierarchy.png"
+style="width:80.0%" />
+</div>
+<figcaption>Memory Hierarchy Overview</figcaption>
+</figure>
+
+<figure id="fig:ch-deploy/flashattn">
+<div class="center">
+<img src="../img/ch08/flashattn.png" style="width:80.0%" />
+</div>
+<figcaption>FlashAttention Overview with Two Blocks</figcaption>
+</figure>
+
+**Recomputation**:
+
+Standard attention requires $O(N^2)$ memory to store intermediate
+matrices **S** and **P** for gradient computation w.r.t. **Q, K, V** in
+the backward pass. For FlashAttention, **S** and **P** can be recomputed
+with the HBM-stored $s(x)$, $m(x)$ and **O** in SRAM easily. Therefore,
+only $O(N)$ memory is required. Furthermore, FlashAttention has fewer
+HBM accesses than Standard Attention which results in faster runtime
+[@dao2022flashattention].
+
+The standard FlashAttention implementation doesn't eliminate the
+redundant computation of zero elements within the attention mechanism.
+To address this, a mask is incorporated in FlashAttention to focus
+computation exclusively on non-zero elements. Termed as Block-Sparse
+FlashAttention, this approach is also discussed in
+[@dao2022flashattention]. By using sparsity, Block-Sparse FlashAttention
+effectively reduces the larger component of the I/O complexity, leading
+to a direct improvement in performance.
+
+However, FlashAttention has not been fully optimized. Dao noted that its
+inefficiency stems from suboptimal work distribution among various
+thread blocks and warps on the GPU. This leads to either low occupancy
+or unnecessary shared memory reads and writes. Thus, Dao proposed
+**FlashAttention-2** [@dao2023flashattention2] which has better
+parallelism and work partitioning.
+
+FlashAttention-2 includes several tweaks to reduce the non-matmul
+operations.
+
+1.  Remain output **O** blocks un-scaled until the very end of the loop.
+
+2.  Instead of saving both $s(x)$ and $m(x)$ in HBM, save
+    $logsumexp_{i} = m_{i} + log(s_{i})$ which is enough for backward
+    pass.
+
+3.  For blocks where column indices are greater than row indices, which
+    occupy about half of the blocks in large sequences, computation is
+    skipped. It leads to a 1.7-1.8X speedup compared to those without
+    this skip.
+
+4.  Only use the row-wise $logsumexp$ instead of both the row-wise max
+    $m(x)$ and row-wise sum $s(x)$ of exponentials in the softmax.
+
+For parallelism, In the original version of FlashAttention, parallel
+processing was done over the batch size and number of heads, with one
+thread block processing one attention head. There are as many thread
+blocks as the product of the batch size and the number of heads. This
+works well on an A100 GPU, which has 108 Streaming Multiprocessors
+(SMs), as long as the number of thread blocks is large enough to engage
+most of the SMs, like 80 or more.
+
+However, for long sequences, this isn't as efficient because of the
+smaller number of thread blocks. FlashAttention-2 introduces additional
+parallelization over the sequence length dimension, which significantly
+speeds up the process in these cases by improving GPU occupancy, i.e.
+the fraction of GPU resources being used.
+
+In the forward pass, the method schedules different parts of the
+sequence length on different thread blocks that operate independently.
+The backward pass also incorporates parallelization over the sequence
+length. To update the gradients of the query matrix **dQ**, it uses
+atomic additions to synchronize updates between different thread blocks.
+
+Within each thread block, work partitioning for each wrap is also of
+importance. Usually, 4 to 8 warps are allocated to each thread block. To
+handle this condition, FlashAttention-2 introduces significant
+improvements in both the forward and backward passes of the algorithm.
+In the forward pass, unlike FlashAttention which splits **K** and **V**
+across 4 warps (the \"split-K\" scheme) leading to inefficient shared
+memory operations, FlashAttention-2 splits **Q** across the warps while
+keeping **K** and **V** accessible to all. This change eliminates the
+need for inter-warp communication and reduces shared memory
+reads/writes, resulting in a faster runtime. Each warp directly
+multiplies its slice of **Q** with **K** and then with **V**,
+simplifying the computation of the output slice. In the backward pass,
+FlashAttention-2 continues to avoid the \"split-K\" scheme, aligning the
+warps in a way that minimizes shared memory operations. Despite
+requiring some synchronization due to complex dependencies among inputs
+and gradients, this approach still leads to a speedup by reducing the
+shared memory reads/writes.
+
+FlashAttention has gained significant attention in the industry for its
+remarkable performance, offering accelerated attention computations in
+both forward and backward passes while also reducing memory I/O
+complexity. An enhanced version, FlashAttention-2, achieves a notable 2X
+speedup over the standard FlashAttention [@dao2022flashattention].
+Moreover, continuous optimization efforts are being made, promising an
+even more potent version of FlashAttention in the future.
