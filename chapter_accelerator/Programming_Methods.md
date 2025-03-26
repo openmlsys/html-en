@@ -69,12 +69,11 @@ cuBLAS and cuDNN. cuBLAS provides an interface for leveraging Tensor
 Cores to accelerate GEMM operations, while cuDNN offers an interface to
 hasten neural network operations. To utilize Tensor Cores via cuBLAS
 doing GEMM, we can use function `cublasGemmEx`, its signature is shown
-in Code :numref:`lst:cublasGemmEx`.
+in Code:
 
-    ```
-        cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
-    ```
-    :label:`lst:cublasGemmEx`
+```cpp
+    cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
+```
 
 `handle` is the cuBLAS handle, which is created using the `cublasCreate`
 function. `transa` denotes whether the matrices $\bf{A}$ and $\bf{C}$
