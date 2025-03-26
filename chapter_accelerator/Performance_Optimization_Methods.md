@@ -31,3 +31,58 @@ for (unsigned m = 0; m < M; ++m) {
 }
 ```
 
+ach element in matrix $C$ is independently computed, and numerous GPU
+threads can be launched to compute the corresponding elements in matrix
+$C$ in parallel. The GPU kernel function is shown in
+Code `lst:gpu`.
+
+**lst:gpu**
+```cpp
+__global__ void gemmKernel(const float * A,
+const float * B, float * C,
+float alpha, float beta, unsigned M, unsigned N,
+unsigned K) {
+    unsigned int m = threadIdx.x + blockDim.x * blockIdx.x;
+    unsigned int n = threadIdx.y + blockDim.y * blockIdx.y;
+    if (m >= M || n >= N)
+    return;
+    float c = 0;
+    for (unsigned k = 0; k < K; ++k) {
+        c += A[m * K + k] * B[k * N + n];
+    }
+    c = c * alpha;
+    float result = c;
+    if (beta != 0) {
+        result = result + C[m * N + n] * beta;
+    }
+    C[m * N + n] = result;
+}
+```
+
+Figure :numref:`cuda_naive_gemm` shows the layout of the implementation.
+Each element in matrix $C$ is computed by one thread. The row index $m$
+and column index $n$ of the element in matrix $C$ corresponding to the
+thread are computed in lines 5 and 6 of the GPU kernel. Then, in lines 9
+to 11, the thread loads the row vector in matrix $A$ according to the
+row index and the column vector in matrix $B$ according to the column
+index, computes the vector inner product. The thread also stores the
+result back to $C$ matrix in line 17.
+
+![Simple implementation ofGEMM](../img/ch06/practise/naive.png)
+:label:`cuda_naive_gemm`
+
+The method of launching the kernel function is shown in
+Code `lst:launch`.
+
+**lst:launch**
+```cpp
+void gemmNaive(const float *A, const float *B, float *C,
+float alpha, float beta, unsigned M,
+unsigned N, unsigned K) {
+    dim3 block(16, 16);
+    dim3 grid((M - 1) / block.x + 1, (N - 1) / block.y + 1);
+    
+    gemmKernel<<<grid, block>>>(A, B, C, alpha, beta, M, N, K);
+}
+```
+
