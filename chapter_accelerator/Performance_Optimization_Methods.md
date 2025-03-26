@@ -93,4 +93,6 @@ used to compute the entire matrix $C$.
 Eigen is used to generate data and compute the GEMM result on the CPU.
 In addition, error computing and time profiling code are implemented for
 the GPU computing result. For details, see
-
+[first_attempt.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/first_attempt.cu).
+After the program is compiled and executed, output results are as
+follows:
