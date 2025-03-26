@@ -208,3 +208,37 @@ PyTorch framework.
 
 Code `lst:torchscript` illustrates the use of the Scripting method
 to print a TorchScript IR graph.
+
+**lst:torchscript**
+```python
+import torch
+    
+    @torch.jit.script
+    def test_func(input):
+    rv = 10.0
+    for i in range(5):
+    rv = rv + input
+    rv = rv/2
+    return rv
+    
+    print(test_func.graph)
+```
+
+Code `lst:torchscriptir` shows the structure of this IR graph.
+
+**lst:torchscriptir**
+```
+graph(%input.1 : Tensor):
+    %9 : int = prim::Constant[value=1]()
+    %5 : bool = prim::Constant[value=1]() # test.py:6:1
+    %rv.1 : float = prim::Constant[value=10.]() # test.py:5:6
+    %2 : int = prim::Constant[value=5]() # test.py:6:16
+    %14 : int = prim::Constant[value=2]() # test.py:8:10
+    %rv : float = prim::Loop(%2, %5, %rv.1) # test.py:6:1
+    block0(%i : int, %rv.9 : float):
+    %rv.3 : Tensor = aten::add(%input.1, %rv.9, %9) # <string>:5:9
+    %12 : float = aten::FloatImplicit(%rv.3) # test.py:7:2
+    %rv.6 : float = aten::div(%12, %14) # test.py:8:7
+    -> (%5, %rv.6)
+    return (%rv)
+```
