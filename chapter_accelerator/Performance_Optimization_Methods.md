@@ -86,3 +86,22 @@ unsigned N, unsigned K) {
 }
 ```
 
+Each thread block processes $16\times16$ elements in matrix $C$.
+Therefore, $(M - 1) / 16 + 1 \times (N - 1) / 16 + 1$ thread blocks are
+used to compute the entire matrix $C$.
+
+Eigen is used to generate data and compute the GEMM result on the CPU.
+In addition, error computing and time profiling code are implemented for
+the GPU computing result. For details, see
+[first_attempt.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/first_attempt.cu).
+After the program is compiled and executed, output results are as
+follows:
+
+    Average time: 48.961 ms
+    Max error: 0.000092
+
+The peak GPU throughput can be approximated by using the following
+formula: 2 $\times$ Frequency $\times$ Number of single-precision
+compute units. The number of single-precision compute units equals the
+number of SMs in the GPU multiplied by the number of single-precision
+compute units in each SM. The results are as follows:
