@@ -116,3 +116,34 @@ matrices (multiplier or accumulator), matrix shape
 (`row_major or col_major`).
 Code `lst:frament` shows the fragment types.
 
+**lst:frament**
+```
+wmma::fragment<wmma::matrix_a, WMMA_M, WMMA_N, WMMA_K, half, wmma::row_major> a_frag;
+wmma::fragment<wmma::matrix_b, WMMA_M, WMMA_N, WMMA_K, half, wmma::col_major> b_frag;
+wmma::fragment<wmma::accumulator, WMMA_M, WMMA_N, WMMA_K, float> acc_frag;
+wmma::fragment<wmma::accumulator, WMMA_M, WMMA_N, WMMA_K, float> c_frag;
+```
+
+The data of the matrix block required by multiplication operations needs
+to be loaded to the register as a fragment. Fragments are initialized or
+cleared after multiply-accumulate operations performed by Tensor Cores,
+the fragments are stored back in global memory. NVIDIA provides the
+`wmma.load_matrix_sync() and wmma.store_matrix_sync()` interfaces to
+load or write the submatrix blocks. The `wmma.fill_fragment()` interface
+is used to initialize the data of the corresponding fragments, and the
+`wmma.mma_sync()` interface is used to perform multiply-accumulate
+operations on fragments.
+
+### Low-level Assembly Language Interface
+
+The PTX ISA offers another programming interface, for example, the
+`mma.sync.aligned.m8n8k4` instruction in the Volta architecture. This
+instruction uses the shape configuration of $M=8, N=8, K=4$ to perform
+multiply-add operations. The basic control unit of the API is the data
+element. The matrix size (modifier `.m8n8k4`), data format (modifier
+`.row` or `.col`) and data formats of input accumulator D, matrix A,
+matrix B, and output accumulator C (modifier `.f32` or `.f16`) need to
+be specified. NVIDIA's documentation provides information about
+using the PTX instruction set, helping programmers compile code based on
+the corresponding syntax rules, as shown in
+Code `lst:ptx`.
