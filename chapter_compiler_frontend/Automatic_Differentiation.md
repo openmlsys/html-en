@@ -198,7 +198,37 @@ implications.
 ![Illustration of forward-mode automaticdifferentiation](../img/ch04/AD-forward_example.png)
 :label:`ch04/ch04-forward-mode-compute-function`
 
-Figure :numref:`ch04/ch04-forward-mode-compute-function` elucidates thecomputation process within the forward mode. The sequence of elementaryoperations, derived from the source program, is displayed on the left.Following the chain rule and using established derivative evaluationrules, we sequentially compute each intermediate variable${\dot{v}_i}=\frac{\partial v_i}{\partial x_1}$ from top to bottom, asdepicted on the right. Consequently, this leads to the computation ofthe final variable ${\dot{v}_5}=\frac{\partial y}{\partial x_1}$.In the process of derivative evaluation of a function, we obtain a setof partial derivatives of any output with respect to any input of thisfunction. For a function $f:{\mathbf{R}^n}\to \mathbf{R}^m$, where $n$is the number of independent input variables $x_i$, and $m$ is thenumber of independent output variables $y_i$, the derivative resultscorrespond to the following Jacobian matrix:$$\mathbf{J}_{f}=    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\        \vdots & \ddots & \vdots \\        \frac{\partial y_m}{\partial x_1} & \cdots & \frac{\partial y_m}{\partial x_n}    \end{bmatrix}$$Each forward pass of function $f$ results in partial derivatives of alloutputs with respect to a single input, represented by the vectorsbelow. This corresponds to one column of the Jacobian matrix. Therefore,executing $n$ forward passes gives us the full Jacobian matrix.$$\begin{bmatrix}        \frac{\partial y_1}{\partial x_i} \\        \vdots \\        \frac{\partial y_m}{\partial x_i}    \end{bmatrix}$$The forward mode allows us to compute Jacobian-vector products byinitializing $\dot{\mathbf{x}}=\mathbf{r}$ to generate the results for asingle column. As the derivative evaluation rules for elementaryoperations are pre-determined, we know the Jacobian matrix for all theelementary operations. Consequently, by leveraging the chain rule toevaluate the derivatives of $f$ propagated from inputs to outputs, wesecure one column in the Jacobian matrix of the entire network.$$\mathbf{J}_{f}\mathbf{r}=    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\        \vdots & \ddots & \vdots \\        \frac{\partial y_m}{\partial x_1} & \cdots & \frac{\partial y_m}{\partial x_n}    \end{bmatrix}    \begin{bmatrix}        r_1 \\        \vdots \\        r_n    \end{bmatrix}$$### Reverse ModeFigure :numref:`ch04/ch04-backward-mode-compute` illustrates theautomatic differentiation process in the reverse mode. The sequence ofelementary operations, derived from the source program, is displayed onthe left. Beginning from$\bar{v}_5=\bar{y}=\frac{\partial y}{\partial y}=1$, we sequentiallycompute each intermediate variable${\bar{v}_i}=\frac{\partial y_j}{\partial v_i}$ from bottom to top,
+Figure :numref:`ch04/ch04-forward-mode-compute-function` elucidates thecomputation process within the forward mode. The sequence of elementaryoperations, derived from the source program, is displayed on the left.Following the chain rule and using established derivative evaluationrules, we sequentially compute each intermediate variable ${\dot{v}_i}=\frac{\partial v_i}{\partial x_1}$ from top to bottom, as depicted on the right. 
+Consequently, this leads to the computation ofthe final variable ${\dot{v}_5}=\frac{\partial y}{\partial x_1}$. In the process of derivative evaluation of a function, we obtain a setof partial derivatives of any output with respect to any input of thisfunction. 
+For a function $f:{\mathbf{R}^n}\to \mathbf{R}^m$, where $n$ is the number of independent input variables $x_i$, and $m$ is thenumber of independent output variables $y_i$, the derivative resultscorrespond to the following Jacobian matrix:
+
+$$
+\mathbf{J}_{f}=    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\        
+\vdots & \ddots & \vdots \\        
+\frac{\partial y_m}{\partial x_1} & \cdots & \frac{\partial y_m}{\partial x_n}    \end{bmatrix}
+$$
+
+Each forward pass of function $f$ results in partial derivatives of alloutputs with respect to a single input, represented by the vectorsbelow. This corresponds to one column of the Jacobian matrix. Therefore,executing $n$ forward passes gives us the full Jacobian matrix.
+
+$$
+\begin{bmatrix}        \frac{\partial y_1}{\partial x_i} \\        
+\vdots \\        
+\frac{\partial y_m}{\partial x_i}    \end{bmatrix}
+$$
+
+The forward mode allows us to compute Jacobian-vector products byinitializing $\dot{\mathbf{x}}=\mathbf{r}$ to generate the results for asingle column. As the derivative evaluation rules for elementaryoperations are pre-determined, we know the Jacobian matrix for all theelementary operations. Consequently, by leveraging the chain rule toevaluate the derivatives of $f$ propagated from inputs to outputs, wesecure one column in the Jacobian matrix of the entire network.
+
+$$
+\mathbf{J}_{f}\mathbf{r}=    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\        
+\vdots & \ddots & \vdots \\        
+\frac{\partial y_m}{\partial x_1} & \cdots & \frac{\partial y_m}{\partial x_n}    \end{bmatrix}    \begin{bmatrix}        r_1 \\        
+\vdots \\        
+r_n    \end{bmatrix}
+$$
+
+### Reverse Mode
+
+Figure :numref:`ch04/ch04-backward-mode-compute` illustrates theautomatic differentiation process in the reverse mode. The sequence ofelementary operations, derived from the source program, is displayed onthe left. Beginning from $\bar{v}_5=\bar{y}=\frac{\partial y}{\partial y}=1$, we sequentiallycompute each intermediate variable ${\bar{v}_i}=\frac{\partial y_j}{\partial v_i}$ from bottom to top,
 leveraging the chain rule and established derivative evaluation rules
 (as depicted on the right). Thus, we can compute the final variables
 ${\bar{x}_1}=\frac{\partial y}{\partial x_1}$ and
