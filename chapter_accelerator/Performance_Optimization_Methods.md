@@ -97,8 +97,10 @@ the GPU computing result. For details, see
 After the program is compiled and executed, output results are as
 follows:
 
-    FP32 peak throughput 29767.680 GFLOPS
-    Average Throughput: 185.313 GFLOPS
+```
+FP32 peak throughput 29767.680 GFLOPS
+Average Throughput: 185.313 GFLOPS
+```
 
 A significant gap exists between the performance that can be achieved by
 the current code and the peak device performance. In an entire computing
