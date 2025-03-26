@@ -1,0 +1,198 @@
+# Model Inference
+
+After conversion and compression, a trained model needs to be deployed
+on the computation hardware in order to execute inference. Such
+execution involves the following steps:
+
+1.  Preprocessing: Process raw data to suit the network input.
+
+2.  Inference execution: Deploy the model resulting from offline
+    conversion on the device to execute inference and compute the output
+    based on the input.
+
+3.  Postprocessing: Further process the output of the model, for
+    example, by threshold filtering.
+
+## Preprocessing and Postprocessing
+
+**1. Preprocessing**
+
+Raw data, such as images, voices, and texts, is so disordered that
+machine learning models cannot identify or extract useful information
+from it. Preprocessing is intended to convert such into tensors that
+work for machine learning networks, eliminate irrelevant information,
+restore useful true information, enhance the detectability of relevant
+information, and simplify the data as much as possible. In this way,
+reliability indicators related to feature extraction, image
+segmentation, matching, and recognition of the models can be improved.
+
+The following techniques are often used in data preprocessing:
+
+1.  Feature encoding: Encode the raw data that describes features into
+    numbers and input them to machine learning models which can process
+    only numerical values. Common encoding approaches include
+    discretization, ordinal encoding, one-hot encoding, and binary
+    encoding.
+
+2.  Normalization: Modify features to be on the same scale without
+    changing the correlation between them, eliminating the impact of
+    dimensions between data indicators. Common approaches include
+    Min-Max normalization that normalizes the data range, and Z-score
+    normalization that normalizes data distribution.
+
+3.  Outliner processing: An outlier is a data point that is distant from
+    all others in distribution. Elimination of outliers can improve the
+    accuracy of a model.
+
+**2. Postprocessing**
+
+After model inference, the output data is transferred to users for
+postprocessing. Common postprocessing techniques include:
+
+1.  Discretization of contiguous data: Assume we expect to predict
+    discrete data, such as the quantity of a good, using a model, but a
+    regression model only provides contiguous prediction values, which
+    have to be rounded or bounded.
+
+2.  Data visualization: This technique uses graphics and tables to
+    represent data so that we can find relationships in the data in
+    order to support analysis strategy selection.
+
+3.  Prediction range widening: Most values predicted by a regression
+    model are concentrated in the center, and few are in the tails. For
+    example, abnormal values of hospital laboratory data are used to
+    diagnose diseases. To increase the accuracy of prediction, we can
+    enlarge the values in both tails by widening the prediction range
+    and multiplying the values that deviate from the normal range by a
+    coefficient to
+
+## Parallel Computing
+:label:`ch-deploy/parallel-inference`
+
+Most inference models have a multi-thread mechanism that leverages the
+capabilities of multiple cores in order to achieve performance
+improvements. In this mechanism, the input data of operators is
+partitioned, and multiple threads are used to process different data
+partitions. This allows operators to be computed in parallel, thereby
+multiplying the operator performance.
+
+![Data partitioning for matrixmultiplication](../img/ch08/ch09-parallel.png)
+:label:`ch09_parallel`
+
+In Figure :numref:`ch09_parallel`, the matrix in the multiplication can be
+partitioned according to the rows of matrix A. Three threads can then be
+used to compute A1 \* B, A2 \* B, and A3 \* B (one thread per
+computation), implementing multi-thread parallel execution of the matrix
+multiplication.
+
+To facilitate parallel computing of operators and avoid the overhead of
+frequent thread creation and destruction, inference frameworks usually
+have a thread pooling mechanism. There are two common practices:
+
+1.  Open Multi-Processing (OpenMP) API: OpenMP is an API that supports
+    concurrency through memory sharing across multiple platforms. It
+    provides interfaces that are commonly used to implement operator
+    parallelism. An example of such an interface is `parallel for`,
+    which allows `for` loops to be concurrently executed by multiple
+    threads.
+
+2.  Framework-provided thread pools: Such pools are more lightweight and
+    targeted at the AI domain compared with OpenMP interfaces, and can
+    deliver better performance.
+
+## Operator Optimization
+:label:`ch-deploy/kernel-optimization`
+
+When deploying an AI model, we want model training and inference to be
+performed as fast as possible in order to obtain better performance. For
+a deep learning network, the scheduling of the framework takes a short
+period of time, whereas operator execution is often a bottleneck for
+performance. This section introduces how to optimize operators from the
+perspectives of hardware instructions and algorithms.
+
+**1. Hardware instruction optimization**
+
+Given that most devices have CPUs, the time that CPUs spend processing
+operators has a direct impact on the performance. Here we look at the
+methods for optimizing hardware instructions on ARM CPUs.
+
+**1) Assembly language**
+
+High-level programming languages such as C++ and Java are compiled as
+machine instruction code sequences by compilers, which often have a
+direct influence on which capabilities these languages offer. Assembly
+languages are close to machine code and can implement any instruction
+code sequence in one-to-one mode. Programs written in assembly languages
+occupy less memory, and are faster and more efficient than those written
+in high-level languages.
+
+In order to exploit the advantages of both types of languages, we can
+write the parts of a program that require better performance in assembly
+languages and the other parts in high-level languages. Because
+convolution and matrix multiplication operators in deep learning involve
+a large amount of computation, using assembly languages for code
+necessary to perform such computation can improve model training and
+inference performance by dozens or even hundreds of times.
+
+Next, we use ARMv8 CPUs to illustrate the optimization related to
+hardware instructions.
+
+**2) Registers and NEON instructions**
+
+Each ARMv8 CPU has 32 NEON registers, that is, v0 to v31. As shown in
+Figure :numref:`ch-deploy/register`, NEON register v0 can store 128
+bits, which is equal to the capacity of 4 float32, 8 float16, or 16
+int8.
+
+![Structure of the NEON register v0 of an ARMv8CPU](../img/ch08/ch09-register.png)
+:label:`ch-deploy/register`
+
+The single instruction multiple data (SIMD) method can be used to
+improve the data access and computing speed on this CPU. Compared with
+single data single instruction (SISD), the NEON instruction can process
+multiple data values in the NEON register at a time. For example, the
+`fmla` instruction for floating-point data is used as
+`fmla v0.4s, v1.4s, v2.4s`. As depicted in Figure
+:numref:`ch-deploy/fmla`, the products of the corresponding
+floating-point values in registers v1 and v2 are added to the value in
+v0.
+
+![fmla instructioncomputing](../img/ch08/ch09-fmla.png)
+:label:`ch-deploy/fmla`
+
+**3) Assembly language optimization**
+
+For assembly language programs with known functions, computational
+instructions are usually fixed. In this case, non-computational
+instructions are the source the performance bottleneck. The structure of
+computer storage devices resembles a pyramid, as shown in Figure
+:numref:`ch-deploy/fusion-storage`. The top layer has the fastest
+speed but the smallest space; conversely, the bottom layer has the
+largest space but the slowest speed. L1 to L3 are referred to as caches.
+When accessing data, the CPU first attempts to access the data from one
+of its caches. If the data is not found, the CPU then accesses an
+external main memory. Cache hit rate is introduced to measure the
+proportion of data that is accessed from the cache. In this sense, the
+cache hit rate must be maximized to improve the program performance.
+
+There are some techniques to improve the cache hit rate and optimize the
+assembly performance:
+
+1.  Loop unrolling: Use as many registers as possible to achieve better
+    performance at the cost of increasing the code size.
+
+2.  Instruction reordering: Reorder the instructions of different
+    execution units to improve the pipeline utilization, thereby
+    allowing instructions that incur latency to be executed first. In
+    addition to reducing the latency, this method also reduces data
+    dependency before and after the instruction.
+
+3.  Register blocking: Block NEON registers appropriately to reduce the
+    number of idle registers and reuse more registers.
+
+4.  Data rearrangement: Rearrange the computational data to ensure
+    contiguous memory reads and writes and improve the cache hit rate.
+
+5.  Instruction prefetching: Load the required data from the main memory
+    to the cache in advance to reduce the access latency.
+
