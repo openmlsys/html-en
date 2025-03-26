@@ -464,7 +464,10 @@ ParameterNode signifies the function's formal parameter, and CNode
 invocation.
 
 ![MindIR grammar](../img/ch04/IR-MindIR.png)
-:label:`ch04/ch04-MindIR}The example provided below in Code 1 offers a deeper analysis of MindIR.``` {#lst:MindSporeCode caption="Building a function with MindSpore" label="lst:MindSporeCode"`
+:label:`ch04/ch04-MindIR`
+
+The example provided below in Code 1 offers a deeper analysis of MindIR.
+``` {#lst:MindSporeCode caption="Building a function with MindSpore" label="lst:MindSporeCode"
 def func(x, y):
     return x / y
     
