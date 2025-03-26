@@ -255,7 +255,7 @@ When the function has significantly fewer inputs than outputs
 $(f:{\mathbf{R}^n}\to \mathbf{R}^m, n << m)$, the forward mode proves to
 be more efficient. Conversely, when the function has considerably more
 inputs than outputs $(f:{\mathbf{R}^n}\to \mathbf{R}^m, n >> m)$, the
-reverse mode becomes advantageous.
+reverse mode becomes advantageous. 
 
 For an extreme case where the function maps from $n$ inputs to a single
 output $f:{\mathbf{R}^n}\to \mathbf{R}$, we can evaluate all the
