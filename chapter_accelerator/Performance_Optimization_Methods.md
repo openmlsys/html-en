@@ -192,3 +192,258 @@ details about the code used to achieve this, see
 :label:`use_tile`
 
 The test results are as follows:
+
+```
+Max Error: 0.000092
+Average Time: 6.232 ms, Average Throughput: 1378.317 GFLOPS
+```
+
+To sample and analyze performance indicators, we will use the analysis
+tool Nsight Compute released by NVIDIA. This tool, designed for GPU
+kernel functions, samples and collects GPU activity data by hooking
+drivers. The following commands can be used to analyze the performance:
+
+```
+bash
+ncu --set full -o <profile_output_file> <profile_process>
+```
+
+`–set full` indicates that all data is sampled. `-o` indicates that the
+result is output as a file. `<profile_output_file>` indicates the output
+file name without the file name extension. `<profile_process>` indicates
+the executable file to be analyzed and its arguments. For example, to
+analyze `first_attempt` and name the output result
+`first_attepmt_prof_result`, run the following instructions:
+
+```
+ncu --set full -o first_attepmt_prof_result ./first_attempt
+```
+
+If the system displays a message indicating that you do not have
+permission to run this command, prefix it with `sudo` and run it again.
+After obtaining the output file, the program `nv-nsight-cu` can be used
+to view the file. We compared the profiling results of the new GPU
+kernel function and the previous one.
+
+The result shows that the number of `LDG` instructions decreases by 84%,
+and the value of `Stall LG Throttle` decreases by 33%. By using wide
+instructions to increase the compute density, we are able to reduce the
+number of global load/store instructions, thereby cutting the amount of
+time needed to wait before issuing instructions. The improvement on
+`Arithmetic Intensity` proves that our analysis of the arithmetic
+intensity is correct. The gemm_use_tile.cu test results are as follows:
+
+```
+Max Error: 0.000092
+Average Time: 3.188 ms, Average Throughput: 2694.440 GFLOPS
+```
+
+The analysis using Nsight Compute shows that the code can also improve
+other indicators, such as `Stall LG Throttle`.
+
+## Caching Data in Shared Memory
+
+By increasing the amount of data that a thread can load in one go, we
+can improve the arithmetic intensity and performance. However, this
+method decreases the degree of parallelism because it reduces the total
+number of enabled threads. Other hardware features need to be exploited
+in order to improve performance without compromising the degree of
+parallelism. In earlier code, several thread blocks are enabled, each of
+which processes one or more matrix blocks in matrix $C$. As shown in
+Figure :numref:`duplicated_data`, thread $x$ and thread $y$ process the same
+row in matrix $C$, so they load the same data from matrix $A$. The
+shared memory can be used to improve the program throughput by enabling
+different threads in the same thread block to load unique data and reuse
+shared data.
+
+![Threads loading redundantdata](../img/ch06/practise/duplicated_data.png)
+:label:`duplicated_data`
+
+We have previously mentioned that the inner product can be computed by
+loading and accumulating data in $K$ loops. Specifically, in each loop,
+threads that process the same row in matrix $C$ load the same data from
+matrix $A$, and threads that process the same column in matrix $C$ load
+the same data from matrix $B$. However, the code needs to be optimized
+by dividing $K$ loops into $\frac{K}{tileK}$ outer loops and $tileK$
+inner loops. In this way, an entire block of data is loaded in each
+outer loop and accumulated in each inner loop.
+Figure :numref:`use_smem_store` shows the process of moving data from the
+global memory to the shared memory. Before each inner loop starts, the
+entire `tiles` in matrix $A$ and matrix $B$ is stored in the shared
+memory.
+
+Figure :numref:`use_smem_load` shows the process of moving data from the
+shared memory to the register. In each inner loop, data is loaded from
+the shared memory and computed. An advantage of this design is that each
+thread does not need to load all the data it requires from the global
+memory. Instead, the entire thread block loads the data required for all
+threads from the global memory and stores the data in the shared memory.
+During computational processes, each thread only needs to load the data
+it requires from the shared memory.
+
+![Writing data to the sharedmemory](../img/ch06/practise/use_smem_store.png)
+:label:`use_smem_store`
+
+![Loading data from the sharedmemory](../img/ch06/practise/use_smem_load.png)
+:label:`use_smem_load`
+
+For details about the complete code, see
+[gemm_use_smem.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_smem.cu).
+
+The test results are as follows:
+
+```
+Max Error: 0.000092
+Average Time: 0.617 ms, Average Throughput: 13925.168 GFLOPS
+```
+
+Again, we use Nsight Compute to profile the kernel function and compare
+the results with the previous ones. The analysis shows some major
+improvements. Specifically, the number of `LDG` instructions decreases
+by 97%, which is consistent with this design. And the value of
+`SM Utilization` increases by 218%, which proves that using the shared
+memory can reduce the memory access latency and improve the memory
+utilization. Furthermore, the performance of other indicators such as
+`Pipe Fma Cycles Active` also improves significantly, demonstrating the
+benefits of the shared memory.
+
+## Reducing Register Usage
+
+In previous sections, the data blocks that store matrix $A$ in the
+shared memory are arranged in a row-first manner, and the shared memory
+is loaded by row. We can instead adopt a column-first manner in order to
+reduce loops and loop variables, thereby reducing the number of
+registers and improving performance.
+
+For details about the complete code, see
+[gemm_transpose_smem.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_transpose_smem.cu).
+
+The test results are as follows:
+
+```
+Max Error: 0.000092
+Average Time: 0.610 ms, Average Throughput: 14083.116 GFLOPS
+```
+
+Analysis by Nsight Compute shows that `Occupancy` increases by 1.3%.
+This is because only 111 registers are used (17 fewer than used by the
+previous GPU kernel function). The benefit of reducing the number of
+registers varies depending on the GPU architecture. Observations have
+shown that the number of `STS` instructions increases and bank conflicts
+occur, meaning that using fewer registers may not have a positive impact
+on other GPU architectures.
+
+## Hiding Shared Memory Loading Latency
+
+To load data from the shared memory, a GPU uses the `LDS` instruction.
+After issuing this instruction, the GPU will execute the following
+instructions without waiting for the data to be loaded to the register
+unless the instructions require such data. In the previous section, each
+time this instruction is issued during $tileK$ inner loops, the
+mathematical operation that requires the loaded data is performed
+immediately. However, the compute unit has to wait for the data to be
+loaded from the shared memory, as shown in
+Figure :numref:`use_smem_pipeline`. Accessing the shared memory may take
+dozens of clock cycles, but computation instructions can often be
+completed within only a few clock cycles. In order to significantly
+accelerate memory access, we can hide the shared memory loading latency
+by optimizing the pipeline. Specifically, during $tileK$ inner loops,
+loading instructions that prepare data in the next loop can be loaded at
+the beginning of each loop, as shown in
+Figure :numref:`hide_smem_latency`. In this way, computation instructions in
+the current operation do not require the data in the next loop. As such,
+the execution of these computation instructions will not be blocked by
+the instructions that load the data for the next loop.
+
+![Pipeline of the previous GPU kernelfunction](../img/ch06/practise/use_smem_pipeline.png)
+:label:`use_smem_pipeline`
+
+![Pipeline that hides the shared memory loadinglatency](../img/ch06/practise/hide_smem_latency.png)
+:label:`hide_smem_latency`
+
+For details about the complete code, see
+[gemm_hide_smem_latency.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_hide_smem_latency.cu).
+
+The test results are as follows:
+
+```
+Max Error: 0.000092
+Average Time: 0.585 ms, Average Throughput: 14686.179 GFLOPS
+```
+
+Analysis by Nsight Compute shows that the value of
+`Stall Short Scoreboard` decreases by 67% when compared with that of the
+previous GPU kernel function. As mentioned before, after GPU memory
+load/store instructions are issued, the GPU executes the next
+instruction without waiting for the data to be landed in the register.
+However, it will set a flag on the Scoreboard and reset the flag after
+the data is landed. If instructions that require such data need to be
+executed, the GPU will execute them only after the data is landed. The
+decrease of `Stall Short Scoreboard` demonstrates that hiding the access
+latency of the shared memory is an effective method to better utilize
+the GPU.
+
+## Hiding Global Memory Loading Latency
+
+To load data from the global memory, a GPU uses the textttLDG
+instruction, the behavior of which is similar to the `LDS` instruction
+used to load data from the shared memory as discussed in the previous
+section. At the beginning of each of the $\frac{K}{tileK}$ outer loops,
+instructions that load the data tiles in matrix $A$ for the next loop
+are issued. Because this data is not required by any inner loop in a
+given outer loop, the computational processes in the inner loop will not
+wait for the read instruction to be completed, thereby hiding the global
+memory loading latency. We can also enable data in `buffer` to be
+written to `tile` in the last loop in the inner loop after $tileK - 1$
+loops are executed, further reducing the latency of writing data to
+`tile`. Figure :numref:`hide_global_latency` shows the optimized pipeline.
+
+![Pipeline that hides the global memory loadinglatency](../img/ch06/practise/hide_global_latency.png)
+:label:`hide_global_latency`
+
+For details about the complete code, see
+[gemm_final.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_final.cu).
+
+The test results are as follows:
+
+```
+Max Error: 0.000092
+Average Time: 0.542 ms, Average Throughput: 15838.302 GFLOPS
+```
+
+Similar to the `Stall Short Scoreboard` results obtained in the previous
+section, analysis by Nsight Compute shows that the value of
+`Stall Long Scoreboard` (a global memory indicator) decreases by 67%.
+Such a significant decrease demonstrates that prefetching data can hide
+the global memory to reduce the loading latency.
+
+## Performance Optimization Principles
+
+So far, we have discussed various methods to enhance the performance of
+an accelerator. Even though other methods exist, the principles of
+performance optimization generally adhere to the following:
+
+-   Increasing parallelism through resource mapping: Multi-level
+    parallel resources (`blocks`, `warps`, and `threads`) are mapped to
+    the data needing computation and transfer to enhance program
+    parallelism.
+
+-   Reducing memory access latency through memory structure
+    optimization: Based on the recognition of data reuse within the same
+    `block` during computation, the reused data is stored in local
+    memory (like shared memory and registers) to increase locality.
+
+-   Reducing the instruction issue overhead through optimizing
+    instruction execution: The `#pragma unroll` function is used to
+    unroll loops in order to improve the degree of parallelism at the
+    instruction level and reduce logic judgment. The vectorized load
+    instruction is used to increase bandwidth. For the Ampere
+    architecture, the maximum vectorized load instruction is
+    `LDG.E.128`, and the data type for data loading is `float4`.
+
+-   Hiding load/store latency by optimizing the memory access pipeline:
+    In instances where the in-memory data undergoes modifications (such
+    as the movement of matrix data), we can optimize the memory access
+    pipeline. This way, the accelerator performs computations during the
+    intervals between data movement, thereby concealing the latency
+    associated with data movement.
