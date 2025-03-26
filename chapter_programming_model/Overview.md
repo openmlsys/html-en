@@ -3,7 +3,7 @@
 With the advent of machine learning systems, the design of user-friendly
 and high-performance APIs has become a paramount concern for system
 designers. In the early stages of machine learning frameworks (as
-depicted in Figure :numref:`ch03/framework_development_history`, developers often
+depicted in Figure :numref:`ch03/framework_development_history`), developers often
 opted for high-level programming languages like Lua (Torch) and Python
 (Theano) to write machine learning programs. These frameworks offered
 essential functions, including model definition and automatic
