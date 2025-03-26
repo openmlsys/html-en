@@ -160,3 +160,66 @@ Figure :numref:`ch-deploy/memory` shows the memory hierarchy with
 corresponding bandwidths. The main goal of FlashAttention is to avoid
 reading and writing the large attention matrix to and from HBM. And
 perform computation in SRAM as much as possible.
+
+The standard Scaled Dot-Product Attention [@attention] formula is
+
+$$\textbf{A} = Softmax(\frac{\textbf{QK}^T}{\sqrt{d_k}})\textbf{V}$$ 
+:eqlabel:`equ:std_attn`
+
+As $d_k$ is a scalar, we can simplify it into three parts:
+
+$$
+\begin{aligned}
+    \textbf{S} = \textbf{QK}^T\\
+    \textbf{P} = Softmax(\textbf{S})\\
+    \textbf{O} = \textbf{PV}
+\end{aligned}$$ 
+:eqlabel:`equ:attn_sep`
+
+The matrices **K**, **Q**, **V** are all stored in HBM. The standard
+implementation of attention follows these steps:
+
+1.  Load **K, Q** from HBM, compute **$S$ = $QK^T$**, and write **S** to
+    the HBM.
+
+2.  Read **S** from HBM, compute **P** = $Softmax$(**S**), and write
+    **P** to HBM.
+
+3.  Load **P** and **V** from HBM, compute **O** = **PV**, and write
+    **O** to HBM. Finally, return **O**.
+
+The standard implementation of attention involves frequent I/O
+interactions with HBM for large matrices reads/writes, leading to
+reduced speed due to the intensive memory access requirements. Moreover,
+it stores large intermediate matrices in HBM for backward propagation.
+
+To handle such issues, FlashAttention divides the input components **Q,
+K**, and **V** into blocks. These blocks are then transferred from
+slower HBM to faster SRAM. Once in SRAM, the attention output is
+computed with respect to these blocks. Two strategies involved are
+called **tiling** and **recomputation**.
+
+**Tiling**: Assuming a vector $x\in \mathbb{R}^D$, the basic Softmax can
+be calculated as: 
+
+$$
+\begin{aligned}
+m(x) = \max\limits_{i} x_i\\
+l_{1}(x) = [e^{x_{1} - m(x)},\, ...\,,e^{x_{D} - m(x)}]\\
+s_{1}(x) = \sum_{i} l_{1}(x)_i\\
+Softmax(x) = \frac{l_{1}(x)}{s_{1}(x)}
+\end{aligned}
+$$
+
+Attention can be computed by blocks, so large Softmax can be decomposed
+into separated parts. To elaborate, assuming a vector $x \in\mathbb{R}^{2D}$: 
+
+$$
+\begin{aligned}
+x = [x_{1}, \,x_{2}], \quad x_{1}, \, x_{2} \in\mathbb{R}^D\\
+m(x) = \max(m(x_{1}), \,m(x_{2}))\\
+l(x) = [e^{m(x_{1})-m_(x)}l_{1}(x_1),\, ... \, ,e^{m(x_2)-m(x)}l_{1}(x_2)]\\
+s(x) = e^{m(x_{1})-m(x)}s_{1}(x_1) + e^{m(x_2)-m(x)}s_{1}(x_2)\\
+Softmax(x) = \frac{l(x)}{s(x)}
+\end{aligned}
+$$
