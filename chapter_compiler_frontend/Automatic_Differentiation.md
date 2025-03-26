@@ -264,3 +264,54 @@ $(\frac{\partial y}{\partial x_1},\cdots,\frac{\partial y}{\partial n})$
 using a single reverse pass or $n$ forward passes. This is a situation
 akin to derivative evaluation for a multi-input, single-output network,
 a structure frequently encountered in machine learning.
+
+Due to this feature, reverse-mode automatic differentiation forms the
+basis for the backpropagation algorithm, a key technique for training
+neural networks. By enabling efficient computation of gradients,
+especially in scenarios with high-dimensional input data and scalar
+output (common in many machine learning applications), reverse-mode
+automatic differentiation has become indispensable in the field.
+
+However, the reverse mode does come with certain limitations. For
+instance, once a source program is decomposed into a sequence of
+elementary operations in the forward mode, inputs can be obtained
+synchronously during the execution of these operations. This is possible
+because the sequence of derivative evaluations aligns with the sequence
+of operation execution. In contrast, in the reverse mode, the sequence
+for derivative evaluation is the inverse of the execution sequence of
+the source program, leading to a two-phased computation process. The
+initial phase entails executing the source program and storing the
+intermediate results in memory, while the subsequent phase involves
+retrieving these intermediate results to evaluate the derivatives. Due
+to the additional steps involved, the reverse mode requires more memory.
+
+## Implementing Automatic Differentiation
+
+This section explores typical design patterns for implementing automatic
+differentiation in machine learning frameworks. These design patterns
+can be broadly classified into three categories: elemental libraries,
+operator overloading, and source transformation.
+
+### Elemental Libraries
+
+Elemental libraries encapsulate elementary expressions and their
+differential expressions as library functions. When coding, users must
+manually decompose a program into a set of elementary expressions and
+replace them with corresponding library functions. Take the program
+$a=(x+y)/z$ as an example; it needs to be manually decomposed as
+follows:
+
+```
+    t = x + y
+    a = t / z
+```
+
+Subsequently, users replace the decomposed elementary expressions with
+appropriate library functions:
+
+```
+    // The parameters include variables x, y, and t and their derivative variables dx, dy, and dt.
+    call ADAdd(x, dx, y, dy, t, dt)
+    // The parameters include variables t, z, and a and their derivative variables dt, dz, and da.
+    call ADDiv(t, dt, z, dz, a, da)
+```
