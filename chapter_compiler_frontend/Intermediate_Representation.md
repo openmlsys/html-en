@@ -51,7 +51,7 @@ source programs and generating optimized compiled code. Table
 different IR types. It is important to design IR structures carefully,
 considering the specific requirements of the compiler's design.
 
-: Types of IRs
+:Types of IRs
 
 | IR Structure  | Characteristics                       | Examples |
 | --------------| --------------------------------------| ----------------------------------------------
