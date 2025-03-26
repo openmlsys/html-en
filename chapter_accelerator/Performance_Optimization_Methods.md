@@ -96,3 +96,14 @@ the GPU computing result. For details, see
 [first_attempt.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/first_attempt.cu).
 After the program is compiled and executed, output results are as
 follows:
+
+    FP32 peak throughput 29767.680 GFLOPS
+    Average Throughput: 185.313 GFLOPS
+
+A significant gap exists between the performance that can be achieved by
+the current code and the peak device performance. In an entire computing
+process, the process with the highest computing density is matrix
+multiplication $A\times B$. Its time complexity is $O(M*N*K)$, whereas
+that time complexity of the entire computing process is
+$O(M*N*K+2*M*N)$. Therefore, optimizing matrix multiplication is key to
+improving performance.
