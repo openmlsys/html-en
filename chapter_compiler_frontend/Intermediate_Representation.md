@@ -242,3 +242,264 @@ graph(%input.1 : Tensor):
     -> (%5, %rv.6)
     return (%rv)
 ```
+
+
+### Intermediate Representation in JAX
+
+The JAX framework facilitates both static and dynamic computational
+graphs and employs the Jax Program Representation (Jaxpr) IR. This IR
+ensures that the output, not reliant on global variables, depends solely
+on the input, with both input and output encapsulating typed
+information. Functionality-wise, Jaxpr IR supports an array of features
+such as loops, branching, recursion, closure function differentiation,
+third-order differentiation, as well as backpropagation and forward
+propagation in automatic differentiation.
+
+Jaxpr IR utilizes the A-normal Form (ANF), a form of functional
+expression, demonstrated in
+Code `lst:ANF`
+via the ANF grammar.
+
+**lst:ANF**
+```
+<aexp> ::=  NUMBER | STRING | VAR | BOOLEAN | PRIMOP
+    |  (lambda (VAR ...) <exp>)
+    <cexp> ::=  (<aexp> <aexp> ...)
+    | (if <aexp> <exp> <exp>)
+    <exp> ::=  (let ([VAR <cexp>]) <exp>) | <cexp> | <aexp>
+```
+
+The ANF segregates expressions into atomic expressions (aexp) and
+compound expressions (cexp). Atomic expressions represent constants,
+variables, primitives, and anonymous functions, while compound
+expressions, comprising several atomic expressions, can be viewed as
+invocations of anonymous or primitive functions. The first input in a
+cexp represents the invoked function, and all subsequent inputs
+symbolize the invoked parameters.
+
+Code `lst:JaxCode` displays the Jaxpr corresponding to a function.
+
+**lst:JaxCode**
+```python
+from jax import make_jaxpr
+    import jax.numpy as jnp
+    
+    def test_func(x, y):
+    ret = x + jnp.sin(y) * 3
+    return jnp.sum(ret)
+    
+    print(make_jaxpr(test_func)(jnp.zeros(8), jnp.ones(8)))
+```
+
+The structure of this Jaxpr is shown in
+Code `lst:JaxPr`.
+
+**lst:JaxPr**
+```
+{ lambda ; a:f32[8] b:f32[8]. let
+        c:f32[8] = sin b
+        d:f32[8] = mul c 3.0
+        e:f32[8] = add a d
+        f:f32[] = reduce_sum[axes=(0,)] e
+        in (f,) }
+```
+
+### Intermediate Representation in TensorFlow
+
+TensorFlow utilizes dataflow programming to execute numerical
+computations through dataflow graphs. TensorFlow's static graph
+mechanism progresses through a series of abstractions and analyses when
+running a program, transforming it from higher-level to lower-level IRs,
+a process referred to as \"lowering\".
+
+To cater to diverse hardware platforms, TensorFlow employs a range of IR
+designs. As illustrated in
+Figure :numref:`ch04/ch04-tensorflow_ecosystem`, the blue boxes denote
+graph-based IRs while the green ones indicate SSA-based IRs. During the
+IR transformation, each level optimizes the IR independently, precluding
+communication with other levels. This absence of awareness about
+optimizations performed at other levels necessitates optimal
+implementation at each level, often leading to repetitive tasks and
+sub-optimal efficiency. Notably, transitioning from graph-based IRs to
+SSA-based IRs involves a qualitative transformation that incurs
+significant costs. The inability to reuse the same optimization code
+across levels also hampers development efficiency.
+
+Multi-level IRs present a mixed bag of advantages and disadvantages. On
+the plus side, they offer flexible representations, pass-based
+optimization at varying levels, and efficient optimization algorithms.
+On the downside, they pose challenges due to their inherent
+characteristics: The transformation between different IRs often
+complicates full compatibility implementation, thereby increasing
+engineering workload and potentially leading to information loss. This
+might make lower-level optimization challenging if information at a
+higher level has been optimized. To mitigate such information loss, we
+can impose stricter constraints on the optimization sequence.
+Additionally, choosing the level for implementing certain optimizations
+that can be performed at two adjacent levels can be a conundrum for
+framework developers. Finally, defining distinct operator granularities
+at different levels might impact accuracy to a certain degree.
+
+![TensorFlow's IRdesign](../img/ch04/IR-MLIR.png)
+:label:`ch04/ch04-tensorflow_ecosystem`
+
+### Multi-Level Intermediate Representation
+
+Multi-Level Intermediate Representation (MLIR) serves as a unified
+platform for IRs rather than being a specific type of IR. Leveraging the
+infrastructure provided by MLIR, developers can define IRs to suit their
+needs. Thus, MLIR can be interpreted as a \"compiler of compilers\". It
+expands beyond the TensorFlow framework and can be used to construct IRs
+linking other languages to backend platforms (such as LLVM).
+
+Despite the design of MLIR being heavily influenced by LLVM, MLIR
+fosters a more open ecosystem. Given that MLIR does not confine
+developers to a set group of operation or abstraction types, it offers
+more latitude to define IRs and solve specific problems. To facilitate
+this extensibility, MLIR introduces the concept of \"dialects\". These
+provide a grouping mechanism for abstraction under a unique namespace.
+Each dialect lays out a production and associates an operation to an IR,
+thus producing an MLIR-typed IR. Within MLIR, the \"operation\" is the
+fundamental unit of abstraction and computation. Operations can carry
+application-specific semantics and encapsulate all the core IR
+structures in LLVM, including instructions, functions, modules, etc.
+
+The MLIR assembly for an operation is illustrated as follows:
+
+```
+%tensor = "toy.transpose"(%tensor) {inplace = true} : (tensor<2x3xf64>) -> tensor<3x2xf64> loc("example/file/path":12:1)
+```
+
+This MLIR operation can be dissected as follows:
+
+-   %tensor: The identifier for the result defined by this operation
+    (prefixed with a $\%$ to prevent naming conflicts). An operation may
+    define no results or multiple results, represented as SSA values.
+
+-   \"toy.transpose\": The operation name. It is usually a unique
+    string, with the dialect's namespace prefixing the ".". This refers
+    to the transpose operation within the toy dialect.
+
+-   (%tensor): A list that can contain zero or more input operands (or
+    arguments), which are SSA values defined by other operations or that
+    refer to block arguments.
+
+-   inplace = true: A dictionary that may contain zero or more
+    attributes. These are constant special operands. Here, a boolean
+    attribute named `inplace` with a constant value of `true` is
+    defined.
+
+-   (tensor\<2x3xf64\>)-\>tensor\<3x2xf64\>: This represents the
+    operation type in a functional form, specifying the input before the
+    arrow and output after. The data types and shapes of the input and
+    output are contained within the parentheses. For instance,
+    $<2x3xf64>$ represents a tensor with a shape of `(2, 3)` and data
+    type `float64`.
+
+-   loc(\"example/file/path\":12:1): This refers to the source code
+    location from where this operation originated.
+
+As each level's IR design adheres to this assembly, it simplifies
+transformation across levels, boosting the efficiency of IR
+transformation. Moreover, different levels can interact to optimize the
+IRs, enabling optimization to be performed at the most suitable level,
+thereby negating the need for optimal performance at each level. By
+transforming them into the IR at the most appropriate level, other IRs
+can be optimized, enhancing both optimization and development
+efficiency. TensorFlow can also employ MLIR to perform multi-layer
+transformation from graph-based IRs to
+
+### Intermediate Representation in MindSpore
+
+MindSpore adopts graph-based functional IRs, known as MindSpore IR
+(abbreviated to MindIR). MindIR employs a unified IR approach instead of
+a multi-level IR structure, outlining the network's logical structure
+and operator attributes. This approach obliterates model disparities
+across different backends, facilitating connections to various target
+machines.
+
+MindIR primarily caters to the automatic differential transformation. It
+implements a transformation method grounded in functional programming
+frameworks, thereby making it similar to ANF (A-Normal Form) functional
+semantics. Its defining characteristics include:
+
+1.  **Graph-based Representation**. MindSpore represents programs as
+    graphs which are conducive to optimization. MindSpore treats
+    functions as essential elements of a machine learning program,
+    allowing for recursive invocation, parameter passing, or returning
+    from other functions. This ability paves the way for representing a
+    range of control flow structures.
+
+2.  **Purely Functional**. In a purely functional context, the function
+    outcomes depend solely on parameters. Side effects are potential
+    issues when a function relies on or affects external states, such as
+    global variables. These can lead to incorrect results if code
+    execution sequence isn't strictly maintained. These side effects can
+    also impact automatic differentiation, necessitating the requirement
+    for pure functions. MindIR has the capability to transform
+    representations with side effects into purely functional
+    representations, ensuring correct code execution sequence while
+    upholding ANF functional semantics and enabling a higher degree of
+    automatic differentiation freedom.
+
+3.  **Closure Representation**. Reverse mode automatic differentiation
+    requires the storage of basic operation intermediate results in
+    closures for a combined connection. Closures, the combination of a
+    code block bundled with references to its surrounding environment,
+    become particularly crucial. In MindIR, the code block takes the
+    shape of a function diagram, with the surrounding environment
+    interpreted as the function invocation context.
+
+4.  **Strongly Typed**. Each node requires a specific type for achieving
+    optimal performance. This is particularly crucial in machine
+    learning frameworks where operator execution can be time-consuming.
+    Detecting errors at the earliest can help save valuable time.
+    MindIR's type and shape inference capabilities thus center on the
+    support for function invocation and higher-order functions.
+
+Figure :numref:`ch04/ch04-MindIR` outlines the MindIR grammar based on
+MindSpore framework's characteristics. ANode corresponds to an atomic
+expression in ANF, ValueNode represents the constant value,
+ParameterNode signifies the function's formal parameter, and CNode
+(corresponding to a compound expression in ANF) indicates function
+invocation.
+
+![MindIR grammar](../img/ch04/IR-MindIR.png)
+:label:`ch04/ch04-MindIR`
+
+The example provided below in Code 1 offers a deeper analysis of MindIR.
+
+**lst:MindSporeCode**
+```
+def func(x, y):
+    return x / y
+    
+    @ms_function
+    def test_f(x, y):
+    a = x - 1
+    b = a + y
+    c = b * func(a, b)
+    return c
+```
+
+The ANF expression corresponding to this function is demonstrated in
+Code `lst:MindIR`.
+
+**lst:MindIR**
+```
+lambda (x, y)
+    let a = x - 1 in
+    let b = a + y in
+    let func = lambda (x, y)
+    let ret = x / y in
+    ret end in
+    let %1 = func(a, b) in
+    let c = b * %1 in
+    c end
+```
+
+In ANF, each expression is encapsulated as a variable utilizing the
+`let` expression, with dependencies on the expression's output
+represented via variable references. In contrast, MindIR packages each
+expression as a node, portraying dependencies through directed edges
+connecting the nodes.
