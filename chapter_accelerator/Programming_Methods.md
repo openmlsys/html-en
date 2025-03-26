@@ -69,10 +69,11 @@ cuBLAS and cuDNN. cuBLAS provides an interface for leveraging Tensor
 Cores to accelerate GEMM operations, while cuDNN offers an interface to
 hasten neural network operations. To utilize Tensor Cores via cuBLAS
 doing GEMM, we can use function `cublasGemmEx`, its signature is shown
-in Code:
+in Code `lst:cublasGemmEx`.
 
-```cpp
-    cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
+**lst:cublasGemmEx**
+```cuda
+cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
 ```
 
 `handle` is the cuBLAS handle, which is created using the `cublasCreate`
@@ -108,6 +109,71 @@ In the Volta architecture, NVIDIA offers three distinct sizes of WMMA
 multiply-accumulate computing interfaces for FP16 input data:
 $16\times16\times16$, $32\times8\times16$, and $8\times32\times16$.
 
+The basic control unit of the WMMA API is a fragment, which refers to a
+template class that specifies information such as the meaning of
+matrices (multiplier or accumulator), matrix shape
+(`WMMA_M, WMMA_N, or WMMA_K`), data type (FP16, FP32, etc.), and layout
+(`row_major or col_major`).
+Code `lst:frament` shows the fragment types.
+
+**lst:frament**
+```
+wmma::fragment<wmma::matrix_a, WMMA_M, WMMA_N, WMMA_K, half, wmma::row_major> a_frag;
+wmma::fragment<wmma::matrix_b, WMMA_M, WMMA_N, WMMA_K, half, wmma::col_major> b_frag;
+wmma::fragment<wmma::accumulator, WMMA_M, WMMA_N, WMMA_K, float> acc_frag;
+wmma::fragment<wmma::accumulator, WMMA_M, WMMA_N, WMMA_K, float> c_frag;
+```
+
+The data of the matrix block required by multiplication operations needs
+to be loaded to the register as a fragment. Fragments are initialized or
+cleared after multiply-accumulate operations performed by Tensor Cores,
+the fragments are stored back in global memory. NVIDIA provides the
+`wmma.load_matrix_sync() and wmma.store_matrix_sync()` interfaces to
+load or write the submatrix blocks. The `wmma.fill_fragment()` interface
+is used to initialize the data of the corresponding fragments, and the
+`wmma.mma_sync()` interface is used to perform multiply-accumulate
+operations on fragments.
+
+### Low-level Assembly Language Interface
+
+The PTX ISA offers another programming interface, for example, the
+`mma.sync.aligned.m8n8k4` instruction in the Volta architecture. This
+instruction uses the shape configuration of $M=8, N=8, K=4$ to perform
+multiply-add operations. The basic control unit of the API is the data
+element. The matrix size (modifier `.m8n8k4`), data format (modifier
+`.row` or `.col`) and data formats of input accumulator D, matrix A,
+matrix B, and output accumulator C (modifier `.f32` or `.f16`) need to
+be specified. NVIDIA's documentation[^1] provides information about
+using the PTX instruction set, helping programmers compile code based on
+the corresponding syntax rules, as shown in
+Code `lst:ptx`.
+
+**lst:ptx**
+```cpp
+    half_t *a, *b;
+    float *C, *D;
+    unsigned const* A = reinterpret_cast<unsigned const*>(a);
+    unsigned const* B = reinterpret_cast<unsigned const*>(b);
+
+    asm volatile(
+        "mma.sync.aligned.m8n8k4.row.row.f32.f16.f16.f32 "
+        "{%0,%1,%2,%3,%4,%5,%6,%7}, {%8,%9}, {%10,%11}, "
+        "{%12,%13,%14,%15,%16,%17,%18,%19};\n"
+        : "=f"(D[0]), "=f"(D[1]), "=f"(D[2]), "=f"(D[3]), "=f"(D[4]),
+        "=f"(D[5]), "=f"(D[6]), "=f"(D[7])
+        : "r"(A[0]), "r"(A[1]), "r"(B[0]), "r"(B[1]), "f"(C[0]),
+        "f"(C[1]), "f"(C[2]), "f"(C[3]), "f"(C[4]), "f"(C[5]),
+        "f"(C[6]), "f"(C[7]));
+```
+
+Data elements are directly used as the input (`unsigned` type is used
+for containing FP16 data elements). Moreover, NVIDIA provides the
+`ldmatrix` instruction to load data from the shared memory to fragments.
+
+A finer-grained instruction, `mma`, can form a warp-level WMMA API of
+more diversified shapes to control the mapping between threads and data
+in the warp. The PTX instructions offer greater flexibility than
+directly using CUDA C++ codes.
 
 [^1]: available at
     <https://docs.nvidia.com/cuda/inline-ptx-assembly/index.html>
