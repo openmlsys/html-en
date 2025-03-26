@@ -69,11 +69,45 @@ cuBLAS and cuDNN. cuBLAS provides an interface for leveraging Tensor
 Cores to accelerate GEMM operations, while cuDNN offers an interface to
 hasten neural network operations. To utilize Tensor Cores via cuBLAS
 doing GEMM, we can use function `cublasGemmEx`, its signature is shown
-in Code [\[lst:cublasGemmEx\]](#lst:cublasGemmEx){reference-type="ref"
-reference="lst:cublasGemmEx"}.
+in Code :numref:`lst:cublasGemmEx`.
 
-     [caption={Fragment types}, label={lst:cublasGemmEx}]
-    cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
+    ```
+        cublasStatus_t cublasGemmEx(cublasHandle_t handle, cublasOperation_t transa, cublasOperation_t transb, int m, int n, int k, const void *alpha, const void *A, cudaDataType_t Atype, int lda, const void *B, cudaDataType_t Btype, int ldb, const void *beta, void *C, cudaDataType_t Ctype, int ldc, cublasComputeType_t computeType, cublasGemmAlgo_t algo)
+    ```
+    :label:`lst:cublasGemmEx`
+
+`handle` is the cuBLAS handle, which is created using the `cublasCreate`
+function. `transa` denotes whether the matrices $\bf{A}$ and $\bf{C}$
+are transposed, while `transb` denotes whether the matrix $\bf{B}$ is
+transposed. `m`, `n`, and `k` are used to describe the shape of the
+matrices. `alpha` and `beta` are used to scale the matrix multiplication
+results. `A`, `B`, and `C` are pointers to the starting addresses of the
+matrices. `Atype`, `Btype`, and `Ctype` describe the data type of the
+matrices. For example, `CUDA_R_16F` indicates that the data is stored in
+real 16-bit floating point type. `lda`, `ldb`, and `ldc` represent the
+leading dimensions of the matrices. `computeType` is the data type used
+in computation. For instance, `CUBLAS_COMPUTE_16F` implies the use of
+Tensor Cores for computation in 16-bit floating point. Notably, if the
+input data type is 32-bit float, we can use
+`CUBLAS_COMPUTE_32F_FAST_16F` to perform the computation in 16-bit
+floating point and achieve acceleration using Tensor Cores. `algo` is
+the algorithm used in computation, and `CUBLAS_GEMM_DEFAULT` is commonly
+used to select the default algorithm.
+
+### Primitives for Hardware Units
+
+The second approach to accelerator programming involves the use of
+programming primitives, such as invoking the CUDA Warp Matrix Multiply
+Accumulate (WMMA) API on a device. This approach hinges on the
+collaborative design of software and hardware, meaning that the design
+of programming APIs at this level is architecture-dependent. For
+instance, in the Volta architecture, the control object of WMMA is a
+$16\times16$ matrix block, processed by two Tensor Cores at a time. This
+notion is tightly linked to the integration of Tensor Cores into a SM.
+
+In the Volta architecture, NVIDIA offers three distinct sizes of WMMA
+multiply-accumulate computing interfaces for FP16 input data:
+$16\times16\times16$, $32\times8\times16$, and $8\times32\times16$.
 
 
 [^1]: available at
