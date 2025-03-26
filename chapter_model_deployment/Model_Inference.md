@@ -196,3 +196,50 @@ assembly performance:
 5.  Instruction prefetching: Load the required data from the main memory
     to the cache in advance to reduce the access latency.
 
+**2. Algorithm optimization**
+
+For most AI models, 90% or more of the inference time of the entire
+network is spent on computing convolution and matrix multiplication
+operators. This section focuses on the optimization of convolution
+operator algorithms, which can be applied to various hardware devices.
+The computation of convolution can be converted into the multiplication
+of two matrices, and we have elaborated on the optimization of the GEMM
+algorithm in Section :ref:`ch-deploy/parallel-inference`. For different hardware,
+appropriate matrix blocking can optimize data load/store efficiency and
+instruction parallelism. This helps to maximize the utilization of the
+hardware's computing power, thereby improving the inference performance.
+
+**(1) Img2col**
+
+Img2col is often used to convert convolution into matrix multiplication.
+Convolutional layers typically operate on 4D inputs in NHWC format.
+Figure :numref:`ch-deploy/conv_nhwc` is a diagram of convolution. The
+input shape is (1, IH, IW, IC), the convolution kernel shape is (OC, KH,
+KW, IC), and the output shape is (1, OH, OW, OC).
+
+![Generalconvolution](../img/ch08/ch09-conv_nhwc.png)
+:label:`ch-deploy/conv_nhwc`
+
+As shown in Figure
+:numref:`ch-deploy/img2col_input`, the Img2col rules for
+convolution are as follows: The input is reordered to obtain the matrix
+on the right. The number of rows corresponds to the number of OH \* OW
+outputs. For a row vector, Img2col processes KH \* KW data points of
+each input channel in sequence, from the first channel to channel IC.
+
+![Img2col on the convolutioninput](../img/ch08/ch09-img2col_input.png)
+:label:`ch-deploy/img2col_input`
+
+As shown in Figure
+:numref:`ch-deploy/img2col_weight`, the weights are rearranged.
+One convolution kernel is expanded into one column of the weight matrix.
+This means that there are OC columns in total. On each column vector, KH
+\* KW data values on the first input channel are arranged first, and
+then on subsequent channels until the channel IC. In this manner, the
+convolution operation is converted into the multiplication of two
+matrices. In practice, the data rearrangement of Img2col and GEMM is
+performed simultaneously to save time.
+
+![Img2col on the convolutionkernel](../img/ch08/ch09-img2col_weight.png)
+:label:`ch-deploy/img2col_weight`
+
