@@ -70,7 +70,3 @@ Cores to accelerate GEMM operations, while cuDNN offers an interface to
 hasten neural network operations. To utilize Tensor Cores via cuBLAS
 doing GEMM, we can use function `cublasGemmEx`, its signature is shown
 in Code `lst:cublasGemmEx`.
-
-
-[^1]: available at
-    <https://docs.nvidia.com/cuda/inline-ptx-assembly/index.html>
