@@ -344,3 +344,29 @@ in Figure :numref:`ch-deploy/winograd`.
 
 ![Winogradsteps](../img/ch08/ch09-winograd.png)
 :label:`ch-deploy/winograd`
+
+To use Winograd of ***F***(2$\times$`<!-- -->`{=html}2,
+3$\times$`<!-- -->`{=html}3) for any output size, we need to divide the
+output into 2$\times$`<!-- -->`{=html}2 blocks. We can then perform the
+preceding four steps using the corresponding input to obtain the
+corresponding output. Winograd is not limited to solving
+***F***(2$\times$`<!-- -->`{=html}2, 3$\times$`<!-- -->`{=html}3). For
+any ***F***($m \times m$, $r \times r$), appropriate constant matrices
+***A***, ***B***, and ***G*** can be found to reduce the number of
+multiplications through indirect computation. However, as $m$ and $r$
+increase, the number of additions involved in input and output and the
+number of multiplications of constant weights increase. In this case,
+the decrease in the computation workload brought by fewer
+multiplications is offset by additions and constant multiplications.
+Therefore, we need to evaluate the benefits of Winograd before using it.
+
+This section describes methods for processing data and optimizing
+performance during model inference. An appropriate data processing
+method can facilitate the input feature extraction and output
+processing. And to fully leverage the computing power of hardware, we
+can use parallel computing and operator-level hardware instruction and
+algorithm optimization. In addition, the memory usage and load/store
+rate are also important for the inference performance. Therefore, it is
+essential to design an appropriate memory overcommitment strategy for
+inference. Related methods have been discussed in the section about the
+compiler backend.
