@@ -54,7 +54,7 @@ the floating-point number before quantization. We are then able to
 obtain the integer $q$ after quantization.
 
 $$q=clip(round(\frac{r}{s}+z),q_{min},q_{max})$$ 
-:eqlabel:`equ:ch-deploy/quantization-q`
+:eqlabel:`ch-deploy/quantization-q`
 
 $clip(\cdot)$ and $round(\cdot)$ indicate the truncation and rounding
 operations, and $q_{min}$ and $q_{max}$ indicate the minimum and maximum
@@ -180,7 +180,7 @@ u_c=E(w_c)-E(\hat{w_c})   \\
 \zeta_c=\frac{||w_c-E(w_c)||}{||\hat{w_c}-E(\hat{w_c})||}
 \end{aligned}
 $$ 
-:eqlabel:`equ:ch-deploy/post-quantization`
+:eqlabel:`ch-deploy/post-quantization`
 
 As a general model compression method, quantization can significantly
 improve the memory and compression efficiency of neural networks, and
