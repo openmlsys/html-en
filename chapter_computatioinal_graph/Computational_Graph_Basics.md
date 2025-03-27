@@ -38,7 +38,7 @@ tensor.
 |      dtype       |          Data type, such as bool, uint8, int16, float32, and float64. |
 |      device      |                      Target device, such as a CPU or GPU. |
 |       name       |                                  Tensor name. |
-:label:ch04/ch4-tensor
+:label:`ch04/ch4-tensor`
 
 
 In the following, we explore each tensor attribute with image data as an
