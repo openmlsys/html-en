@@ -55,6 +55,7 @@ jobs:
         run: |
           source venv/bin/activate
           sh build_html.sh
+
       - name: Deploy to pages branch
         run: |
           # Create and switch to a new worktree for the openmlsys-book-en branch
@@ -65,11 +66,12 @@ jobs:
           git fetch origin openmlsys-book-en || true
           git branch -D openmlsys-book-en || true
           git checkout --orphan openmlsys-book-en
-          git rm -rf . || true
+          
+          # Clean everything except .git directory
+          find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} \;
           
           # Copy built documentation
-          apt-get update && apt-get install -y rsync
-          rsync -av --delete ../_build/ .
+          cp -r ../_build/* .
           
           # Configure git
           git config user.name "${GIT_USER_NAME}"
@@ -90,3 +92,4 @@ jobs:
           # Clean up the worktree
           cd ..
           git worktree remove openmlsys-book-en
+      
