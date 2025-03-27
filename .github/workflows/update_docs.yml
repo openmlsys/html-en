@@ -68,7 +68,8 @@ jobs:
           git rm -rf . || true
           
           # Copy built documentation
-          cp -r ../_build/* .
+          apt-get update && apt-get install -y rsync
+          rsync -av --delete ../_build/ .
           
           # Configure git
           git config user.name "${GIT_USER_NAME}"
