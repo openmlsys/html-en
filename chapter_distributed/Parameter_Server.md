@@ -1,4 +1,5 @@
-# Parameter Server {#sec:parameter server}
+# Parameter Server
+:label:`parameter server`
 
 The following describes another common distributed training system:
 parameter server. In different machine learning frameworks, the
