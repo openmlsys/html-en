@@ -1,4 +1,5 @@
-# Model Compression {#sec:ch-deploy/model-compression}
+# Model Compression
+:label:`ch-deploy/model-compression`
 
 The previous section briefly described the purpose of model conversion
 and focused on some common model optimization methods for model

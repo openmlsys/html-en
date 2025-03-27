@@ -1,4 +1,5 @@
-# Conversion to Inference Model and Model Optimization {#sec:ch-deploy/model-optimization}
+# Conversion to Inference Model and Model Optimization
+:label:`ch-deploy/model-optimization`
 
 ## Model Conversion
 

@@ -1,4 +1,5 @@
-# Programming Methods {#Programming Principles for Hardware Accelerators}
+# Programming Methods
+:label:`Programming Principles for Hardware Accelerators`
 
 The first two sections of this chapter primarily discuss the
 significance, ideas, and basic principles behind the design of hardware
@@ -61,7 +62,8 @@ $\bf{C} = \alpha \bf{A}\times \bf{B} + \beta \bf{C}$, where
 $\bf{A}\in\mathbb{R}^{M\times K}, \bf{B}\in\mathbb{R}^{K\times N}, \bf{C}\in\mathbb{R}^{M\times N}$,
 and $\alpha$ and $\beta$ are parameters provided by users.
 
-### High-level Computation Operators {#sec-accelerator-use-cublas}
+### High-level Computation Operators
+:label:`sec-accelerator-use-cublas`
 
 Using an operator acceleration library directly is the most
 straightforward method. NVIDIA offers two types of operator libraries:
