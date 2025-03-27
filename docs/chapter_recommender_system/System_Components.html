@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>11.2. System Components &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="11.3. Recommendation Pipeline" href="Recommendation_Pipeline.html" />
+    <link rel="prev" title="11.1. Overview" href="Overview.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">11. </span>Recommender System</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">11.2. </span>System Components</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_recommender_system/System_Components.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">11. Recommender System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">11. Recommender System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="system-components">
+<h1><span class="section-number">11.2. </span>System Components<a class="headerlink" href="#system-components" title="Permalink to this heading">¶</a></h1>
+<p>The subsequent sections delve into the functionalities and features of
+each module within the recommender system’s workflow.</p>
+<div class="section" id="message-queue">
+<h2><span class="section-number">11.2.1. </span>Message Queue<a class="headerlink" href="#message-queue" title="Permalink to this heading">¶</a></h2>
+<p>Message queues enable distributed systems to exchange data
+asynchronously in the form of messages. In a recommender system, each
+model is often encapsulated as a microservice, and message queues
+facilitate the data communication among these microservices. Typical
+message queue implementations include RabbitMQ, Kafka, and Pulsar.</p>
+<p>Specifically, a message queue aggregates logs (which include user
+feedback on recommended results) sent from the client to the server. The
+data processing module retrieves raw logs from the message queue,
+sanitizes and transforms them into user features and item features,
+stores these features in feature repositories, and deposits the derived
+training samples into another message queue for the training server’s
+utilization.</p>
+<p>Message queues offer multiple advantages, including enabling message
+producers (such as client reporting modules) and message consumers (like
+server data processing modules) to produce and consume data at different
+rates. For instance, during peak usage times of the recommendation
+service, the client side might generate a vast amount of feedback. If
+the data processing module is expected to receive data directly, a large
+portion of it could be discarded due to the data generation pace
+surpassing the processing speed. Configuring the data processing module
+based on peak feedback volume would result in resource waste during
+off-peak times. Message queues can buffer user logs during peak times,
+allowing the data processing module to handle them during off-peak
+times. This ensures user feedback is processed consistently and
+cost-effectively.</p>
+</div>
+<div class="section" id="feature-store">
+<h2><span class="section-number">11.2.2. </span>Feature Store<a class="headerlink" href="#feature-store" title="Permalink to this heading">¶</a></h2>
+<p>Feature stores serve as repositories where features are stored and
+organized for use in model training and inference services. Typical
+feature store implementations include those developed by commercial
+enterprises, such as Amazon SageMaker and Databricks, as well as
+open-source solutions like Hopsworks and Feast.</p>
+<p>To generate features, a recommender system has a data processing
+component that retrieves raw logs from the message queues. These logs
+might contain gender information, for example, <em>Male</em>, <em>Female</em>, or
+<em>Unknown</em>. Since these raw features cannot be directly incorporated into
+a recommendation model, the data processing module performs a simple
+mapping conversion on the raw features: <em>Male</em> <span class="math notranslate nohighlight">\(\rightarrow\)</span> 0,
+<em>Female</em> <span class="math notranslate nohighlight">\(\rightarrow\)</span> 1, and <em>Unknown</em> <span class="math notranslate nohighlight">\(\rightarrow\)</span> 2. The
+transformed features are then stored in the feature store, where they
+can be accessed by the data processing module or the recommendation
+model.</p>
+<p>Figure <a class="reference internal" href="#id1"><span class="std std-numref">Fig. 11.2.1</span></a> displays a typical format of a feature
+store. When the training or inference module needs to access a specific
+user’s features, all necessary features can be retrieved from the
+feature store using just the user ID.</p>
+<div class="figure align-default" id="id2">
+<span id="id1"></span><img alt="../_images/feature_store.png" src="../_images/feature_store.png" />
+<p class="caption"><span class="caption-number">Fig. 11.2.1 </span><span class="caption-text">Example of a featurestore</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>One significant advantage of utilizing feature stores is the potential
+for reusing the data processing module’s outputs, thereby reducing the
+volume of redundant data that needs to be stored. Essentially, each
+module doesn’t need to process raw data independently or maintain a
+storage system for potentially useful features. A more crucial advantage
+of feature stores is that they ensure a consistent view of features
+across all system modules. Consider an extreme scenario where the values
+for <em>Male</em> and <em>Female</em> are assigned as 1 and 0 in the training module’s
+database, but as 0 and 1 in the inference module’s database. In such a
+situation, the model inference results could be disastrous.</p>
+</div>
+<div class="section" id="neural-networks">
+<h2><span class="section-number">11.2.3. </span>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this heading">¶</a></h2>
+<p>Neural networks, particularly dense ones, are integral to the foundation
+of recommendation models, owing to their proficiency in discerning
+intricate and implicit relationships among features. This capability
+enables the suggestion of items potentially appealing to the users.
+Multilayer perceptrons (MLPs), a simple form of dense neural networks,
+have demonstrated their potency in these systems. Renowned companies
+such as Google   and Meta   incorporate MLPs in their recommendation
+models, underscoring their efficacy.</p>
+<p>The compact size of an MLP, a mere few megabytes, ensures manageable
+storage requirements within a recommendation model. Nevertheless, it
+should be noted that the extensive matrix multiplication operations
+inherent to MLPs are computationally demanding and therefore necessitate
+robust computing power.</p>
+<p>While MLPs have produced impressive outcomes, the exploration of
+innovative deep neural network applications in recommendation systems
+continues unabated. An assortment of sophisticated and elaborate network
+structures has emerged in recent years, testifying to the relentless
+drive for improvement. Notably, there have been attempts to utilize
+Transformer models for recommendation tasks  , hinting at the evolving
+trajectory of this field.</p>
+<p>Looking forward, it is anticipated that the size of dense neural
+networks within recommendation models will inevitably expand, possibly
+escalating to several gigabytes or even terabytes. This evolution is
+poised to bring about significant changes, both in terms of the systems’
+effectiveness and their operational demands.</p>
+</div>
+<div class="section" id="embedding-table">
+<h2><span class="section-number">11.2.4. </span>Embedding Table<a class="headerlink" href="#embedding-table" title="Permalink to this heading">¶</a></h2>
+<p>Embedding tables constitute a crucial component of recommendation
+systems. They primarily serve to transform discrete feature data that
+cannot be directly calculated—for instance, user IDs, item IDs, genders,
+and item categories—into vectors within a high-dimensional space. The
+structure of an embedding table in a recommendation model bears
+resemblance to its counterpart in a natural language processing (NLP)
+model, though there are subtle distinctions.</p>
+<div class="figure align-default" id="id3">
+<span id="recommendation-models"></span><img alt="../_images/recommendation_model.png" src="../_images/recommendation_model.png" />
+<p class="caption"><span class="caption-number">Fig. 11.2.2 </span><span class="caption-text">Structure of a recommendation model</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>In NLP models, the majority of parameters are found within deep neural
+networks. In contrast, embedding tables carry the bulk of parameters in
+recommendation models, as illustrated in Figure
+<a class="reference internal" href="#recommendation-models"><span class="std std-numref">Fig. 11.2.2</span></a>. This discrepancy can be attributed to
+the plethora of discrete features in recommendation systems, each
+necessitating an individual embedding item for every possible value.</p>
+<p>For instance, the gender feature, which can take on the values <em>Female</em>,
+<em>Male</em>, or <em>Unknown</em>, would require three separate embedding items.
+Assuming that each item is a 64-dimensional single-precision
+floating-point vector, a recommendation system catering to 100 million
+users would result in a user embedding table (where each embedding item
+corresponds to a user) of <span class="math notranslate nohighlight">\(4*64*10^8~=23.8\)</span> GB in size.</p>
+<p>Moreover, there would also be a requirement for embedding tables for
+items (with each table entry corresponding to an item) as well as for
+various user and item features. Taken together, the combined size of
+these tables could potentially stretch into hundreds of gigabytes, or
+even tens of terabytes.</p>
+<p>In contrast, as mentioned earlier, the MLP models that are frequently
+employed in recommendation systems are relatively small in size. For
+instance, in a Deep Learning Recommendation Model (DLRM)   trained on
+the Ali-CCP dataset  , the embedding tables surpass 1.44 GB in size,
+while the dense neural network only measures approximately 100 KB. This
+disparity underscores the dominant role of embedding tables in shaping
+the scale and computational demands of recommendation models.</p>
+</div>
+<div class="section" id="parameter-server">
+<h2><span class="section-number">11.2.5. </span>Parameter Server<a class="headerlink" href="#parameter-server" title="Permalink to this heading">¶</a></h2>
+<p>Recommendation systems commonly employ a parameter server architecture,
+effectively partitioning computational and storage responsibilities.
+This is advantageous given that while embedding tables consume a
+significant portion of a recommendation model’s storage space, their
+computation tends to be sparse.</p>
+<p>This sparsity results from the piecemeal computation of data in small
+batches throughout both the training and inference phases. Within the
+computation of a single batch, only the relevant embedding items are
+accessed. For example, in a recommender system serving 100 million users
+and processing 1000 user requests at a time, only about
+<span class="math notranslate nohighlight">\(\frac{1}{100000}\)</span> of the total embedding items are accessed
+concurrently.</p>
+<p>Thus, servers conducting the computations for generating recommendation
+results—during either the training or inference stages—do not need to
+store the full set of embedding tables. This separation of concerns
+offered by the parameter server architecture greatly improves the
+efficiency of storage and computation resource management in
+recommendation systems.</p>
+<div class="figure align-default" id="id4">
+<span id="parameter-server-in-recommendation"></span><img alt="../_images/parameter_server_in_recommendation.png" src="../_images/parameter_server_in_recommendation.png" />
+<p class="caption"><span class="caption-number">Fig. 11.2.3 </span><span class="caption-text">Role of parameter servers in a recommender system</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>The parameter servers in a recommender system have a dual role. They
+coordinate the training process and also support model inference. During
+the model inference process, inference servers need to access model
+parameters stored on parameter servers to compute recommendation
+results. To minimize delay in the inference process, at least one copy
+of the model parameters is stored on the parameter servers located in
+the same data center as the inference server (commonly referred to as an
+inference data center), as illustrated in Figure
+<a class="reference internal" href="#parameter-server-in-recommendation"><span class="std std-numref">Fig. 11.2.3</span></a>.</p>
+<p>This architectural design also aids in failure recovery. If a data
+center unexpectedly goes offline and becomes inaccessible, user requests
+can be rerouted to other operational inference data centers.</p>
+</div>
+<div class="section" id="training-server">
+<h2><span class="section-number">11.2.6. </span>Training Server<a class="headerlink" href="#training-server" title="Permalink to this heading">¶</a></h2>
+<p>Within a recommender system, a training server is responsible for
+pulling a batch of data from the message queue and the corresponding
+embedding items and deep neural network parameters from the parameter
+servers. This enables the server to generate the recommendation result,
+calculate the loss, and carry out backpropagation to compute the
+gradients.</p>
+<p>The parameter servers, in turn, gather these gradients from all training
+servers. Following this, they aggregate the gathered gradients to
+compute the new parameters. This cycle of operations signifies the
+completion of one round of model training.</p>
+<p>Given that the parameter servers need to compile the gradients from all
+training servers, these servers are usually housed in the same data
+center, also known as the training data center. This setup serves to
+mitigate the ‘straggler problem’, where network delays can severely
+impact training efficiency.</p>
+</div>
+<div class="section" id="inference-server">
+<h2><span class="section-number">11.2.7. </span>Inference Server<a class="headerlink" href="#inference-server" title="Permalink to this heading">¶</a></h2>
+<p>Inference servers in a recommender system play the role of receiving
+users’ recommendation requests from the client, pulling necessary model
+parameters from the parameter servers based on these requests, and
+obtaining user features and item features from feature stores. Using
+this information, they calculate the recommendation results.</p>
+<p>To simplify, this section considers a scenario with only one inference
+server processing user requests. However, in a large-scale recommender
+system, the recommendation result is typically produced by a
+recommendation pipeline composed of multiple models, each running on
+separate inference servers.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">11.2. System Components</a><ul>
+<li><a class="reference internal" href="#message-queue">11.2.1. Message Queue</a></li>
+<li><a class="reference internal" href="#feature-store">11.2.2. Feature Store</a></li>
+<li><a class="reference internal" href="#neural-networks">11.2.3. Neural Networks</a></li>
+<li><a class="reference internal" href="#embedding-table">11.2.4. Embedding Table</a></li>
+<li><a class="reference internal" href="#parameter-server">11.2.5. Parameter Server</a></li>
+<li><a class="reference internal" href="#training-server">11.2.6. Training Server</a></li>
+<li><a class="reference internal" href="#inference-server">11.2.7. Inference Server</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Overview.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>11.1. Overview</div>
+         </div>
+     </a>
+     <a id="button-next" href="Recommendation_Pipeline.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>11.3. Recommendation Pipeline</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

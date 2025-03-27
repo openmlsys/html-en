@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>11.5. Supporting Real-time Machine Learning &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="11.6. Chapter Summary" href="Chapter_Summary.html" />
+    <link rel="prev" title="11.4. Model Update" href="Model_Update.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">11. </span>Recommender System</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">11.5. </span>Supporting Real-time Machine Learning</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_recommender_system/Supporting_Real-time_Machine_Learning.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">11. Recommender System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">11. Recommender System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="supporting-real-time-machine-learning">
+<h1><span class="section-number">11.5. </span>Supporting Real-time Machine Learning<a class="headerlink" href="#supporting-real-time-machine-learning" title="Permalink to this heading">¶</a></h1>
+<p>The landscape of contemporary recommender systems has seen a growing
+trend in the adoption of a real-time machine learning architecture.
+However, realizing the full potential of such a architecture poses
+considerable challenges.</p>
+<p>Recommender systems may aim to enhance the quality of their suggestions
+by managing an extensive array of parameters. These parameters are often
+replicated across multiple data centers to minimize access latency. Yet,
+the ongoing updating of these parameters by machine learning models can
+generate a significant volume of synchronization traffic. In essence,
+any update to a “leader” parameter replica necessitates timely
+reflection in all corresponding “follower” replicas.</p>
+<div class="section" id="system-challenges">
+<h2><span class="section-number">11.5.1. </span>System Challenges<a class="headerlink" href="#system-challenges" title="Permalink to this heading">¶</a></h2>
+<p>Transitioning from offline model training to the more dynamic real-time
+(or online) model training in a recommender system presents several
+system-related challenges:</p>
+<div class="section" id="needs-for-synchronizing-massive-replicas">
+<h3><span class="section-number">11.5.1.1. </span>Needs for Synchronizing Massive Replicas<a class="headerlink" href="#needs-for-synchronizing-massive-replicas" title="Permalink to this heading">¶</a></h3>
+<p>In a recommender system, model parameters are typically replicated
+across multiple servers. These replicas exist on servers within a single
+data center and can collaboratively address parameter queries. This
+approach enhances query throughput by distributing the load evenly among
+the servers. In addition, replicas are also located in geographically
+distributed data centers. This strategic placement not only improves the
+availability of the model parameters, but also the locality at which
+these replicas can be accessed. Consequently, a single model parameter
+may have numerous replicas (for instance, between tens and hundreds) in
+a distributed environment.</p>
+<p>In the context of real-time machine learning, the training servers need
+to frequently update the primary (leader) replica of a parameter. The
+primary replica must coordinate with all other secondary (follower)
+replicas to ensure consistency. Coordinating such a vast number of
+replicas often surpasses the capabilities of traditional synchronization
+protocols, which are typically designed for syncing smaller sets of file
+replicas across different devices.</p>
+</div>
+<div class="section" id="excessive-network-traffic">
+<h3><span class="section-number">11.5.1.2. </span>Excessive Network Traffic<a class="headerlink" href="#excessive-network-traffic" title="Permalink to this heading">¶</a></h3>
+<p>The training data center continuously collects new training samples and
+instantaneously uses these samples to compute gradients for model
+parameter updates. These updates must then be transferred over a network
+comprising both a Local Area Network (LAN) and a Wide Area Network
+(WAN). The LAN connects the servers within a data center, while the WAN
+interlinks multiple data centers.</p>
+<p>Empirical system traces have revealed that the model update traffic can
+reach up to hundreds of gigabytes per second. This volume of traffic is
+significantly greater than what a typical LAN or WAN can handle. On
+average, a LAN can deliver an aggregated throughput ranging from 100 to
+1000 Gbps, while a WAN can provide a bandwidth ranging from 10 to 100
+Gbps.</p>
+</div>
+<div class="section" id="lack-of-model-validation">
+<h3><span class="section-number">11.5.1.3. </span>Lack of Model Validation<a class="headerlink" href="#lack-of-model-validation" title="Permalink to this heading">¶</a></h3>
+<p>In the context of real-time machine learning, the gradient of a
+parameter (or an updated version of this parameter) is immediately sent
+to all replicas. This gradient however could adversely affect the
+recommendation quality. The underlying reason for this is the
+architectural design of real-time machine learning systems, which
+permits the training server to calculate gradients based on a small
+batch of real-time samples. These samples, collected in an online
+environment, can potentially be biased or malicious.</p>
+<p>Traditionally, the negative impacts of these gradients are mitigated
+through extended training periods, with only the checkpoints that pass
+validation being disseminated to replicas. However, real-time machine
+learning does not allow for such offline validation. As a consequence,
+there is an urgent need to devise new strategies that protect the
+recommendation system from being negatively impacted by detrimental
+gradients.</p>
+</div>
+</div>
+<div class="section" id="application-specific-synchronization-protocols">
+<h2><span class="section-number">11.5.2. </span>Application-Specific Synchronization Protocols<a class="headerlink" href="#application-specific-synchronization-protocols" title="Permalink to this heading">¶</a></h2>
+<p>To mitigate the challenge of leader bottlenecks during synchronization
+of replicas, designers of distributed machine learning systems have
+turned to application-specific synchronization protocols. These
+protocols are devised to capitalize on the data characteristics unique
+to machine learning applications, with the aim of expediting the
+synchronization process. For instance, Microsoft’s Adam utilizes a
+customized two-phase commit protocol in its parameter server system for
+machine learning model replicas. Moreover, some parameter servers are
+designed to skip synchronization requests when the gradient magnitude is
+relatively small, implying that a model update is unlikely to
+drastically affect the inference outcomes of a machine learning model.</p>
+<p>Despite their general efficacy, these protocols can encounter
+difficulties in real-world recommender systems due to a couple of
+factors. Firstly, the requirement of a leader to orchestrate replicas in
+these parameter servers can become a limiting factor, particularly when
+there are hundreds of replicas to manage. Secondly, the leader replica’s
+dependence on high-speed networks to facilitate low latency
+communication with follower replicas can be problematic, as these
+high-speed networks are not always readily available on a wide area
+network.</p>
+<p>Recently, practitioners in the field of recommender systems have been
+exploring the potential of decentralized synchronization protocols. One
+noteworthy example is the Ekko system, which expands on traditional
+peer-to-peer synchronization protocol to effectively manage the vast
+number of synchronization requests in a recommender system.</p>
+<p>To demonstrate how a recommender system can utilize the data
+characteristics of machine learning applications to accelerate
+synchronization, we’ll examine Ekko. Figure <a class="reference internal" href="#p2p-replication"><span class="std std-numref">Fig. 11.5.1</span></a>
+depicts Ekko’s peer-to-peer architecture where replicas can be
+synchronized among decentralized parameter servers.</p>
+<div class="figure align-default" id="id3">
+<span id="p2p-replication"></span><img alt="../_images/p2p_replication.png" src="../_images/p2p_replication.png" />
+<p class="caption"><span class="caption-number">Fig. 11.5.1 </span><span class="caption-text">Example of decentralized synchronization protocols for
+parameterservers</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>To execute the peer-to-peer synchronization algorithm, Ekko first
+attributes a version to each parameter (each key-value pair) by using
+the established version vector algorithm  . Every version records the
+time and location of a parameter’s update. Moreover, Ekko establishes a
+version vector (also referred to as knowledge) within each shard to
+document all known versions of the shard. By comparing the version
+number with the version vector, a parameter server can retrieve the
+updated parameter state from its peers without needing to transmit the
+parameters. For a more detailed understanding of the version vector
+algorithm, please refer to the original paper.</p>
+<p>However, Ekko system researchers have discovered that even with the
+version vector algorithm, identifying updated parameters amongst a large
+number of model parameters remains a time-consuming task. To hasten the
+process of locating updated parameters, Ekko harnesses two key
+characteristics of recommendation models:</p>
+<ol class="arabic simple">
+<li><p><strong>Update Sparsity:</strong> While embedding tables in a model may span
+several hundred gigabytes or even several terabytes, the training
+server only updates the embedding items included in the current batch
+at any given time. This is because model training generally happens
+in small batches. From a global perspective, the states of only a
+small fraction of parameters within the embedding tables are updated
+over a certain time period.</p></li>
+<li><p><strong>Time Locality:</strong> In a recommender system, model updates aren’t
+uniformly distributed across all parameters. Embedding items
+corresponding to popular items and active users undergo frequent
+updates within a specified period of time, whereas those related to
+less popular items and inactive users may not be updated at all.</p></li>
+</ol>
+<p>Based on these two characteristics, the cornerstone of Ekko’s comparison
+acceleration approach is to circumvent time wasted on comparing versions
+of parameters that remain unchanged.</p>
+<p>Within the Ekko system, a <em>model update cache</em> is developed in each
+shard to store the pointers of parameters that have recently been
+updated. Suppose parameter server A is trying to pull model updates from
+parameter server B. If parameter server A already has all model updates
+that parameter server B has not cached, server A can obtain all unknown
+model updates by simply comparing the parameters stored in the cache of
+parameter server B. This is all that’s needed to ensure server A is up
+to date.</p>
+</div>
+<div class="section" id="application-aware-model-update-scheduling">
+<h2><span class="section-number">11.5.3. </span>Application-Aware Model Update Scheduling<a class="headerlink" href="#application-aware-model-update-scheduling" title="Permalink to this heading">¶</a></h2>
+<p>When dealing with limited bandwidth for model update transfer, designers
+of distributed machine learning systems often consider the effects of
+these updates on their applications. The fundamental intuition is that
+not all model updates exert an equal influence on the service quality of
+an application. Typically, this quality is assessed in terms of
+service-level objectives (SLOs), such as latency, recommendation
+accuracy, user engagement metrics, among others.</p>
+<p>Various protocols have been developed to prioritize the transmission of
+model updates over congested networks, based on the impact of these
+updates on the SLOs. The Ekko system serves as a representative example
+for illustrating this approach. Typically, three metrics are considered:</p>
+<ol class="arabic simple">
+<li><p><strong>Update Freshness:</strong> If the embedding tables of the recommendation
+model lack embedding items corresponding to new users or items, these
+users or items cannot reap the benefits of the high SLOs provided by
+the recommendation model. To counter this, we can assign the highest
+priority to newly added embedding items, ensuring that they are
+disseminated to all inference service clusters as swiftly as
+possible.</p></li>
+<li><p><strong>Update Significance:</strong> Numerous studies have demonstrated that
+model updates with larger gradients considerably impact model
+accuracy. Consequently, we can assign varying priorities to different
+model updates based on their amplitude.  <a class="footnote-reference brackets" href="#id2" id="id1">1</a></p></li>
+<li><p><strong>Model Importance:</strong> In online services involving multiple models,
+each model attracts different volumes of inference traffic.
+Therefore, during network congestion, we can give precedence to the
+update of models that garner the most traffic.</p></li>
+</ol>
+<p>These aforementioned application-level metrics need to be consolidated
+to effectively guide the scheduling of model updates. We demonstrate
+this concept using Figure <a class="reference internal" href="#model-update-scheduler"><span class="std std-numref">Fig. 11.5.2</span></a>, a model
+update scheduler implemented in the Ekko system. In this system, the
+total priority for each model update is computed and then compared with
+the k-th percentile. If the total priority exceeds the kth percentile,
+it is considered high priority; otherwise, it is deemed low priority.
+The value of <em>k</em> is user-defined, and the kth percentile is estimated
+using an existing algorithm based on historical priority data.</p>
+<div class="figure align-default" id="id4">
+<span id="model-update-scheduler"></span><img alt="../_images/update_scheduler.png" src="../_images/update_scheduler.png" />
+<p class="caption"><span class="caption-number">Fig. 11.5.2 </span><span class="caption-text">Application-aware model update scheduler</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="online-model-state-management">
+<h2><span class="section-number">11.5.4. </span>Online Model State Management<a class="headerlink" href="#online-model-state-management" title="Permalink to this heading">¶</a></h2>
+<p>In the context of real-time machine learning, it’s crucial to have
+mechanisms in place that can continuously monitor the performance of a
+recommendation model and quickly revert this model to a previous state
+if any performance degradation is detected. We demonstrate how this can
+be implemented using the Ekko system.</p>
+<p>The key design principle involves setting up a group of baseline models
+and diverting a small amount of the requests (or traffic) from inference
+requests to these baseline models. This strategy allows the collection
+of SLO-related metrics from the baseline models.</p>
+<p>As depicted in Figure <a class="reference internal" href="#model-state-manager"><span class="std std-numref">Fig. 11.5.3</span></a>, the time series
+anomaly detection algorithm in the inference model state manager
+persistently monitors the SLOs of both baseline and online models. The
+model state, which could be healthy, uncertain, or corrupted, is
+maintained by the replicated state machine.</p>
+<p>If an online model is found to be in a corrupted state, the traffic for
+this model is redirected to another model in a healthy state. The
+corrupted model is then rolled back to a previous healthy state before
+being reintroduced online.</p>
+<div class="figure align-default" id="id5">
+<span id="model-state-manager"></span><img alt="../_images/state_manager.png" src="../_images/state_manager.png" />
+<p class="caption"><span class="caption-number">Fig. 11.5.3 </span><span class="caption-text">Online Model StateManagement</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>The update amplitude could either be the gradient itself or the
+gradient multiplied by the learning rate, contingent on the model
+training mode.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">11.5. Supporting Real-time Machine Learning</a><ul>
+<li><a class="reference internal" href="#system-challenges">11.5.1. System Challenges</a><ul>
+<li><a class="reference internal" href="#needs-for-synchronizing-massive-replicas">11.5.1.1. Needs for Synchronizing Massive Replicas</a></li>
+<li><a class="reference internal" href="#excessive-network-traffic">11.5.1.2. Excessive Network Traffic</a></li>
+<li><a class="reference internal" href="#lack-of-model-validation">11.5.1.3. Lack of Model Validation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#application-specific-synchronization-protocols">11.5.2. Application-Specific Synchronization Protocols</a></li>
+<li><a class="reference internal" href="#application-aware-model-update-scheduling">11.5.3. Application-Aware Model Update Scheduling</a></li>
+<li><a class="reference internal" href="#online-model-state-management">11.5.4. Online Model State Management</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Model_Update.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>11.4. Model Update</div>
+         </div>
+     </a>
+     <a id="button-next" href="Chapter_Summary.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>11.6. Chapter Summary</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>5.3. Intermediate Representation &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.4. Automatic Differentiation" href="Automatic_Differentiation.html" />
+    <link rel="prev" title="5.2. Overview of AI Compiler Frontends" href="Overview_of_AI_Compiler_Frontends.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">5. </span>AI Compiler Frontend</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">5.3. </span>Intermediate Representation</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_compiler_frontend/Intermediate_Representation.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. AI Compiler Frontend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. AI Compiler Frontend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="intermediate-representation">
+<h1><span class="section-number">5.3. </span>Intermediate Representation<a class="headerlink" href="#intermediate-representation" title="Permalink to this heading">¶</a></h1>
+<p>In this section, we begin by introducing basic IR concepts and the types
+of IR employed in classical compilers. Next, we address the new
+requirements and challenges that arise in the IR design for machine
+learning frameworks. To conclude this section, we examine the types of
+IRs utilized by well-known machine learning frameworks and delve into
+their implementation.</p>
+<div class="section" id="definition-of-intermediate-representations">
+<h2><span class="section-number">5.3.1. </span>Definition of Intermediate Representations<a class="headerlink" href="#definition-of-intermediate-representations" title="Permalink to this heading">¶</a></h2>
+<p>An IR is a data structure or a form of code that a compiler utilizes to
+represent source code. Almost all compilers need IRs to model the
+program code that requires analysis, transformation, and optimization.
+The representational capability of an IR is crucial during the
+compilation process. It must accurately depict source code without
+information loss, ensure the completeness of the source-to-target code
+compilation, and guarantee the effectiveness and performance of code
+optimization.</p>
+<p>As illustrated in Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-IR</span></code>, IRs facilitate the
+representation of multiple source program languages from the frontend
+and enable the backend to connect to various target machines. Located
+between the frontend and backend is an optimizer, which allows for the
+addition of new optimization processes directly into the frontend and
+backend. These processes use existing IRs as input and generate new IRs
+as output. By analyzing and optimizing IRs, the optimizer enhances the
+extensibility of the compilation process and minimizes the impact that
+might be introduced during an optimization process on the frontend and
+backend.</p>
+<div class="figure align-default" id="id1">
+<span id="ch04-ch04-ir"></span><img alt="../_images/IR-IR_structure.png" src="../_images/IR-IR_structure.png" />
+<p class="caption"><span class="caption-number">Fig. 5.3.1 </span><span class="caption-text">Compiler’s optimizationprocess</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>With the ongoing evolution of compiler techniques, the development of
+IRs has progressed through three stages. In the initial stage, IRs were
+confined within a compiler and exclusively used by compiler developers.
+During the middle stage, when specific compilers became open source, IRs
+started being made publicly available, primarily for use by the users of
+compilers and related compilation tools. In the current stage, IRs are
+advancing toward facilitating an ecosystem of ecosystems (through a
+unified IR approach), encouraging increasing stakeholders (for example,
+hardware accelerator designers, machine learning framework users, and
+more) to participate in advertising AI computing.</p>
+</div>
+<div class="section" id="types-of-intermediate-representations">
+<h2><span class="section-number">5.3.2. </span>Types of Intermediate Representations<a class="headerlink" href="#types-of-intermediate-representations" title="Permalink to this heading">¶</a></h2>
+<p>We will discuss various types of IR structures used by classical
+compilers. Understanding these IR structures is essential for analyzing
+source programs and generating optimized compiled code. Table
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch06/ch06-categorize</span></code> offers an overview of the different IR
+types. It is important to design IR structures carefully, considering
+the specific requirements of the compiler’s design.</p>
+<div class="section" id="linear-intermediate-representation">
+<h3><span class="section-number">5.3.2.1. </span>Linear Intermediate Representation<a class="headerlink" href="#linear-intermediate-representation" title="Permalink to this heading">¶</a></h3>
+<p>Linear IRs are widely used in compiler design, resembling assembly code
+for abstract machines. They represent the code to be compiled as a
+sequentially ordered series of operations. This ordering is important in
+practical terms. Linear IRs are popular because most processors utilize
+linear assembly languages.</p>
+<p>Two common types of linear IRs are stack machine code and three-address
+code . Stack machine code, a form of single-address code, offers a
+straightforward and compact representation. Instructions in stack
+machine code typically consist solely of an opcode that specifies an
+operation, with operands stored on a stack. Most instructions retrieve
+operands from the stack and push the results of their operations back
+onto it. On the other hand, three-address code (3AC) emulates the
+instruction format used in modern RISC machines. It employs a set of
+quadruples, each containing an operator and three addresses (two
+operands and one target). Figure <a class="reference internal" href="#ch04-ch04-linearir"><span class="std std-numref">Fig. 5.3.2</span></a>
+illustrates the stack machine code and three-address code
+representations for the expression <span class="math notranslate nohighlight">\(a-b*5\)</span>.</p>
+<div class="figure align-default" id="id2">
+<span id="ch04-ch04-linearir"></span><img alt="../_images/IR-linear_IR.png" src="../_images/IR-linear_IR.png" />
+<p class="caption"><span class="caption-number">Fig. 5.3.2 </span><span class="caption-text">Stack machine code and three-addresscode</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="graphical-intermediate-representation">
+<h3><span class="section-number">5.3.2.2. </span>Graphical Intermediate Representation<a class="headerlink" href="#graphical-intermediate-representation" title="Permalink to this heading">¶</a></h3>
+<p>Graphical IRs store information about the compilation process in the
+form of graphs. These graphs utilize nodes, edges, lists, trees, and
+other elements to collectively represent an algorithm. Although all
+graphical IRs consist of nodes and edges, they differ in terms of
+abstraction levels and graph structures. Common examples of graphical
+IRs include abstract syntax trees (ASTs), directed acyclic graphs
+(DAGs), and control-flow graphs (CFGs).</p>
+<p>An AST is a tree-structured IR that closely resembles the structure of
+the source code. Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-AST_DAG</span></code> depicts the AST
+for the expression <span class="math notranslate nohighlight">\(a5+a5b\)</span>. It is worth noting that the AST
+contains two identical copies of <span class="math notranslate nohighlight">\(a5\)</span>, which introduces
+redundancy. To address this redundancy, the DAG offers a simplified
+representation where identical subtrees can be shared by multiple parent
+nodes. By reusing subtrees, the DAG reduces the cost of the evaluation
+process, especially when the compiler can verify that the value of
+<span class="math notranslate nohighlight">\(a\)</span> remains constant.</p>
+<div class="figure align-default" id="id3">
+<span id="ch04-ch04-ast-dag"></span><img alt="../_images/IR-ASTDAG.png" src="../_images/IR-ASTDAG.png" />
+<p class="caption"><span class="caption-number">Fig. 5.3.3 </span><span class="caption-text">AST and DAG</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="hybrid-intermediate-representation">
+<h3><span class="section-number">5.3.2.3. </span>Hybrid Intermediate Representation<a class="headerlink" href="#hybrid-intermediate-representation" title="Permalink to this heading">¶</a></h3>
+<p>Hybrid IRs combine both linear IR and graphical IR elements. An example
+of a hybrid IR is LLVM IR , which is illustrated in Figure
+<a class="reference internal" href="#ch04-ch04-llvm-ir"><span class="std std-numref">Fig. 5.3.4</span></a>. LLVM is an open-source compiler framework
+with the goal of providing unified IRs for different frontends and
+backends.</p>
+<p>In LLVM IR, linear IRs are used to construct basic blocks, while
+graphical IRs represent the control flow between these blocks. Each
+instruction within a basic block is presented as a static single
+assignment (SSA) . SSA requires each variable to be defined before use,
+with values assigned to them only once. Multiple SSA instructions form a
+linear list within a basic block.</p>
+<p>In the control flow graph (CFG), each node represents a basic block, and
+control transfer between these blocks is implemented through edges. This
+combination of linear IR for basic blocks and graphical IR for control
+flow allows for a flexible and efficient representation in LLVM IR.</p>
+<div class="figure align-default" id="id4">
+<span id="ch04-ch04-llvm-ir"></span><img alt="../_images/IR-LLVMIR.png" src="../_images/IR-LLVMIR.png" />
+<p class="caption"><span class="caption-number">Fig. 5.3.4 </span><span class="caption-text">LLVM IR</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="intermediate-representation-in-machine-learning-frameworks">
+<h2><span class="section-number">5.3.3. </span>Intermediate Representation in Machine Learning Frameworks<a class="headerlink" href="#intermediate-representation-in-machine-learning-frameworks" title="Permalink to this heading">¶</a></h2>
+<p>Classical IRs (such as LLVM IR) primarily target programming languages
+for general-purpose computation tasks, which falls short of satisfying
+the unique requirements of machine-learning-related computation. When
+designing IRs tailored for machine learning frameworks, certain vital
+factors warrant attention:</p>
+<ul class="simple">
+<li><p><strong>Tensor Representation</strong>. Given the predominance of tensor data in
+machine learning frameworks, it’s imperative that the IRs can
+effectively handle tensor representation.</p></li>
+<li><p><strong>Automatic Differentiation</strong>. A core aspect of machine learning
+involves evaluating derivatives of neural networks and optimizers
+through automatic differentiation. Accordingly, IRs must prioritize
+simplicity, performance, and scalability of higher-order
+differentials for automatic differentiation.</p></li>
+<li><p><strong>Computational Graph Mode</strong>. Machine learning frameworks like
+TensorFlow, PyTorch, and MindSpore operate on two computational graph
+modes: static and dynamic. The static mode, with pre-defined
+computational graphs, enhances optimization but compromises on
+flexibility. Conversely, the dynamic mode trades running speed for
+flexibility and easier debugging by executing operators immediately
+in the computational graph. IRs should therefore support both modes,
+enabling users to choose the one best suited for their tasks while
+building algorithm models.</p></li>
+<li><p><strong>Support for Higher-order Functions and Closures</strong>. Essential in
+functional programming, higher-order functions take or return
+functions, while closures bundle code blocks with references to the
+surrounding environment, facilitating access to an outer function’s
+scope from an inner function. Such support reduces redundant code,
+improves abstraction, and enhances the flexibility and simplicity of
+framework representations.</p></li>
+<li><p><strong>Compilation Optimization</strong>. Machine learning frameworks lean on
+compilation optimizations, including hardware-agnostic,
+hardware-specific, and deployment- or inference-related
+optimizations. These rely significantly on IRs implementations.</p></li>
+<li><p><strong>Just-in-Time (JIT) Compilation</strong>. For expedited compilation and
+execution in machine learning frameworks, JIT compilation is
+frequently utilized. Optimization of JIT compilation, including loop
+unrolling, fusion, and inlining, plays a crucial role in optimizing
+parts of data flow graphs in IRs. A flawed IR design could
+potentially hamper JIT compilation performance in machine learning
+frameworks, thereby impacting the program’s running capabilities.</p></li>
+</ul>
+<p>Considering these factors, developers persistently refine classical IRs
+and introduce new IRs specifically tailored for machine learning
+frameworks. In the following section, we will delve into the IRs
+employed by various machine learning frameworks.</p>
+<div class="section" id="intermediate-representation-in-pytorch">
+<h3><span class="section-number">5.3.3.1. </span>Intermediate Representation in PyTorch<a class="headerlink" href="#intermediate-representation-in-pytorch" title="Permalink to this heading">¶</a></h3>
+<p>PyTorch is a dynamic, Python-oriented machine learning framework.
+Renowned for its usability and flexibility, PyTorch simplifies the
+process of writing and debugging machine learning programs. It
+introduces TorchScript, a method used for constructing serializable and
+optimizable models during the saving and loading of neural networks.</p>
+<p>Particularly, TorchScript IR employs JIT compilation to convert Python
+code into target model files. All TorchScript programs can be saved
+within the Python process and later loaded into processes devoid of
+Python dependencies.</p>
+<p>Aligning with the imperative programming paradigm, PyTorch incorporates
+the TorchScript IR, composed primarily of Single Static Assignment
+(SSA)-based linear IRs, to represent Python code. This representation
+can be achieved through either the Tracing or Scripting method of JIT
+compilation. TorchScript IR not only amplifies model deployment
+capabilities but also bolsters compilation performance. Additionally,
+TorchScript IR greatly improves the model visualization within the
+PyTorch framework.</p>
+<p>Code <code class="docutils literal notranslate"><span class="pre">lst:torchscript</span></code> illustrates the use of the Scripting method
+to print a TorchScript IR graph.</p>
+<p><strong>lst:torchscript</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_func</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="mf">10.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="n">rv</span> <span class="o">+</span> <span class="nb">input</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="n">rv</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">rv</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">test_func</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Code <code class="docutils literal notranslate"><span class="pre">lst:torchscriptir</span></code> shows the structure of this IR graph.</p>
+<p><strong>lst:torchscriptir</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="p">(</span><span class="o">%</span><span class="nb">input</span><span class="mf">.1</span> <span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
+    <span class="o">%</span><span class="mi">9</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">prim</span><span class="p">::</span><span class="n">Constant</span><span class="p">[</span><span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">]()</span>
+    <span class="o">%</span><span class="mi">5</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">prim</span><span class="p">::</span><span class="n">Constant</span><span class="p">[</span><span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">]()</span> <span class="c1"># test.py:6:1</span>
+    <span class="o">%</span><span class="n">rv</span><span class="mf">.1</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">prim</span><span class="p">::</span><span class="n">Constant</span><span class="p">[</span><span class="n">value</span><span class="o">=</span><span class="mf">10.</span><span class="p">]()</span> <span class="c1"># test.py:5:6</span>
+    <span class="o">%</span><span class="mi">2</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">prim</span><span class="p">::</span><span class="n">Constant</span><span class="p">[</span><span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">]()</span> <span class="c1"># test.py:6:16</span>
+    <span class="o">%</span><span class="mi">14</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">prim</span><span class="p">::</span><span class="n">Constant</span><span class="p">[</span><span class="n">value</span><span class="o">=</span><span class="mi">2</span><span class="p">]()</span> <span class="c1"># test.py:8:10</span>
+    <span class="o">%</span><span class="n">rv</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">prim</span><span class="p">::</span><span class="n">Loop</span><span class="p">(</span><span class="o">%</span><span class="mi">2</span><span class="p">,</span> <span class="o">%</span><span class="mi">5</span><span class="p">,</span> <span class="o">%</span><span class="n">rv</span><span class="mf">.1</span><span class="p">)</span> <span class="c1"># test.py:6:1</span>
+    <span class="n">block0</span><span class="p">(</span><span class="o">%</span><span class="n">i</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">%</span><span class="n">rv</span><span class="mf">.9</span> <span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="o">%</span><span class="n">rv</span><span class="mf">.3</span> <span class="p">:</span> <span class="n">Tensor</span> <span class="o">=</span> <span class="n">aten</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="o">%</span><span class="nb">input</span><span class="mf">.1</span><span class="p">,</span> <span class="o">%</span><span class="n">rv</span><span class="mf">.9</span><span class="p">,</span> <span class="o">%</span><span class="mi">9</span><span class="p">)</span> <span class="c1"># &lt;string&gt;:5:9</span>
+    <span class="o">%</span><span class="mi">12</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">aten</span><span class="p">::</span><span class="n">FloatImplicit</span><span class="p">(</span><span class="o">%</span><span class="n">rv</span><span class="mf">.3</span><span class="p">)</span> <span class="c1"># test.py:7:2</span>
+    <span class="o">%</span><span class="n">rv</span><span class="mf">.6</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">aten</span><span class="p">::</span><span class="n">div</span><span class="p">(</span><span class="o">%</span><span class="mi">12</span><span class="p">,</span> <span class="o">%</span><span class="mi">14</span><span class="p">)</span> <span class="c1"># test.py:8:7</span>
+    <span class="o">-&gt;</span> <span class="p">(</span><span class="o">%</span><span class="mi">5</span><span class="p">,</span> <span class="o">%</span><span class="n">rv</span><span class="mf">.6</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">%</span><span class="n">rv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="intermediate-representation-in-jax">
+<h3><span class="section-number">5.3.3.2. </span>Intermediate Representation in JAX<a class="headerlink" href="#intermediate-representation-in-jax" title="Permalink to this heading">¶</a></h3>
+<p>The JAX framework facilitates both static and dynamic computational
+graphs and employs the Jax Program Representation (Jaxpr) IR. This IR
+ensures that the output, not reliant on global variables, depends solely
+on the input, with both input and output encapsulating typed
+information. Functionality-wise, Jaxpr IR supports an array of features
+such as loops, branching, recursion, closure function differentiation,
+third-order differentiation, as well as backpropagation and forward
+propagation in automatic differentiation.</p>
+<p>Jaxpr IR utilizes the A-normal Form (ANF), a form of functional
+expression, demonstrated in Code <code class="docutils literal notranslate"><span class="pre">lst:ANF</span></code> via the ANF grammar.</p>
+<p><strong>lst:ANF</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">aexp</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span>  <span class="n">NUMBER</span> <span class="o">|</span> <span class="n">STRING</span> <span class="o">|</span> <span class="n">VAR</span> <span class="o">|</span> <span class="n">BOOLEAN</span> <span class="o">|</span> <span class="n">PRIMOP</span>
+    <span class="o">|</span>  <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="n">VAR</span> <span class="o">...</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">exp</span><span class="o">&gt;</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">cexp</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span>  <span class="p">(</span><span class="o">&lt;</span><span class="n">aexp</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">aexp</span><span class="o">&gt;</span> <span class="o">...</span><span class="p">)</span>
+    <span class="o">|</span> <span class="p">(</span><span class="k">if</span> <span class="o">&lt;</span><span class="n">aexp</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">exp</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">exp</span><span class="o">&gt;</span><span class="p">)</span>
+    <span class="o">&lt;</span><span class="n">exp</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span>  <span class="p">(</span><span class="n">let</span> <span class="p">([</span><span class="n">VAR</span> <span class="o">&lt;</span><span class="n">cexp</span><span class="o">&gt;</span><span class="p">])</span> <span class="o">&lt;</span><span class="n">exp</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">cexp</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">aexp</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The ANF segregates expressions into atomic expressions (aexp) and
+compound expressions (cexp). Atomic expressions represent constants,
+variables, primitives, and anonymous functions, while compound
+expressions, comprising several atomic expressions, can be viewed as
+invocations of anonymous or primitive functions. The first input in a
+cexp represents the invoked function, and all subsequent inputs
+symbolize the invoked parameters.</p>
+<p>Code <code class="docutils literal notranslate"><span class="pre">lst:JaxCode</span></code> displays the Jaxpr corresponding to a function.</p>
+<p><strong>lst:JaxCode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_jaxpr</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">make_jaxpr</span><span class="p">(</span><span class="n">test_func</span><span class="p">)(</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">8</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>The structure of this Jaxpr is shown in Code <code class="docutils literal notranslate"><span class="pre">lst:JaxPr</span></code>.</p>
+<p><strong>lst:JaxPr</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="k">lambda</span> <span class="p">;</span> <span class="n">a</span><span class="p">:</span><span class="n">f32</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">b</span><span class="p">:</span><span class="n">f32</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span> <span class="n">let</span>
+        <span class="n">c</span><span class="p">:</span><span class="n">f32</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">sin</span> <span class="n">b</span>
+        <span class="n">d</span><span class="p">:</span><span class="n">f32</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">mul</span> <span class="n">c</span> <span class="mf">3.0</span>
+        <span class="n">e</span><span class="p">:</span><span class="n">f32</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">add</span> <span class="n">a</span> <span class="n">d</span>
+        <span class="n">f</span><span class="p">:</span><span class="n">f32</span><span class="p">[]</span> <span class="o">=</span> <span class="n">reduce_sum</span><span class="p">[</span><span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,)]</span> <span class="n">e</span>
+        <span class="ow">in</span> <span class="p">(</span><span class="n">f</span><span class="p">,)</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="intermediate-representation-in-tensorflow">
+<h3><span class="section-number">5.3.3.3. </span>Intermediate Representation in TensorFlow<a class="headerlink" href="#intermediate-representation-in-tensorflow" title="Permalink to this heading">¶</a></h3>
+<p>TensorFlow utilizes dataflow programming to execute numerical
+computations through dataflow graphs. TensorFlow’s static graph
+mechanism progresses through a series of abstractions and analyses when
+running a program, transforming it from higher-level to lower-level IRs,
+a process referred to as “lowering”.</p>
+<p>To cater to diverse hardware platforms, TensorFlow employs a range of IR
+designs. As illustrated in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-tensorflow_ecosystem</span></code>, the blue boxes
+denote graph-based IRs while the green ones indicate SSA-based IRs.
+During the IR transformation, each level optimizes the IR independently,
+precluding communication with other levels. This absence of awareness
+about optimizations performed at other levels necessitates optimal
+implementation at each level, often leading to repetitive tasks and
+sub-optimal efficiency. Notably, transitioning from graph-based IRs to
+SSA-based IRs involves a qualitative transformation that incurs
+significant costs. The inability to reuse the same optimization code
+across levels also hampers development efficiency.</p>
+<p>Multi-level IRs present a mixed bag of advantages and disadvantages. On
+the plus side, they offer flexible representations, pass-based
+optimization at varying levels, and efficient optimization algorithms.
+On the downside, they pose challenges due to their inherent
+characteristics: The transformation between different IRs often
+complicates full compatibility implementation, thereby increasing
+engineering workload and potentially leading to information loss. This
+might make lower-level optimization challenging if information at a
+higher level has been optimized. To mitigate such information loss, we
+can impose stricter constraints on the optimization sequence.
+Additionally, choosing the level for implementing certain optimizations
+that can be performed at two adjacent levels can be a conundrum for
+framework developers. Finally, defining distinct operator granularities
+at different levels might impact accuracy to a certain degree.</p>
+<div class="figure align-default" id="id5">
+<span id="ch04-ch04-tensorflow-ecosystem"></span><img alt="../_images/IR-MLIR.png" src="../_images/IR-MLIR.png" />
+<p class="caption"><span class="caption-number">Fig. 5.3.5 </span><span class="caption-text">TensorFlow’s IRdesign</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="multi-level-intermediate-representation">
+<h3><span class="section-number">5.3.3.4. </span>Multi-Level Intermediate Representation<a class="headerlink" href="#multi-level-intermediate-representation" title="Permalink to this heading">¶</a></h3>
+<p>Multi-Level Intermediate Representation (MLIR) serves as a unified
+platform for IRs rather than being a specific type of IR. Leveraging the
+infrastructure provided by MLIR, developers can define IRs to suit their
+needs. Thus, MLIR can be interpreted as a “compiler of compilers”. It
+expands beyond the TensorFlow framework and can be used to construct IRs
+linking other languages to backend platforms (such as LLVM).</p>
+<p>Despite the design of MLIR being heavily influenced by LLVM, MLIR
+fosters a more open ecosystem. Given that MLIR does not confine
+developers to a set group of operation or abstraction types, it offers
+more latitude to define IRs and solve specific problems. To facilitate
+this extensibility, MLIR introduces the concept of “dialects”. These
+provide a grouping mechanism for abstraction under a unique namespace.
+Each dialect lays out a production and associates an operation to an IR,
+thus producing an MLIR-typed IR. Within MLIR, the “operation” is the
+fundamental unit of abstraction and computation. Operations can carry
+application-specific semantics and encapsulate all the core IR
+structures in LLVM, including instructions, functions, modules, etc.</p>
+<p>The MLIR assembly for an operation is illustrated as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">tensor</span> <span class="o">=</span> <span class="s2">&quot;toy.transpose&quot;</span><span class="p">(</span><span class="o">%</span><span class="n">tensor</span><span class="p">)</span> <span class="p">{</span><span class="n">inplace</span> <span class="o">=</span> <span class="n">true</span><span class="p">}</span> <span class="p">:</span> <span class="p">(</span><span class="n">tensor</span><span class="o">&lt;</span><span class="mi">2</span><span class="n">x3xf64</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="mi">3</span><span class="n">x2xf64</span><span class="o">&gt;</span> <span class="n">loc</span><span class="p">(</span><span class="s2">&quot;example/file/path&quot;</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This MLIR operation can be dissected as follows:</p>
+<ul class="simple">
+<li><p>%tensor: The identifier for the result defined by this operation
+(prefixed with a <span class="math notranslate nohighlight">\(\%\)</span> to prevent naming conflicts). An
+operation may define no results or multiple results, represented as
+SSA values.</p></li>
+<li><p>“toy.transpose”: The operation name. It is usually a unique string,
+with the dialect’s namespace prefixing the “.”. This refers to the
+transpose operation within the toy dialect.</p></li>
+<li><p>(%tensor): A list that can contain zero or more input operands (or
+arguments), which are SSA values defined by other operations or that
+refer to block arguments.</p></li>
+<li><p>inplace = true: A dictionary that may contain zero or more
+attributes. These are constant special operands. Here, a boolean
+attribute named <code class="docutils literal notranslate"><span class="pre">inplace</span></code> with a constant value of <code class="docutils literal notranslate"><span class="pre">true</span></code> is
+defined.</p></li>
+<li><p>(tensor&lt;2x3xf64&gt;)-&gt;tensor&lt;3x2xf64&gt;: This represents the operation
+type in a functional form, specifying the input before the arrow and
+output after. The data types and shapes of the input and output are
+contained within the parentheses. For instance, <span class="math notranslate nohighlight">\(&lt;2x3xf64&gt;\)</span>
+represents a tensor with a shape of <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3)</span></code> and data type
+<code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+<li><p>loc(“example/file/path”:12:1): This refers to the source code
+location from where this operation originated.</p></li>
+</ul>
+<p>As each level’s IR design adheres to this assembly, it simplifies
+transformation across levels, boosting the efficiency of IR
+transformation. Moreover, different levels can interact to optimize the
+IRs, enabling optimization to be performed at the most suitable level,
+thereby negating the need for optimal performance at each level. By
+transforming them into the IR at the most appropriate level, other IRs
+can be optimized, enhancing both optimization and development
+efficiency. TensorFlow can also employ MLIR to perform multi-layer
+transformation from graph-based IRs to</p>
+</div>
+<div class="section" id="intermediate-representation-in-mindspore">
+<h3><span class="section-number">5.3.3.5. </span>Intermediate Representation in MindSpore<a class="headerlink" href="#intermediate-representation-in-mindspore" title="Permalink to this heading">¶</a></h3>
+<p>MindSpore adopts graph-based functional IRs, known as MindSpore IR
+(abbreviated to MindIR). MindIR employs a unified IR approach instead of
+a multi-level IR structure, outlining the network’s logical structure
+and operator attributes. This approach obliterates model disparities
+across different backends, facilitating connections to various target
+machines.</p>
+<p>MindIR primarily caters to the automatic differential transformation. It
+implements a transformation method grounded in functional programming
+frameworks, thereby making it similar to ANF (A-Normal Form) functional
+semantics. Its defining characteristics include:</p>
+<ol class="arabic simple">
+<li><p><strong>Graph-based Representation</strong>. MindSpore represents programs as
+graphs which are conducive to optimization. MindSpore treats
+functions as essential elements of a machine learning program,
+allowing for recursive invocation, parameter passing, or returning
+from other functions. This ability paves the way for representing a
+range of control flow structures.</p></li>
+<li><p><strong>Purely Functional</strong>. In a purely functional context, the function
+outcomes depend solely on parameters. Side effects are potential
+issues when a function relies on or affects external states, such as
+global variables. These can lead to incorrect results if code
+execution sequence isn’t strictly maintained. These side effects can
+also impact automatic differentiation, necessitating the requirement
+for pure functions. MindIR has the capability to transform
+representations with side effects into purely functional
+representations, ensuring correct code execution sequence while
+upholding ANF functional semantics and enabling a higher degree of
+automatic differentiation freedom.</p></li>
+<li><p><strong>Closure Representation</strong>. Reverse mode automatic differentiation
+requires the storage of basic operation intermediate results in
+closures for a combined connection. Closures, the combination of a
+code block bundled with references to its surrounding environment,
+become particularly crucial. In MindIR, the code block takes the
+shape of a function diagram, with the surrounding environment
+interpreted as the function invocation context.</p></li>
+<li><p><strong>Strongly Typed</strong>. Each node requires a specific type for achieving
+optimal performance. This is particularly crucial in machine learning
+frameworks where operator execution can be time-consuming. Detecting
+errors at the earliest can help save valuable time. MindIR’s type and
+shape inference capabilities thus center on the support for function
+invocation and higher-order functions.</p></li>
+</ol>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-MindIR</span></code> outlines the MindIR grammar based
+on MindSpore framework’s characteristics. ANode corresponds to an atomic
+expression in ANF, ValueNode represents the constant value,
+ParameterNode signifies the function’s formal parameter, and CNode
+(corresponding to a compound expression in ANF) indicates function
+invocation.</p>
+<div class="figure align-default" id="id6">
+<span id="ch04-ch04-mindir"></span><img alt="../_images/IR-MindIR.png" src="../_images/IR-MindIR.png" />
+<p class="caption"><span class="caption-number">Fig. 5.3.6 </span><span class="caption-text">MindIR grammar</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>The example provided below in Code 1 offers a deeper analysis of MindIR.</p>
+<p><strong>lst:MindSporeCode</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+
+    <span class="nd">@ms_function</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">c</span>
+</pre></div>
+</div>
+<p>The ANF expression corresponding to this function is demonstrated in
+Code <code class="docutils literal notranslate"><span class="pre">lst:MindIR</span></code>.</p>
+<p><strong>lst:MindIR</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">lambda</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">let</span> <span class="n">a</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">in</span>
+    <span class="n">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">y</span> <span class="ow">in</span>
+    <span class="n">let</span> <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">let</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span> <span class="ow">in</span>
+    <span class="n">ret</span> <span class="n">end</span> <span class="ow">in</span>
+    <span class="n">let</span> <span class="o">%</span><span class="mi">1</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span>
+    <span class="n">let</span> <span class="n">c</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="o">%</span><span class="mi">1</span> <span class="ow">in</span>
+    <span class="n">c</span> <span class="n">end</span>
+</pre></div>
+</div>
+<p>In ANF, each expression is encapsulated as a variable utilizing the
+<code class="docutils literal notranslate"><span class="pre">let</span></code> expression, with dependencies on the expression’s output
+represented via variable references. In contrast, MindIR packages each
+expression as a node, portraying dependencies through directed edges
+connecting the nodes.</p>
+</div>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">5.3. Intermediate Representation</a><ul>
+<li><a class="reference internal" href="#definition-of-intermediate-representations">5.3.1. Definition of Intermediate Representations</a></li>
+<li><a class="reference internal" href="#types-of-intermediate-representations">5.3.2. Types of Intermediate Representations</a><ul>
+<li><a class="reference internal" href="#linear-intermediate-representation">5.3.2.1. Linear Intermediate Representation</a></li>
+<li><a class="reference internal" href="#graphical-intermediate-representation">5.3.2.2. Graphical Intermediate Representation</a></li>
+<li><a class="reference internal" href="#hybrid-intermediate-representation">5.3.2.3. Hybrid Intermediate Representation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intermediate-representation-in-machine-learning-frameworks">5.3.3. Intermediate Representation in Machine Learning Frameworks</a><ul>
+<li><a class="reference internal" href="#intermediate-representation-in-pytorch">5.3.3.1. Intermediate Representation in PyTorch</a></li>
+<li><a class="reference internal" href="#intermediate-representation-in-jax">5.3.3.2. Intermediate Representation in JAX</a></li>
+<li><a class="reference internal" href="#intermediate-representation-in-tensorflow">5.3.3.3. Intermediate Representation in TensorFlow</a></li>
+<li><a class="reference internal" href="#multi-level-intermediate-representation">5.3.3.4. Multi-Level Intermediate Representation</a></li>
+<li><a class="reference internal" href="#intermediate-representation-in-mindspore">5.3.3.5. Intermediate Representation in MindSpore</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Overview_of_AI_Compiler_Frontends.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>5.2. Overview of AI Compiler Frontends</div>
+         </div>
+     </a>
+     <a id="button-next" href="Automatic_Differentiation.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>5.4. Automatic Differentiation</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

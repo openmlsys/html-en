@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>8.5. Collective Communication &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8.6. Parameter Server" href="Parameter_Server.html" />
+    <link rel="prev" title="8.4. Architecture of Machine Learning Clusters" href="Architecture_of_Machine_Learning_Clusters.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">8. </span>Distributed Training</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">8.5. </span>Collective Communication</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_distributed/Collective_Communication.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">8. Distributed Training</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">8. Distributed Training</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="collective-communication">
+<h1><span class="section-number">8.5. </span>Collective Communication<a class="headerlink" href="#collective-communication" title="Permalink to this heading">¶</a></h1>
+<p>This section delves into the application of collective communication in
+the creation of distributed training systems within machine learning
+clusters. Collective communication, a fundamental aspect of parallel
+computing, is instrumental in developing high-performance Single Program
+Multiple Data (SPMD) programs. We will begin by discussing common
+operators within collective communication. Following this, we explore
+the use of the AllReduce algorithm to alleviate network bottlenecks in
+distributed training systems. Lastly, we will address the support
+available for different collective communication algorithms within
+existing machine learning systems.</p>
+<div class="section" id="collective-communication-operators">
+<h2><span class="section-number">8.5.1. </span>Collective Communication Operators<a class="headerlink" href="#collective-communication-operators" title="Permalink to this heading">¶</a></h2>
+<p>In this subsection, we will establish a simplified model of collective
+communication before introducing commonly used collective communication
+operators. These include Broadcast, Reduce, AllGather, Scatter, and
+AllReduce:</p>
+<div class="figure align-default" id="id1">
+<span id="ch010-ch10-collective-operators"></span><img alt="../_images/ch10-collective-operators.png" src="../_images/ch10-collective-operators.png" />
+<p class="caption"><span class="caption-number">Fig. 8.5.1 </span><span class="caption-text">Examples of collective communicationoperators</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<ul class="simple">
+<li><p><strong>Broadcast</strong>: The Broadcast operator is often employed in a
+distributed machine learning system to transmit model parameters or
+configuration files from device <span class="math notranslate nohighlight">\(i\)</span> to all other devices. The
+starting and final states of this operation, initiated by device 1 in
+a three-device cluster, are depicted in Figure
+<a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a>.</p></li>
+<li><p><strong>Reduce</strong>: In a distributed machine learning system, the Reduce
+operator plays a pivotal role by consolidating computation results
+from different devices. It is commonly used to aggregate local
+gradients from each device to compute the gradient summation. This
+operator employs functions, represented as <span class="math notranslate nohighlight">\(f\)</span>, which often
+obey the associative and commutative laws. Such functions, including
+sum, prod, max, and min, are initiated by all devices, with the final
+aggregate result stored in device <span class="math notranslate nohighlight">\(i\)</span>. The initial and final
+states when device 1 executes the Reduce operator for summation are
+depicted in Figure <a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a>.</p></li>
+<li><p><strong>AllReduce</strong>: The AllReduce operator, a part of collective
+communication, stores the result of the Reduce function <span class="math notranslate nohighlight">\(f\)</span> in
+all devices. Figure <a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a> shows
+the starting and ending states when devices 1, 2, and 3 jointly
+execute AllReduce to perform a summation.</p></li>
+<li><p><strong>Gather</strong>: The Gather operator can gather data from all devices and
+store it in device <span class="math notranslate nohighlight">\(i\)</span>. Figure
+<a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a> shows the initial and end
+states when device 1 invokes the Gather operator to gather data from
+all devices.</p></li>
+<li><p><strong>AllGather</strong>: The AllGather operator sends the gather result to all
+devices. Figure <a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a> shows the
+initial and end states when devices 1, 2, and 3 invoke the AllGather
+operator.</p></li>
+<li><p><strong>Scatter</strong>: The Scatter operator is the inverse of the Gather
+operator. Figure <a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a> shows
+the initial and end states when device 1 invokes the Scatter
+operator.</p></li>
+</ul>
+<p>It’s important to note that other collective communication operators may
+also be deployed in distributed machine learning applications. Examples
+of these are ReduceScatter, Prefix Sum, Barrier, and All-to-All.
+However, this section will not delve into the specifics of these
+operators.</p>
+</div>
+<div class="section" id="gradient-averaging-with-allreduce">
+<h2><span class="section-number">8.5.2. </span>Gradient Averaging with AllReduce<a class="headerlink" href="#gradient-averaging-with-allreduce" title="Permalink to this heading">¶</a></h2>
+<p>The following discusses how to utilize AllReduce operators to implement
+efficient gradient averaging in large clusters. We can implement a
+simple method for computing the average gradient, whereby a device in
+the cluster gathers local gradients from each device and then broadcasts
+the computed average gradient to all devices. Although this approach is
+easy to implement, it leads to two problems. 1) Network congestion may
+occur if multiple devices send data to the gather device simultaneously.
+2) It is not feasible to fit gradient averaging computation on a single
+device due to the computing power constraint.</p>
+<p>To solve the preceding problems, the Reduce-Broadcast implementation of
+the AllReduce operator can be used to optimize the algorithm. In this
+implementation, all nodes participate in network communication and
+averaging computation of gradients so that the huge amount of network
+and computing overheads is evenly shared across all nodes. This
+implementation can solve the two problems of a single gradient gather
+node. Assume that there are <span class="math notranslate nohighlight">\(M\)</span> devices, and that each device
+stores a model replica consisting of <span class="math notranslate nohighlight">\(N\)</span> parameters/gradients.
+According to the requirements of AllReduce, all parameters need to be
+partitioned into <span class="math notranslate nohighlight">\(M\)</span> partitions based on the number of devices,
+with each partition containing <span class="math notranslate nohighlight">\(N/M\)</span> parameters. The initial and
+end states of the algorithm are provided.</p>
+<p>In the AllReduce example shown in Figure
+<a class="reference internal" href="#ch010-ch10-collective-operators"><span class="std std-numref">Fig. 8.5.1</span></a>, there are three devices.
+Each device has a model replica, and each replica has 3 parameters.
+According to the partitioning method of AllReduce, parameters are
+partitioned into three partitions (because there are 3 devices), and
+each partition has 1 (<span class="math notranslate nohighlight">\(N/M\)</span> = 3/3) parameter. In this example,
+assume that device 1 has parameters 2, 4, and 6; device 2 has parameters
+1, 2, and 3; and device 3 has parameters 4, 8, and 12. After an
+AllReduce operator is used for computation, the gradient summation
+results 7, 14, and 21 are sent to all devices. The result 7 of partition
+1 is the sum of the initial results of partition 1 in the three devices
+(7 = 1 + 2 + 4). To compute the average gradient, the sum of gradients
+needs to be divided by the number of devices (e.g., to obtain the final
+result of partition 1, divide 7 by 3).</p>
+<p>The AllReduce operator splits the gradient computation into <span class="math notranslate nohighlight">\(M-1\)</span>
+Reduce operators and <span class="math notranslate nohighlight">\(M-1\)</span> Broadcast operators (where <span class="math notranslate nohighlight">\(M\)</span>
+indicates the number of nodes). Reduce operators are used to compute the
+summation of gradients, and Broadcast operators are used to broadcast
+the summation of gradients to all nodes.</p>
+<p>Figure <a class="reference internal" href="#ch010-ch10-allreduce-process"><span class="std std-numref">Fig. 8.5.2</span></a> shows the execution
+process of an AllReduce operator. The AllReduce operator starts with a
+Reduce operator. In the first Reduce operator, the AllReduce operator
+performs pairing on all nodes and enables them to jointly complete
+gradient summation. In the first Reduce operator shown in Figure
+<a class="reference internal" href="#ch010-ch10-allreduce-process"><span class="std std-numref">Fig. 8.5.2</span></a>, devices 1 and 2 are paired to
+jointly complete the summation of data in partition 1. Device 2 sends
+local gradient data 1 to device 1, which adds up the received gradient
+data 1 and gradient data 2 stored in local partition 1 to obtain the
+intermediate gradient summation result 3. At the same time, devices 1
+and 3 are paired to jointly complete the summation of data in partition
+3, and devices 3 and 2 are paired to jointly complete the summation of
+data in partition 2.</p>
+<div class="figure align-default" id="id2">
+<span id="ch010-ch10-allreduce-process"></span><img alt="../_images/ch10-allreduce-process.png" src="../_images/ch10-allreduce-process.png" />
+<p class="caption"><span class="caption-number">Fig. 8.5.2 </span><span class="caption-text">Process of the AllReducealgorithm</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>Such distributed computing of gradients performed by Reduce operators
+realizes the following performance optimizations:</p>
+<ol class="arabic simple">
+<li><p><strong>Network optimization:</strong> All devices receive and send data
+simultaneously by utilizing their ingress and egress bandwidths.
+Therefore, in the execution process of the AllReduce algorithm, the
+available bandwidth is <span class="math notranslate nohighlight">\(M * B\)</span>, where <span class="math notranslate nohighlight">\(M\)</span> indicates the
+number of nodes and <span class="math notranslate nohighlight">\(B\)</span> indicates the node bandwidth. This
+enables the system to implement network bandwidth scalability.</p></li>
+<li><p><strong>Computing power optimization:</strong> Processors of all devices
+participate in the gradient summation. Therefore, in the execution
+process of the AllReduce algorithm, the total number of available
+processors is <span class="math notranslate nohighlight">\(M * P\)</span>, where <span class="math notranslate nohighlight">\(M\)</span> indicates the number of
+nodes and <span class="math notranslate nohighlight">\(P\)</span> indicates the number of processors for a single
+device. This enables the system to implement computing scalability.</p></li>
+<li><p><strong>Load balancing:</strong> Data partitions are evenly partitioned.
+Therefore, the communication and computing overheads allocated to
+each device are the same.</p></li>
+</ol>
+<p>In the Reduce operators other than the first one, the AllReduce
+algorithm selects other pairing methods for different data partitions.
+For example, in the second Reduce operator shown in Figure
+<a class="reference internal" href="#ch010-ch10-allreduce-process"><span class="std std-numref">Fig. 8.5.2</span></a>, the AllReduce algorithm pairs
+devices 1 and 3 for data summation in partition 1. Devices 1 and 2 are
+paired for data summation in partition 2, and devices 2 and 3 are paired
+for data summation in partition 3. In a three-node AllReduce cluster,
+after two Reduce operators complete execution, the data summation result
+of each partition is obtained. The data summation result (7) of
+partition 1 is stored on device 3, the data summation result (14) of
+partition 2 is stored on device 1, and the data summation result (21) of
+partition 3 is stored on device 2.</p>
+<p>The AllReduce algorithm then enters the broadcast phase. The process in
+this phase is similar to the execution process of Reduce operators. The
+core difference is that, after nodes are paired, they do not add up data
+— instead, they broadcast the computation results of Reduce operators.
+In the first Broadcast operator shown in Figure
+<a class="reference internal" href="#ch010-ch10-allreduce-process"><span class="std std-numref">Fig. 8.5.2</span></a>, device 1 directly writes the
+result (14) of partition 2 to partition 2 of device 3. Device 2 directly
+writes the result (21) of partition 3 to device 1, and device 3 directly
+writes the result of partition 1 to device 2. In a three-node AllReduce
+cluster, the Broadcast operator is repeated twice in order to notify all
+nodes of the Reduce computation result of each partition.</p>
+</div>
+<div class="section" id="model-training-with-collective-communication">
+<h2><span class="section-number">8.5.3. </span>Model Training with Collective Communication<a class="headerlink" href="#model-training-with-collective-communication" title="Permalink to this heading">¶</a></h2>
+<p>Typically, a machine learning system flexibly combines different
+collective communication operators for different clusters to maximize
+communication efficiency. The following describes two cases: ZeRO and
+DALL-E.</p>
+<p>ZeRO is a neural network optimizer proposed by Microsoft. In practice,
+ZeRO successfully trained the world’s largest language model in 2020
+(with up to 17 billion parameters). In the training process of a neural
+network like this, parameters of the optimizer, gradients obtained
+during backward computation, and model parameters all impose significant
+pressure on the memory space of accelerators. If parameters are
+represented by 32-bit floating-point numbers, a model with 17 billion
+parameters requires at least 680 GB of memory, far exceeding the maximum
+memory capacity (80 GB) of NVIDIA A100 (an accelerator with the largest
+memory available today). Therefore, we need to explore how to
+efficiently split a model across different accelerators, and how to
+efficiently utilize collective communication operators for model
+training and inference. The following describes three optimization
+technologies regarding collective communication:</p>
+<ol class="arabic simple">
+<li><p><strong>Parameter storage on a single node:</strong> The bandwidth of the
+accelerators inside a node in a modern cluster is much greater than
+the inter-node bandwidth. Therefore, we need to minimize inter-node
+communication and ensure that communication mostly happens between
+accelerators inside nodes. The model slicing process shows that the
+amount of communication between different slices during the forward
+and backward computation of the model is far less than the average
+amount of communication required for gradient averaging of model
+replicas. As such, ZeRO stores all slices of a single model in the
+same node, greatly improving the training efficiency.</p></li>
+<li><p><strong>Forward computation based on the AllGather operator:</strong> Assuming
+that the parameters in a model are linear by layer, we can assign the
+parameters to different accelerators from front to back based on the
+sequence of these parameters on the network. In forward computation,
+the computation of a layer depends only on the parameters of its
+adjacent layers. Given this, we can apply AllGather computation once
+on all accelerators that contain model parameters in order to extract
+the parameters of the next layer for the current layer and to compute
+the activation value of the current layer. To conserve memory
+resources, the parameters of layers other than the current one need
+to be discarded immediately after the AllGather operation is
+complete.</p></li>
+<li><p><strong>Gradient averaging based on the ReduceScatter operator:</strong>
+Similarly, during backward computation, only the parameters of the
+previous layer are needed to compute the activation value and
+gradient of the current layer. Therefore, AllGather can be used again
+to complete the gradient computation on each accelerator. At the same
+time, after gradients are gathered, each accelerator needs only the
+gradient corresponding to the layer with the same index as the
+accelerator. In this case, the ReduceScatter operator, instead of
+AllReduce, can be used to directly store the corresponding gradient
+to accelerator <span class="math notranslate nohighlight">\(i\)</span>.</p></li>
+</ol>
+<p>DALL-E is a text-based image generation model proposed by OpenAI. This
+model has up to 12 billion parameters. In addition to the AllGather +
+ReduceScatter technique used by ZeRO during training, the OpenAI team
+made further optimizations. The following describes two optimization
+technologies regarding collective communication:</p>
+<ol class="arabic simple">
+<li><p><strong>Matrix factorization:</strong> The operational speeds of collective
+communication operators are positively correlated with the message
+length. In model training, the message length indicates the number of
+model parameters. DALL-E uses matrix factorization to convert a
+high-dimensional tensor into a two-dimensional matrix, and then uses
+collective communication operators for transmission after
+factorization. In this way, DALL-E significantly reduces the amount
+of communication.</p></li>
+<li><p><strong>Custom data types:</strong> Another way to reduce the amount of
+communication is to modify data types. As expected, the 16-bit
+half-precision floating-point number representation can reduce the
+amount of communication by nearly half compared with the 32-bit
+floating-point number representation. However, in practice,
+low-precision data types cause unstable model convergence and
+compromise the final training result. OpenAI analyzes the structure
+of the DALL-E model and classifies the model parameters into three
+categories based on their sensitivity to the precision of data types.
+The most precision-sensitive parameters are represented by 32-bit
+floating-point numbers and synchronized only by the AllReduce
+operator, whereas the most precision-insensitive parameters are
+compressed and transmitted using matrix factorization. For the
+remaining parameters, such as the moments and variance parameters
+involved in Adam optimization, OpenAI implements two new data types
+based on the IEEE 754 standard: 1-6-9 and 0-6-10. (The first digit
+indicates the number of bits required for expressing positive and
+negative, the second digit indicates the number of bits required for
+expressing the exponent, and the third digit indicates the number of
+bits required for expressing a valid number.) In addition to
+conserving space, this also ensures training convergence.</p></li>
+</ol>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">8.5. Collective Communication</a><ul>
+<li><a class="reference internal" href="#collective-communication-operators">8.5.1. Collective Communication Operators</a></li>
+<li><a class="reference internal" href="#gradient-averaging-with-allreduce">8.5.2. Gradient Averaging with AllReduce</a></li>
+<li><a class="reference internal" href="#model-training-with-collective-communication">8.5.3. Model Training with Collective Communication</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Architecture_of_Machine_Learning_Clusters.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>8.4. Architecture of Machine Learning Clusters</div>
+         </div>
+     </a>
+     <a id="button-next" href="Parameter_Server.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>8.6. Parameter Server</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

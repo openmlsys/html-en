@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>4.3. Neural Network Programming &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4.4. Functional Programming" href="Functional_Programming.html" />
+    <link rel="prev" title="4.2. Machine Learning Workflow" href="Machine_Learning_Workflow.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">4. </span>Programming Model</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">4.3. </span>Neural Network Programming</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_programming_model/Neural_Network_Programming.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. Programming Model</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. Programming Model</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="neural-network-programming">
+<h1><span class="section-number">4.3. </span>Neural Network Programming<a class="headerlink" href="#neural-network-programming" title="Permalink to this heading">¶</a></h1>
+<p>To implement an AI model, a machine learning framework often takes a
+neural-network-centric programming interface. Regardless of their
+structures, neural networks are comprised of three elements: (1) Nodes
+serve as computational units that carry out the processing of a neural
+network, (2) Node Weights are variables updated by gradients during the
+training process, and (3) Node Connections specify how data (for
+example, activation and gradients) are transmitted within a neural
+network.</p>
+<div class="section" id="neural-network-layers">
+<h2><span class="section-number">4.3.1. </span>Neural Network Layers<a class="headerlink" href="#neural-network-layers" title="Permalink to this heading">¶</a></h2>
+<p>In order to simplify the construction of a neural network, many machine
+learning frameworks utilize a layer-oriented approach. This method
+organizes nodes, their weights, and their connections into cohesive
+neural network layers.</p>
+<p>To illustrate this, we can examine the use of fully connected layers, a
+type of neural network layer. A distinguishing characteristic of fully
+connected layers is that every node in one layer is linked to every node
+in the succeeding layer. This method facilitates an extensive linear
+transformation of the feature space. By doing so, data can be transposed
+from a high-dimensional space to a lower-dimensional one, and
+conversely.</p>
+<p>As shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch03/fc_layer_1</span></code>, the fully connected
+process transforms <em>n</em> data points from the input into an <em>m</em> sized
+feature space. This is followed by a further transformation into a <em>p</em>
+sized feature space. It’s important to highlight that the quantity of
+parameters in a fully connected layer grows substantially — from
+n<span class="math notranslate nohighlight">\(\times\)</span>m during the initial transformation to
+m<span class="math notranslate nohighlight">\(\times\)</span>p in the subsequent one.</p>
+<figure id="fig:ch03/fc_layer_1"><figcaption><p>Fully connected layer illustration</p>
+</figcaption></figure><p>Several types of neural network layers are widely used in various
+applications, including fully connected, convolution, pooling,
+recurrent, attention, batch normalization, and dropout layers. When
+dealing with problems related to time series association in sequential
+data, recurrent neural layers are commonly employed. However, recurrent
+neural layers encounter difficulties with vanishing or exploding
+gradients as the sequence length increases during the training process.
+The Long Short-Term Memory (LSTM) model was developed as a solution to
+this problem, enabling the capturing of long-term dependencies in
+sequential data. Code <code class="docutils literal notranslate"><span class="pre">ch02/code2.3.1</span></code> shows some examples of NN
+Layers in Pytorch:</p>
+<p><strong>ch02/code2.3.1</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fc_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># A fully connected layer with 16 input features and 5 output features</span>
+<span class="n">relu_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span> <span class="c1"># A ReLU activation layer</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># A convolutional layer with 3 input channels, 16 output channels, and a 3x3 kernel</span>
+<span class="n">dropout_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span> <span class="c1"># A dropout layer with 20% dropout rate</span>
+<span class="n">batch_norm_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="c1"># A batch normalization layer with 16 channels</span>
+<span class="n">layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">conv_layer</span><span class="p">,</span> <span class="n">batch_norm_layer</span><span class="p">,</span> <span class="n">relu_layer</span><span class="p">,</span> <span class="n">fc_layer</span><span class="p">,</span> <span class="n">dropout_layer</span><span class="p">)</span> <span class="c1"># A sequential container to combine layers</span>
+</pre></div>
+</div>
+<p>In tasks related to natural language processing, the
+Sequence-to-Sequence (Seq2Seq) architecture applies recurrent neural
+layers in an encoder-decoder framework. Often, the decoder component of
+Seq2Seq integrates the attention mechanism, allowing the model to
+concentrate on pertinent segments of the input sequence. This
+amalgamation contributed to the inception of the <em>Transformer</em> model, a
+pivotal element in the architecture of the Bidirectional Encoder
+Representations from Transformers (BERT) and Generative Pre-trained
+Transformers (GPT) models. Both BERT and GPT have propelled significant
+progress in diverse language-related tasks.</p>
+</div>
+<div class="section" id="neural-network-implementation">
+<h2><span class="section-number">4.3.2. </span>Neural Network Implementation<a class="headerlink" href="#neural-network-implementation" title="Permalink to this heading">¶</a></h2>
+<p>With an increase in the number of network layers, the manual management
+of training variables becomes progressively complex. Thankfully, most
+machine learning frameworks provide user-friendly APIs that encapsulate
+neural network layers into a base class, which is then inherited by all
+other layers. Notable examples include <code class="docutils literal notranslate"><span class="pre">mindspore.nn.Cell</span></code> in
+MindSpore and <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> in PyTorch. Code <code class="docutils literal notranslate"><span class="pre">ch02/code2.3.2</span></code>
+gives a MLP Implementation using Pytorch.</p>
+<p><strong>ch02/code2.3.2</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch03/model_build</span></code> demonstrates the intricate process
+of constructing a neural network. The base class plays a pivotal role in
+initializing training parameters, managing their status, and outlining
+the computation process. Conversely, the neural network model implements
+functions to administer the network layers and their associated
+parameters. Both MindSpore’s Cell and PyTorch’s Module efficiently serve
+these functions. Notably, Cell and Module function not just as model
+abstraction methods but also as base classes for all networks.</p>
+<p>Existing model abstraction strategies can be divided into two
+categories. The first involves the abstraction of two methods: Layer
+(which oversees parameter construction and forward computation for an
+individual neural network layer) and Model (which manages the
+connection, combination of neural network layers, and administration of
+layer parameters). The second category combines Layer and Model into a
+single method, representing both an individual neural network layer and
+a model composed of multiple layers. Cell and Module implementations
+fall into this second category.</p>
+<figure id="fig:ch03/model_build"><embed src="../img/ch03/model_build.pdf" style="width:90.0%" /><figcaption><p>Comprehensive neural network construction process</p>
+</figcaption></figure><p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch03/cell_abstract</span></code> portrays a universal method for
+designing the abstraction of a neural network layer. The constructor
+uses the <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> class from the Python <code class="docutils literal notranslate"><span class="pre">collections</span></code> module to
+store initialized neural network layers and their corresponding
+parameters. This results in an ordered output, which is more compatible
+with stacked deep learning models compared to an unordered <code class="docutils literal notranslate"><span class="pre">Dict</span></code>. The
+management of neural network layers and parameters is conducted within
+the <code class="docutils literal notranslate"><span class="pre">__setattr__</span></code> method. Upon detecting that an attribute pertains to
+a neural network layer or represents a layer parameter, <code class="docutils literal notranslate"><span class="pre">__setattr__</span></code>
+records the attribute appropriately.</p>
+<p>In the neural network model, the computation process is vital. This
+process is defined by reloading the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method during the
+implementation of neural network layers. To acquire the training
+parameters, the base class traverses all network layers. All retrieved
+training parameters are then conveyed to the optimizer through the
+assigned interface that returns such parameters. This text, however,
+only touches on a few significant methods.</p>
+<p>Concerning custom methods, it is often required to implement techniques
+for inserting/deleting parameters, adding/removing neural network
+layers, and retrieving neural network model information.</p>
+<figure id="fig:ch03/cell_abstract"><figcaption><p>Abstraction technique of neural network base classes</p>
+</figcaption></figure><p>In order to preserve simplicity, we provide a condensed overview of the
+base class implementation for neural network interface layers. In
+practical applications, users are typically unable to directly reload
+the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method responsible for computation. Instead, an
+operation method is usually defined outside of <code class="docutils literal notranslate"><span class="pre">__call__</span></code>, which users
+can invoke to utilize <code class="docutils literal notranslate"><span class="pre">__call__</span></code>.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">4.3. Neural Network Programming</a><ul>
+<li><a class="reference internal" href="#neural-network-layers">4.3.1. Neural Network Layers</a></li>
+<li><a class="reference internal" href="#neural-network-implementation">4.3.2. Neural Network Implementation</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Machine_Learning_Workflow.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>4.2. Machine Learning Workflow</div>
+         </div>
+     </a>
+     <a id="button-next" href="Functional_Programming.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>4.4. Functional Programming</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

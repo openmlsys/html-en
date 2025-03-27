@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>13.3. Case Study: Using ROS &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="13.4. Modern Robot Learning" href="Modern_Robot_Learning.html" />
+    <link rel="prev" title="13.2. Robot Operating System" href="Robot_Operating_System.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">13. </span>Robotic System</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">13.3. </span>Case Study: Using ROS</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_robot/Case_Study.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">13. Robotic System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">13. Robotic System</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="case-study-using-ros">
+<h1><span class="section-number">13.3. </span>Case Study: Using ROS<a class="headerlink" href="#case-study-using-ros" title="Permalink to this heading">¶</a></h1>
+<p>In this section, we will guide you through the process of installing ROS
+2 and configuring the environment. We will also provide a few code
+examples to deepen your understanding of ROS 2 usage and concepts
+introduced in the previous section.</p>
+<p>Our environment consists of the following: ROS 2 Foxy Fitzroy, the
+latest ROS 2 long-term support (LTS) release at the time of writing;
+Ubuntu Focal 20.04; and Python 3.8 (our examples use Python 3.8.10)
+installed in Ubuntu Focal. Ubuntu Focal is the official software for
+installing ROS 2 Foxy Fitzroy. If you install ROS 2 via Debian packages
+(recommended), you must use the version of Python 3 on Ubuntu. This is
+because many Python dependencies of ROS 2 will be automatically
+installed in the Python 3 path on Ubuntu via <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span></code> (instead of
+via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code>). In other words, when you select the ROS 2 version,
+the versions of Ubuntu and Python you need are automatically determined.</p>
+<p>If you want to use a Python virtual environment, you must also use the
+Python interpreter provided by Ubuntu and add the <code class="docutils literal notranslate"><span class="pre">site-packages</span></code>
+option during the creation stage because we need the ROS 2 dependencies
+installed in the Python 3 path.</p>
+<p>For example, a pipenv user can use the following command to create a
+virtual environment that uses the installed Python 3 and has
+<code class="docutils literal notranslate"><span class="pre">site-packages</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv<span class="w"> </span>--python<span class="w"> </span><span class="k">$(</span>/usr/bin/python3<span class="w"> </span>-V<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s2">&quot; &quot;</span><span class="w"> </span>-f2<span class="k">)</span><span class="w"> </span>--site-packages
+</pre></div>
+</div>
+<p>Due to Python 3 being installed, virtual environments created with conda
+may experience some compatibility issues. Other versions of ROS 2 are
+installed and operate in essentially the same way.</p>
+<p>In this section and subsequent cases, we may use ROS 2, Ubuntu, and
+Python to refer to ROS 2 Foxy Fitzroy, Ubuntu Focal, and Python 3.8,
+respectively.</p>
+<p>Cases in this section can be found in the ROS 2 official tutorial, which
+is very detailed and ideal for ROS 2 beginners. You can learn more about
+ROS 2 there.</p>
+<p><strong>1. Installing ROS 2 Foxy Fitzroy</strong></p>
+<p>Following the official tutorial makes it relatively easy to install ROS
+2 on Ubuntu (e.g., installing ROS 2 Foxy Fitzroy and Ubuntu Focal). The
+installation procedure of ROS 2 described in this section is primarily
+based on this tutorial.</p>
+<p><strong>2. Setting the system to support the UTF-8 locale</strong></p>
+<p>Before installation, ensure that the Ubuntu system locale is set to a
+value that supports UTF-8. You can check the current locale settings via
+the locale command. If the value of <code class="docutils literal notranslate"><span class="pre">LANG</span></code> ends with <code class="docutils literal notranslate"><span class="pre">.UTF-8</span></code>, the
+system already supports the UTF-8 locale. Otherwise, use the following
+commands to set it as the UTF-8 value in English (US). You can change
+the language code to match your desired language.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>locales
+sudo<span class="w"> </span>locale-gen<span class="w"> </span>en_US<span class="w"> </span>en_US.UTF-8
+sudo<span class="w"> </span>update-locale<span class="w"> </span><span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8<span class="w"> </span><span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+<span class="nb">export</span><span class="w"> </span><span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+</pre></div>
+</div>
+<p><strong>3. Setting the software source</strong></p>
+<p>You also need to add the software source of ROS 2 to the system by
+running the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>curl<span class="w"> </span>gnupg2<span class="w"> </span>lsb-release
+sudo<span class="w"> </span>curl<span class="w"> </span>-sSL<span class="w"> </span>https://raw.githubusercontent.com/ros/rosdistro/master/ros.key<span class="w">  </span>-o<span class="w"> </span>/usr/share/keyrings/ros-archive-keyring.gpg
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=</span><span class="k">$(</span>dpkg<span class="w"> </span>--print-architecture<span class="k">)</span><span class="s2"> signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu </span><span class="k">$(</span><span class="nb">source</span><span class="w"> </span>/etc/os-release<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$UBUNTU_CODENAME</span><span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/ros2.list<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+</pre></div>
+</div>
+<p><strong>4. Installing ROS 2</strong></p>
+<p>Once the preceding steps are complete, update the software source cache
+and then install the ROS 2 Desktop version. This is the preferred
+version because it contains the ROS 2 framework and most of the software
+libraries commonly used in ROS 2 development, such as rviz.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-foxy-desktop
+</pre></div>
+</div>
+<p>In addition, install colcon (a build tool for ROS 2) and rosdep (which
+can help us quickly install a dependency required by the ROS 2 project).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3-colcon-common-extensions<span class="w"> </span>python3-rosdep
+</pre></div>
+</div>
+<p>Now you have installed ROS 2. However, an additional step is required to
+set up the environment before using ROS 2.</p>
+<p><strong>5. Setting the environment</strong></p>
+<p>For any installed version of ROS 2 (and ROS), you need to set up the
+required environment by sourcing the corresponding <code class="docutils literal notranslate"><span class="pre">setup</span></code> script
+before using the version. For example, for the newly installed ROS 2
+Foxy Fitzroy, you can run the following command in the terminal to set
+up the environment required by ROS 2:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/opt/ros/foxy/setup.bash
+</pre></div>
+</div>
+<p>If you are using a shell other than <code class="docutils literal notranslate"><span class="pre">bash</span></code>, you may need to change the
+file name extension of <code class="docutils literal notranslate"><span class="pre">setup</span></code> to the name of the corresponding shell.
+For example, if you are using zsh, you would need to run the command
+<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">/opt/ros/foxy/setup.zsh</span></code>.</p>
+<p>To avoid entering preceding command every time you use ROS 2, you can
+add this command to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> file (or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> and other
+corresponding shell files). This way, every new command-line terminal
+you build will be automatically set to the environment that ROS 2
+requires.</p>
+<p>The advantage of following this process to set up the environment is
+that you can install multiple versions of ROS 2 (and ROS), and then
+source the <code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> file of the corresponding version when you use
+it without interference from other versions.</p>
+<p>If you are a heavy user of Python, adding <code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> to <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>
+may cause issues. This is because all your virtual environments will
+automatically introduce the environment setup of ROS 2, and the Python
+libraries in ROS 2 will be added to the paths of your virtual
+environments. Although virtual environments may detect ROS 2 libraries,
+those libraries will not be used or disrupt the program operation in
+your virtual environments.</p>
+<p>To avoid such issues, if you plan to develop a ROS 2 project primarily
+using Python, you can create a virtual environment for the project and
+add <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">/opt/ros/foxy/setup.bash</span></code> to the <code class="docutils literal notranslate"><span class="pre">activate</span></code> script of
+the virtual environment.</p>
+<p>Note that you may need to add this <code class="docutils literal notranslate"><span class="pre">source</span></code> command to the very
+beginning or close to the end of the script. (If, for example, you are a
+pipenv user, you need to add this command before the
+<code class="docutils literal notranslate"><span class="pre">hash</span> <span class="pre">-r</span> <span class="pre">2&gt;/dev/null</span></code> command instead of putting it at the end.)
+Otherwise, the following error may occur when you activate the virtual
+environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Shell<span class="w"> </span><span class="k">for</span><span class="w"> </span>UNKNOWN_VIRTUAL_ENVIRONMENT<span class="w"> </span>already<span class="w"> </span>activated.
+No<span class="w"> </span>action<span class="w"> </span>taken<span class="w"> </span>to<span class="w"> </span>avoid<span class="w"> </span>nested<span class="w"> </span>environments.
+</pre></div>
+</div>
+<p><strong>6. Testing the installation</strong></p>
+<p>After you run the <code class="docutils literal notranslate"><span class="pre">source</span></code> command, you can test whether ROS 2 is
+successfully installed and the environment is set up correctly. You can
+execute <code class="docutils literal notranslate"><span class="pre">printenv</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">-i</span> <span class="pre">R̂OS</span></code> on the command line where the
+<code class="docutils literal notranslate"><span class="pre">source</span></code> command is executed. The output should contain the following
+three environment variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">ROS_VERSION</span><span class="o">=</span><span class="m">2</span>
+<span class="nv">ROS_PYTHON_VERSION</span><span class="o">=</span><span class="m">3</span>
+<span class="nv">ROS_DISTRO</span><span class="o">=</span>foxy
+</pre></div>
+</div>
+<p>In addition, you can open another two terminal windows that have
+executed the <code class="docutils literal notranslate"><span class="pre">source</span></code> command, and then execute
+Code <code class="docutils literal notranslate"><span class="pre">code/ch17/code_terminal_1</span></code> on terminal 1 and
+Code <code class="docutils literal notranslate"><span class="pre">code/ch17/code_terminal_2</span></code> on terminal 2.</p>
+<p><strong>code/ch17/code_terminal_1</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ros2</span> <span class="n">run</span> <span class="n">demo_nodes_cpp</span> <span class="n">talker</span>
+</pre></div>
+</div>
+<p><strong>code/ch17/code_terminal_2</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ros2</span> <span class="n">run</span> <span class="n">demo_nodes_py</span> <span class="n">listener</span>
+</pre></div>
+</div>
+<p>If the installation was successful and the <code class="docutils literal notranslate"><span class="pre">source</span></code> command is
+executed, <code class="docutils literal notranslate"><span class="pre">talker</span></code> shows that it is broadcasting messages, and
+<code class="docutils literal notranslate"><span class="pre">listener</span></code> shows that it has heard the messages.</p>
+<p>Congratulations, you have now successfully installed ROS 2 and set up
+the environment. The following sections will provide a few examples to
+illustrate the core concepts of ROS 2 introduced in the previous
+section.</p>
+<div class="section" id="node-creation">
+<h2><span class="section-number">13.3.1. </span>Node Creation<a class="headerlink" href="#node-creation" title="Permalink to this heading">¶</a></h2>
+<p>In this subsection, we will create a ROS 2 project and use Python to
+write an example of <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code> to show the basic structure of ROS 2
+nodes.</p>
+<p><strong>1. Creating a new ROS 2 project</strong></p>
+<p>First, create a folder in an appropriate location. This folder will be
+the root directory of the ROS 2 project, that is, the “workspace”
+introduced in the previous section. Because this workspace is manually
+created, it is an overlay workspace. In contrast, the <code class="docutils literal notranslate"><span class="pre">source</span></code> command
+executed earlier will help you prepare the underlay workspace on which
+the overlay workplace is based.</p>
+<p>Suppose you create a workspace and name it as <code class="docutils literal notranslate"><span class="pre">openmlsys-ros2</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>openmlsys-ros2
+<span class="nb">cd</span><span class="w"> </span>openmlsys-ros2
+</pre></div>
+</div>
+<p>In this case, you then need to create a Python virtual environment for
+the workspace and add the <code class="docutils literal notranslate"><span class="pre">source</span></code> command to the corresponding
+<code class="docutils literal notranslate"><span class="pre">activate</span></code> script, as described in the previous subsection about
+environment setup.</p>
+<p>By default, all commands in the case study subsections are executed in
+this newly built virtual environment. Because different tools for
+managing virtual environments have different commands, we do not provide
+examples of executable commands here.</p>
+<p>Next, create a subfolder named <code class="docutils literal notranslate"><span class="pre">src</span></code> in this workspace folder. Within
+this subfolder, create different ROS 2 packages. They are independent of
+each other, but can call each other’s functions to meet the requirements
+of the entire ROS 2 project.</p>
+<p>After the <code class="docutils literal notranslate"><span class="pre">src</span></code> subfolder is created, call the <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code>
+command, which is a common build tool for ROS 2. This command attempts
+to build the entire ROS 2 project (i.e., all packages in the current
+workspace). After this command is executed successfully, three new
+folders will be created in the workspace: <code class="docutils literal notranslate"><span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">install</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">log</span></code>. <code class="docutils literal notranslate"><span class="pre">build</span></code> includes the intermediate outputs, <code class="docutils literal notranslate"><span class="pre">install</span></code>
+contains the final outputs (i.e., well-built packages) of the build
+process, and <code class="docutils literal notranslate"><span class="pre">log</span></code> stores the process logs.</p>
+<p>At this point, with this new framework for the ROS 2 project, you are
+ready to start coding.</p>
+<p><strong>2. Creating a Python package under the ROS 2 framework</strong></p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder, create a ROS 2 package where you will write the
+case of <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>src
+ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs<span class="w"> </span>--node-name<span class="w"> </span>hello_world_node<span class="w"> </span>my_hello_world
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pkg</span> <span class="pre">create</span></code> in the <code class="docutils literal notranslate"><span class="pre">ros2</span></code> command can help you quickly create a
+framework for the ROS 2 package. The <code class="docutils literal notranslate"><span class="pre">build-type</span></code> parameter indicates
+that this is a pure Python package, and the <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> parameter
+indicates that the package will use two dependencies — <code class="docutils literal notranslate"><span class="pre">rclpy</span></code> and
+<code class="docutils literal notranslate"><span class="pre">std_msgs</span></code>. The <code class="docutils literal notranslate"><span class="pre">node-name</span></code> parameter shows that the package created
+has a ROS 2 node named <code class="docutils literal notranslate"><span class="pre">hello_world_node</span></code>, and that <code class="docutils literal notranslate"><span class="pre">my_hello_world</span></code>
+at the end is the name of the new package.</p>
+<p>Go to the new package folder <code class="docutils literal notranslate"><span class="pre">my_hello_world</span></code>. Once the preceding
+command is executed, a Python package folder named <code class="docutils literal notranslate"><span class="pre">my_hello_world</span></code> is
+created. It is named after the package and contains files of
+<code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> and <code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code>. The latter exists because
+you use the <code class="docutils literal notranslate"><span class="pre">node_name</span></code> parameter. This is the Python package folder
+in which you will write your Python code.</p>
+<p>There are another two folders: <code class="docutils literal notranslate"><span class="pre">resource</span></code> and <code class="docutils literal notranslate"><span class="pre">test</span></code>. The former
+helps ROS 2 locate the Python package, and can be ignored. The latter is
+used to accommodate all the test code, and it already contains three
+test files.</p>
+<p>In addition to these three folders, there are three files:
+<code class="docutils literal notranslate"><span class="pre">package.xml</span></code>, <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>, and <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">package.xml</span></code> is the standard configuration file for the ROS 2
+package. In contains a lot of pre-generated content. However, you still
+need to fill in or update the content in <code class="docutils literal notranslate"><span class="pre">version</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>,
+<code class="docutils literal notranslate"><span class="pre">maintainer</span></code>, and <code class="docutils literal notranslate"><span class="pre">license</span></code>. You are advised to fill in all content
+completely each time you create a ROS 2 package. In addition, <code class="docutils literal notranslate"><span class="pre">rclpy</span></code>
+and <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code> are listed as dependencies because you used the
+<code class="docutils literal notranslate"><span class="pre">dependencies</span></code> parameter. To add or modify dependencies, you can
+directly modify the <code class="docutils literal notranslate"><span class="pre">depend</span></code> list in <code class="docutils literal notranslate"><span class="pre">package.xml</span></code>. In addition to
+the most commonly used <code class="docutils literal notranslate"><span class="pre">depend</span></code> (for <code class="docutils literal notranslate"><span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">export</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">execution</span></code>), you also have <code class="docutils literal notranslate"><span class="pre">build_depend</span></code>, <code class="docutils literal notranslate"><span class="pre">build_export_depend</span></code>,
+<code class="docutils literal notranslate"><span class="pre">exec_depend</span></code>, <code class="docutils literal notranslate"><span class="pre">test_depend</span></code>, <code class="docutils literal notranslate"><span class="pre">buildtool_depend</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">dec_depend</span></code>. For details about <code class="docutils literal notranslate"><span class="pre">package.xml</span></code>, see the Wiki page.</p>
+<p>Both <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> and <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> are files related to the Python
+package. However, ROS 2 also uses them to learn how to install the
+Python package to the <code class="docutils literal notranslate"><span class="pre">install</span></code> folder and what entry points —
+programs that can be directly called by the ROS 2 command-line commands
+— need to be registered. Notice that the name <code class="docutils literal notranslate"><span class="pre">hello_world_node</span></code> has
+been set to <code class="docutils literal notranslate"><span class="pre">my_hello_world/hello_world_node.py</span></code> — the alias of the
+<code class="docutils literal notranslate"><span class="pre">main()</span></code> function in the Python file — in <code class="docutils literal notranslate"><span class="pre">console_scripts</span></code>, a
+subitem of <code class="docutils literal notranslate"><span class="pre">entry_points</span></code> in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>. You can call this function
+directly later using the ROS 2 command-line commands and this new name
+as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ros2 run &lt;package_name&gt; &lt;entry_point&gt;</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>hello_world_node
+</pre></div>
+</div>
+<p>To add a new entry point, you can directly add it here.</p>
+<p>In addition to the entry points, you should promptly update the items of
+<code class="docutils literal notranslate"><span class="pre">version</span></code>, <code class="docutils literal notranslate"><span class="pre">maintainer</span></code>, <code class="docutils literal notranslate"><span class="pre">maintainer_email</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">license</span></code> in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<p><strong>3. First ROS 2 node</strong></p>
+<p>Open the Python file <code class="docutils literal notranslate"><span class="pre">my_hello_world/hello_world_node.py</span></code> and delete
+its content in order to write the desired code.</p>
+<p>First, introduce the necessary packages:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">rclpy</span></code> — ROS Client Library for Python — allows you to use various
+functions within the ROS 2 framework through Python. The <code class="docutils literal notranslate"><span class="pre">Node</span></code> class
+is the base class for all ROS 2 nodes. Your node class also needs to
+inherit this base class. <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code> contains some standard message
+formats predefined by ROS 2 for intra-framework communication. You need
+to use the <code class="docutils literal notranslate"><span class="pre">String</span></code> message format to pass string information.</p>
+<p>Next, define your own ROS 2 node:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">HelloWorldNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;my_hello_world_node&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;hello_world_topic&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">timer_period</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="n">timer_period</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Hello World: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Publishing: &quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>As mentioned earlier, your node class <code class="docutils literal notranslate"><span class="pre">HelloWorldNode</span></code> inherits from
+the <code class="docutils literal notranslate"><span class="pre">Node</span></code> base class.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method, call the initialization method of the base
+class to name your node as <code class="docutils literal notranslate"><span class="pre">my_hello_world_node</span></code>. Next, create an
+information publisher that publishes the information of the string type
+to the topic <code class="docutils literal notranslate"><span class="pre">hello_world_topic</span></code> and maintains a buffer of size 10.
+Then, create a timer that calls the <code class="docutils literal notranslate"><span class="pre">timer_callback()</span></code> method once
+every second. Finally, initialize a counter to count the total number of
+messages that have been published.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">timer_callback()</span></code> method, create a simple message of
+<code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code> with a counter and send it through the message
+publisher. Then log the operation and increment the count by 1.</p>
+<p>After the <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code> node class is defined, start defining the
+<code class="docutils literal notranslate"><span class="pre">main()</span></code> function, which is the entry point in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">hello_world_node</span> <span class="o">=</span> <span class="n">HelloWorldNode</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">hello_world_node</span><span class="p">)</span>
+    <span class="n">hello_world_node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This <code class="docutils literal notranslate"><span class="pre">main()</span></code> function is relatively simple. First, start the ROS 2
+framework with the <code class="docutils literal notranslate"><span class="pre">rclpy.init()</span></code> method. Then, create an instance of
+<code class="docutils literal notranslate"><span class="pre">HelloWorldNode</span></code> and add it to the running ROS 2 framework by means of
+<code class="docutils literal notranslate"><span class="pre">rclpy.spin()</span></code>. This ensures that the instance participates in the ROS
+2 event loop and runs correctly. <code class="docutils literal notranslate"><span class="pre">rclpy.spin()</span></code> is a blocking method
+that runs continually until it is blocked (e.g., when the ROS 2
+framework stops running). At this time, your node will be destroyed and
+the ROS 2 framework closed. If you do not destroy an unused node, the
+garbage collector will destroy it.</p>
+<p>At this point, you have created your first ROS 2 node.</p>
+<p><strong>4. First build and run</strong></p>
+<p>You are now ready to build the new package. This involves installing the
+Python package you have written into a place where ROS 2 can find it
+rather than building a Python project.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># cd &lt;workspace&gt;</span>
+<span class="nb">cd</span><span class="w"> </span>openmlsys-ros2
+colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install
+</pre></div>
+</div>
+<p>Running this build command will build all Python and C++ packages in the
+<code class="docutils literal notranslate"><span class="pre">src</span></code> folder in the workspace and then install them in the <code class="docutils literal notranslate"><span class="pre">install</span></code>
+folder. The <code class="docutils literal notranslate"><span class="pre">–symlink-install</span></code> option requires <code class="docutils literal notranslate"><span class="pre">colcon</span></code> to build
+<code class="docutils literal notranslate"><span class="pre">symlink</span></code> for the Python package so that installation is not
+replicated. In this way, any subsequent changes in <code class="docutils literal notranslate"><span class="pre">src</span></code> will be
+reflected directly in <code class="docutils literal notranslate"><span class="pre">install</span></code>, instead of repeatedly executing the
+build command.</p>
+<p>After the build is completed successfully, the package is still not
+ready to be used yet. For example, executing
+<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">my_hello_world</span> <span class="pre">hello_world_node</span></code> now will likely result in
+the message <code class="docutils literal notranslate"><span class="pre">Package</span> <span class="pre">’my_hello_world’</span> <span class="pre">not</span> <span class="pre">found</span></code>.</p>
+<p>To use the package, you need to let ROS 2 know where the <code class="docutils literal notranslate"><span class="pre">install</span></code>
+folder is. Source the <code class="docutils literal notranslate"><span class="pre">local_setup.bash</span></code> file in the <code class="docutils literal notranslate"><span class="pre">install</span></code>
+folder as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>install/local_setup.bash
+</pre></div>
+</div>
+<p>Unlike earlier when we added <code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> to the <code class="docutils literal notranslate"><span class="pre">activate</span></code> script
+in the virtual environment in order to eliminate the need for sourcing
+the file separately each time, we cannot do the same with
+<code class="docutils literal notranslate"><span class="pre">install/local_setup.bash</span></code>. Doing so would cause a problem.</p>
+<p>Specifically, to run the ROS 2 package, you have to source both
+<code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> and <code class="docutils literal notranslate"><span class="pre">install/local_setup.bash</span></code> (either through the
+<code class="docutils literal notranslate"><span class="pre">activate</span></code> script or manually). However, the condition of building the
+pure Python ROS 2 package with C++ dependencies is sourcing only
+<code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> but not <code class="docutils literal notranslate"><span class="pre">local_setup.bash</span></code>. Subsequent cases will show
+such a condition for a pure Python ROS 2 package that uses the package
+of custom message interfaces (your own C++ package).</p>
+<p>After successfully sourcing <code class="docutils literal notranslate"><span class="pre">install/local_setup.bash</span></code>, you can call
+the written node.</p>
+<p>From now on, unless otherwise specified, <code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> and
+<code class="docutils literal notranslate"><span class="pre">install/local_setup.bash</span></code> in any newly created window are sourced and
+the <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code> command is executed in a terminal window where only
+<code class="docutils literal notranslate"><span class="pre">setup.bash</span></code> is sourced and <code class="docutils literal notranslate"><span class="pre">install/local_setup.bash</span></code> is ignored.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>hello_world_node
+</pre></div>
+</div>
+<p>Information similar to the following will be displayed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653270247</span>.805815900<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_hello_world_node<span class="o">]</span>:<span class="w"> </span>Publishing:<span class="w"> </span><span class="s2">&quot;Hello World: 0&quot;</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653270248</span>.798165800<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_hello_world_node<span class="o">]</span>:<span class="w"> </span>Publishing:<span class="w"> </span><span class="s2">&quot;Hello World: 1&quot;</span>
+</pre></div>
+</div>
+<p>You can also open a terminal window and execute
+<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">topic</span> <span class="pre">echo</span> <span class="pre">/hello_world_topic</span></code>. Information similar to the
+following will be displayed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>data:<span class="w"> </span><span class="s1">&#39;Hello World: 23&#39;</span>
+---
+data:<span class="w"> </span><span class="s1">&#39;Hello World: 24&#39;</span>
+---
+</pre></div>
+</div>
+<p>This means that your information is published to the target topic. The
+command <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">topic</span> <span class="pre">echo</span> <span class="pre">&lt;topic_name&gt;</span></code> outputs the information
+received by the topic with the specified name.</p>
+<p>Congratulations, you have now successfully run your first ROS 2 node.</p>
+<p><strong>5. A message subscriber node</strong></p>
+<p>After a message is published, a message subscriber is also needed to
+consume the published information.</p>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">message_subscriber.py</span></code> in the folder where
+<code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code> is located, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">ch17/messageSubscriber</span></code>:</p>
+<p><strong>ch17/messageSubscriber</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MessageSubscriber</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;my_hello_world_subscriber&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_subscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">String</span><span class="p">,</span> <span class="s1">&#39;hello_world_topic&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriber_callback</span><span class="p">,</span> <span class="mi">10</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">subscriber_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Received &quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">message_subscriber</span> <span class="o">=</span> <span class="n">MessageSubscriber</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">message_subscriber</span><span class="p">)</span>
+    <span class="n">message_subscriber</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This newly created file and its message subscriber node class are
+similar to the file and its <code class="docutils literal notranslate"><span class="pre">HelloWorld</span></code> node class mentioned earlier.
+During initialization, you need to use the base class initialization
+method to assign the name <code class="docutils literal notranslate"><span class="pre">my_hello_world_subscriber</span></code> to the node, and
+then create a message subscriber to subscribe to messages under the
+topic <code class="docutils literal notranslate"><span class="pre">hello_world_topic</span></code>. You also need to specify the
+<code class="docutils literal notranslate"><span class="pre">subscriber_callback()</span></code> method to process the received messages. In
+<code class="docutils literal notranslate"><span class="pre">subscriber_callback()</span></code>, log the received messages. The <code class="docutils literal notranslate"><span class="pre">main()</span></code>
+method for this node class is similar to that for the <code class="docutils literal notranslate"><span class="pre">HelloWorld</span></code>
+node class.</p>
+<p>Before using this new node, add it as an entry point by adding the
+following line in the appropriate location of <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;message_subscriber = my_hello_world.message_subscriber:main&#39;</span>
+</pre></div>
+</div>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">my_hello_world</span> <span class="pre">message_subscriber</span></code> in the
+terminal window now, you will get an error message similar to “No
+executable found”. That is because ROS 2 can be aware of the newly added
+entry point only after rebuilding the entire ROS 2 project.</p>
+<p>Execute <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">–symlink-install</span></code> again in the workspace
+directory. After the build is completed successfully, open two terminal
+windows and make sure that the two setup files are sourced. Then call
+them separately with the <code class="docutils literal notranslate"><span class="pre">ros2</span></code> commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in terminal 1</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>hello_world_node
+<span class="c1"># in terminal 2</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>message_subscriber
+</pre></div>
+</div>
+<p>After the commands are run, the “Hello World: N” message is published
+continuously in terminal window 1, and the “Hello World: N” message is
+received continuously in terminal window 2.</p>
+<p>Congratulations, you have now successfully created a pair of ROS 2
+nodes, one for sending messages and the other for subscribing to and
+receiving messages.</p>
+</div>
+<div class="section" id="parameter-reading">
+<h2><span class="section-number">13.3.2. </span>Parameter Reading<a class="headerlink" href="#parameter-reading" title="Permalink to this heading">¶</a></h2>
+<p>Nodes in a real-world project are far more complex than the simple
+example provided earlier because, for example, they are parameterized.
+This subsection will show you how to get a node to read a parameter.</p>
+<p>Create a new file named <code class="docutils literal notranslate"><span class="pre">parametrised_hello_world_node.py</span></code> in the
+folder where <code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code> is located, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">code/ch17/parametrisedHelloWorldNode</span></code>:</p>
+<p><strong>code/ch17/parametrisedHelloWorldNode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ParametrisedHelloWorldNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;parametrised_hello_world_node&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;hello_world_topic&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">timer_period</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="n">timer_period</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_parameter_value</span><span class="p">()</span><span class="o">.</span><span class="n">string_value</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Hello </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Publishing: &quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">hello_world_node</span> <span class="o">=</span> <span class="n">ParametrisedHelloWorldNode</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">hello_world_node</span><span class="p">)</span>
+    <span class="n">hello_world_node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">This new parameterized <code class="docutils literal notranslate"><span class="pre">HelloWorldNode</span></code> class is similar to the
+previous <code class="docutils literal notranslate"><span class="pre">HelloWorld</span></code> node class except for the following two
+differences:</div>
+<div class="line">(1) The new class additionally uses the <code class="docutils literal notranslate"><span class="pre">self.declare_parameter()</span></code>
+method in the initialization methods to declare the new node instance
+to the ROS 2 framework. The new node instance has a parameter named
+<code class="docutils literal notranslate"><span class="pre">name</span></code>, and the initial value of this parameter is <code class="docutils literal notranslate"><span class="pre">world</span></code>.</div>
+<div class="line">(2) The new class attempts to obtain the actual value of the <code class="docutils literal notranslate"><span class="pre">name</span></code>
+parameter in the callback function <code class="docutils literal notranslate"><span class="pre">timer_callback()</span></code> and uses that
+value to form the content of the message to be sent.</div>
+</div>
+<p>First, register the <code class="docutils literal notranslate"><span class="pre">main()</span></code> method of the new file as a new entry
+point. Similarly, add the following line to the corresponding position
+in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>. Also, execute <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">–symlink-install</span></code> in the
+workspace root directory to rebuild the project.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;parametrised_hello_world_node = my_hello_world.parametrised_hello_world_node:main&#39;</span>
+</pre></div>
+</div>
+<p>After the build is successfully completed, if you execute
+<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">my_hello_world</span> <span class="pre">parametrised_hello_world_node</span></code> in the
+terminal, you will see that this parameterized <code class="docutils literal notranslate"><span class="pre">HelloWorld</span></code> node runs
+normally and continuously publishes messages like “Hello World: N”. In
+this case, the node uses the initial value <code class="docutils literal notranslate"><span class="pre">world</span></code>.</p>
+<p>After you execute <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">param</span> <span class="pre">list</span></code> in a new terminal, you will see
+the following information:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/parametrised_hello_world_node:
+<span class="w">  </span>name
+<span class="w">  </span>use_sim_time
+</pre></div>
+</div>
+<p>This indicates that the node <code class="docutils literal notranslate"><span class="pre">parametrised_hello_world_node</span></code> does
+declare and use a <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter. Another parameter named
+<code class="docutils literal notranslate"><span class="pre">use_sim_time</span></code> is a default parameter given by ROS 2 to indicate
+whether the node uses the simulated time inside the ROS 2 framework
+rather than the system time of the computer.</p>
+<p>To assign the value <code class="docutils literal notranslate"><span class="pre">ROS2</span></code> to the <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter, run the
+following command in the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>param<span class="w"> </span><span class="nb">set</span><span class="w"> </span>/parametrised_hello_world_node<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;ROS2&quot;</span>
+</pre></div>
+</div>
+<p>If the assignment is successful, the command returns “Set parameter
+successful”, and the terminal window where the parameterized
+<code class="docutils literal notranslate"><span class="pre">HelloWorld</span></code> node is running continuously changes the messages it
+publishes to “Hello ROS2: N”.</p>
+<p>Congratulations, you now know how to make ROS 2 nodes (and other types
+of ROS 2 programs) use parameters.</p>
+</div>
+<div class="section" id="server-client-service-mode">
+<h2><span class="section-number">13.3.3. </span>Server-Client Service Mode<a class="headerlink" href="#server-client-service-mode" title="Permalink to this heading">¶</a></h2>
+<p>As mentioned in the previous section, the ROS 2 framework has both a
+publisher-subscriber communication mode and a server-client
+communication mode. In this subsection, we will use a simple service
+that concatenates two strings to demonstrate how the server-client mode
+works.</p>
+<p><strong>1. Custom service interfaces</strong></p>
+<p>Before coding for the server and client, you need to define the
+communication interfaces between them.</p>
+<p>There are three types of interfaces in the ROS 2 framework.</p>
+<p>The message/msg interface for nodes in publisher-subscriber mode: It is
+used for unidirectional message delivery and only defines the format of
+such messages. The service/srv interface for service nodes in
+server-client mode: It is used for bidirectional message delivery and
+defines the format of the requests sent from the client to the server
+and the format of the responses sent from the server to the client. The
+action interface for action nodes in action mode: It is used for
+bidirectional message delivery and intermediate progress feedback. It
+defines the format of the requests sent by the action initiating node to
+the action node, the format of the results sent by the action node to
+the action initiating node, and the format of the intermediate progress
+feedback sent by the action node to the action initiating node. The
+<code class="docutils literal notranslate"><span class="pre">std_msgs.msg.String</span></code> message interface in the predefined package
+<code class="docutils literal notranslate"><span class="pre">std_msgs</span></code> is used for the <code class="docutils literal notranslate"><span class="pre">HelloWorld</span></code> nodes defined earlier.
+Because the message interface is only responsible for defining the
+format of unidirectional messages, predefined interface types are
+readily available. For services and actions, however, you need to define
+an interface type because the interfaces are responsible for defining
+the format of bidirectional communications. Next, let’s define the
+service type interface for the string concatenation service.</p>
+<p>First, create a new package in the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder of the workspace,
+which is dedicated to maintaining custom message, service, and action
+interfaces.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>openmlsys-ros2/src
+ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>--build-type<span class="w"> </span>ament_cmake<span class="w"> </span>my_interfaces
+</pre></div>
+</div>
+<p>This is a new C++ package, not a Python one, because custom interface
+types of ROS 2 can only support C++ packages. Once you have created the
+package, update the related items in <code class="docutils literal notranslate"><span class="pre">package.xml</span></code>.</p>
+<p>To facilitate maintenance, custom interfaces are generally placed in the
+corresponding subfolders. As such, you can create three subfolders in
+the new folder <code class="docutils literal notranslate"><span class="pre">src/my_interfaces</span></code>: <code class="docutils literal notranslate"><span class="pre">msg</span></code>, <code class="docutils literal notranslate"><span class="pre">srv</span></code>, and <code class="docutils literal notranslate"><span class="pre">action</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>my_interfaces
+mkdir<span class="w"> </span>msg<span class="w"> </span>srv<span class="w"> </span>action
+</pre></div>
+</div>
+<p>Next, create the service interfaces you want to define in the <code class="docutils literal notranslate"><span class="pre">srv</span></code>
+subfolder.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>srv
+touch<span class="w"> </span>ConcatTwoStr.srv
+</pre></div>
+</div>
+<p>After that, add the following contents to <code class="docutils literal notranslate"><span class="pre">ConcatTwoStr.srv</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>string<span class="w"> </span>str1
+string<span class="w"> </span>str2
+---
+string<span class="w"> </span>ret
+</pre></div>
+</div>
+<p>The contents above - - - are the format of the requests sent by the
+client to the server, and those below are the format of the responses
+sent by the server to the client.</p>
+<p>Once the interfaces are defined, you also need to modify
+<code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>. Open <code class="docutils literal notranslate"><span class="pre">my_interfaces/CMakeLists.txt</span></code> and add the
+following code before the line <code class="docutils literal notranslate"><span class="pre">if(BUILD_TESTING)</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find_package<span class="o">(</span>rosidl_default_generators<span class="w"> </span>REQUIRED<span class="o">)</span>
+
+rosidl_generate_interfaces<span class="o">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+<span class="w">  </span><span class="s2">&quot;srv/ConcatTwoStr.srv&quot;</span>
+<span class="o">)</span>
+</pre></div>
+</div>
+<p>The code above instructs the build tool to find the required
+<code class="docutils literal notranslate"><span class="pre">rosidl_default_generators</span></code> package and to build the custom interfaces
+you specified.</p>
+<p>After updating <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>, you also need to add
+<code class="docutils literal notranslate"><span class="pre">rosidl_default_generators</span></code> to <code class="docutils literal notranslate"><span class="pre">package.xml</span></code> as a dependency of the
+custom interface package. Open the <code class="docutils literal notranslate"><span class="pre">package.xml</span></code> file and add the
+following code before the line
+<code class="docutils literal notranslate"><span class="pre">&lt;test_depend&gt;ament_lint_auto&lt;/test_depend&gt;</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;build_depend&gt;rosidl_default_generators&lt;/build_depend&gt;
+&lt;exec_depend&gt;rosidl_default_runtime&lt;/exec_depend&gt;
+&lt;member_of_group&gt;rosidl_interface_packages&lt;/member_of_group&gt;
+</pre></div>
+</div>
+<p>After <code class="docutils literal notranslate"><span class="pre">package.xml</span></code> is updated, you can build the custom interface
+package.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>openmlsys-ros2
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>my_interfaces
+</pre></div>
+</div>
+<p>Because the package <code class="docutils literal notranslate"><span class="pre">my_hello_world</span></code> has no changes, only the package
+<code class="docutils literal notranslate"><span class="pre">my_interfaces</span></code> is selected using the option <code class="docutils literal notranslate"><span class="pre">–packages-select</span></code>.
+Also, the option <code class="docutils literal notranslate"><span class="pre">–symlink-install</span></code> is not used because the custom
+interface package is a C++ package that must be rebuilt after each
+change.</p>
+<p>When running this build command, error messages such as
+<code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">’XXX’</span></code> (XXX can be <code class="docutils literal notranslate"><span class="pre">em</span></code>,
+<code class="docutils literal notranslate"><span class="pre">catkin_pkg</span></code>, <code class="docutils literal notranslate"><span class="pre">lark</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, or other Python packages) may be
+displayed. Most of these errors occur because the Python virtual
+environment does not point to Python 3 of the Ubuntu system or include
+<code class="docutils literal notranslate"><span class="pre">site-packages</span></code>. In this case, deleting the current virtual
+environment and recreate a new one as described at the beginning of this
+section may resolve the problem.</p>
+<p>To verify whether the build is completed successfully, run
+<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">interface</span> <span class="pre">show</span> <span class="pre">my_interfaces/srv/ConcatTwoStr</span></code> in a new terminal
+window. The terminal will display the definition of the custom service
+interface <code class="docutils literal notranslate"><span class="pre">ConcatTwoStr</span></code> if the build succeeded.</p>
+<p>Now that you have defined the required service interfaces, you are ready
+to code the server and the client.</p>
+<p><strong>2. ROS 2 server</strong></p>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">concat_two_str_service.py</span></code> in the folder where
+<code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code> is located, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">ch17/concatTwoStrService</span></code>:</p>
+<p><strong>ch17/concatTwoStrService</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">my_interfaces.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConcatTwoStr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConcatTwoStrService</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;concat_two_str_service&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">srv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_service</span><span class="p">(</span><span class="n">ConcatTwoStr</span><span class="p">,</span> <span class="s1">&#39;concat_two_str&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concat_two_str_callback</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">concat_two_str_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">ret</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">str1</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">str2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incoming request</span><span class="se">\n</span><span class="s1">str1: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">str1</span><span class="si">}</span><span class="se">\n</span><span class="s1">str2: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">str2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">concat_two_str_service</span> <span class="o">=</span> <span class="n">ConcatTwoStrService</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">concat_two_str_service</span><span class="p">)</span>
+    <span class="n">concat_two_str_service</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The process of building a service is similar to that of building a
+general node, with both the service and node being inherited from the
+same base class <code class="docutils literal notranslate"><span class="pre">rclpy.node.Node</span></code>. In this file, first introduce the
+custom service interface <code class="docutils literal notranslate"><span class="pre">ConcatTwoStr</span></code> from the built package
+<code class="docutils literal notranslate"><span class="pre">my_interfaces</span></code>. Use <code class="docutils literal notranslate"><span class="pre">self.create_service()</span></code> to create a server
+object, and specify the service interface type as <code class="docutils literal notranslate"><span class="pre">ConcatTwoStr</span></code>, the
+service name as <code class="docutils literal notranslate"><span class="pre">concat_two_str</span></code>, and the callback function for
+processing service requests as <code class="docutils literal notranslate"><span class="pre">self.concat_two_str_callback</span></code>. In the
+callback function <code class="docutils literal notranslate"><span class="pre">self.concat_two_str_callback()</span></code>, compute <code class="docutils literal notranslate"><span class="pre">str1</span></code>
+and <code class="docutils literal notranslate"><span class="pre">str2</span></code> obtained by the request object, assign the result to
+<code class="docutils literal notranslate"><span class="pre">ret</span></code> of the response object, and record logs. Note that the structure
+of the request and response objects conforms to the definition in
+<code class="docutils literal notranslate"><span class="pre">ConcatTwoStr.srv</span></code>.</p>
+<p>In addition, add the <code class="docutils literal notranslate"><span class="pre">main()</span></code> method of this file as an entry point to
+<code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;concat_two_str_service = my_hello_world.concat_two_str_service:main&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="client">
+<h2><span class="section-number">13.3.4. </span>Client<a class="headerlink" href="#client" title="Permalink to this heading">¶</a></h2>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">concat_two_str_client_async.py</span></code> in the folder
+where <code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code> is located, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">ch17/concatTwoStrClientAsync</span></code>:</p>
+<p><strong>ch17/concatTwoStrClientAsync</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_interfaces.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConcatTwoStr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConcatTwoStrClientAsync</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;concat_two_str_client_async&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cli</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_client</span><span class="p">(</span><span class="n">ConcatTwoStr</span><span class="p">,</span> <span class="s1">&#39;concat_two_str&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;service not available, waiting again...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">req</span> <span class="o">=</span> <span class="n">ConcatTwoStr</span><span class="o">.</span><span class="n">Request</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">req</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">req</span><span class="o">.</span><span class="n">str2</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">req</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="n">concat_two_str_client_async</span> <span class="o">=</span> <span class="n">ConcatTwoStrClientAsync</span><span class="p">()</span>
+    <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">send_request</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin_once</span><span class="p">(</span><span class="n">concat_two_str_client_async</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Service call failed </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">,))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Result of concat_two_str: (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">) -&gt; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">req</span><span class="o">.</span><span class="n">str1</span><span class="p">,</span> <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">req</span><span class="o">.</span><span class="n">str2</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">ret</span><span class="p">))</span>
+            <span class="k">break</span>
+
+    <span class="n">concat_two_str_client_async</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Coding the client is slightly more complex than coding the server. In
+the initialization method for the client node, first create a client
+object, and specify the service interface type as <code class="docutils literal notranslate"><span class="pre">ConcatTwoSt</span></code> and
+the service name as <code class="docutils literal notranslate"><span class="pre">concat_two_str</span></code>. Then, through a <code class="docutils literal notranslate"><span class="pre">while</span></code> loop,
+the client will wait for the corresponding server to go online before
+proceeding to the next step. This technique of using a loop for waiting
+is used by many clients. When the server goes online, the initialization
+method creates a template of the service request object and temporarily
+stores the template in the <code class="docutils literal notranslate"><span class="pre">req</span></code> attribute of the client node. In
+addition to the initialization method, the client node also defines
+another method — <code class="docutils literal notranslate"><span class="pre">send_request()</span></code> — to read the first two parameters
+of the command line when the program is started, store those parameters
+in the service request object, and then send the object to the server
+asynchronously.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">main()</span></code> method, first create a client and send a service
+request, and then use a <code class="docutils literal notranslate"><span class="pre">while</span></code> loop to wait for the server to return
+the result and log the result. <code class="docutils literal notranslate"><span class="pre">rclpy.ok()</span></code> is used to check whether
+ROS 2 is running properly so that that the client does not get trapped
+in an infinite loop if ROS 2 stops running before the service ends.
+<code class="docutils literal notranslate"><span class="pre">rclpy.spin_once()</span></code> differs from <code class="docutils literal notranslate"><span class="pre">rclpy.spin()</span></code> in that the former
+executes an event loop only once whereas the latter executes an event
+loop until ROS 2 stops. As such, using <code class="docutils literal notranslate"><span class="pre">rclpy.spin_once()</span></code> here is
+more suitable because you already have a <code class="docutils literal notranslate"><span class="pre">while</span></code> loop. Note that the
+object <code class="docutils literal notranslate"><span class="pre">concat_two_str_client.future</span></code> provides a number of methods to
+help determine the current state of the service request.</p>
+<p>You also need to add the <code class="docutils literal notranslate"><span class="pre">main()</span></code> method of this file as an entry
+point to <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;concat_two_str_client_async = my_hello_world.concat_two_str_client_async:main&#39;</span>
+</pre></div>
+</div>
+<p>Now that the server and client are prepared, you can rebuild the package
+<code class="docutils literal notranslate"><span class="pre">my_hello_world</span></code> in the workspace root directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>openmlsys-ros2
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>my_hello_world<span class="w"> </span>--symlink-install
+</pre></div>
+</div>
+<p>Then, run the following commands in the respective terminal windows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in terminal 1</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>concat_two_str_client_async<span class="w"> </span>Hello<span class="w"> </span>World
+<span class="c1"># in terminal 2</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>concat_two_str_service
+</pre></div>
+</div>
+<p>Information similar to the following will be shown if all goes well:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in terminal 1</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653525569</span>.843701600<span class="o">]</span><span class="w"> </span><span class="o">[</span>concat_two_str_client_async<span class="o">]</span>:<span class="w"> </span>Result<span class="w"> </span>of<span class="w"> </span>concat_two_str:<span class="w"> </span><span class="o">(</span>Hello,<span class="w"> </span>World<span class="o">)</span><span class="w"> </span>-&gt;<span class="w"> </span>HelloWorld
+<span class="c1"># in terminal 2</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653516701</span>.306543500<span class="o">]</span><span class="w"> </span><span class="o">[</span>concat_two_str_service<span class="o">]</span>:<span class="w"> </span>Incoming<span class="w"> </span>request
+str1:<span class="w"> </span>Hello
+str2:<span class="w"> </span>World
+</pre></div>
+</div>
+<p>Congratulations, you have now created the custom interface type, server
+node, and client node in the ROS 2 framework.</p>
+</div>
+<div class="section" id="action-mode">
+<h2><span class="section-number">13.3.5. </span>Action Mode<a class="headerlink" href="#action-mode" title="Permalink to this heading">¶</a></h2>
+<p>The previous subsection describes the server-client mode within the ROS
+2 framework. This subsection introduces the action mode by summing each
+element of a number sequence one by one.</p>
+<p><strong>1. Custom action interfaces</strong></p>
+<p>Before coding the action-related node, you need to define the action
+information interface.</p>
+<p>You can use the package <code class="docutils literal notranslate"><span class="pre">my_interfaces</span></code> built earlier, create a new
+file <code class="docutils literal notranslate"><span class="pre">MySum.action</span></code> in <code class="docutils literal notranslate"><span class="pre">my_interfaces/action</span></code>, and add the following
+contents:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Request</span>
+int32<span class="o">[]</span><span class="w"> </span>list
+---
+<span class="c1"># Result</span>
+int32<span class="w"> </span>sum
+---
+<span class="c1"># Feedback</span>
+int32<span class="w"> </span>sum_so_far
+</pre></div>
+</div>
+<p>The action information interface is simple: The request of the action
+has only one item, <code class="docutils literal notranslate"><span class="pre">list</span></code> of an integer sequence. The result of the
+action has only one integer, item <code class="docutils literal notranslate"><span class="pre">sum</span></code>. And the intermediate feedback
+has only one integer, item <code class="docutils literal notranslate"><span class="pre">sum_so_far</span></code>, to calculate the accumulated
+sum to the current position.</p>
+<p>Next, add this information interface to <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>.
+Specifically, add <code class="docutils literal notranslate"><span class="pre">action/MySum.action</span></code> after <code class="docutils literal notranslate"><span class="pre">srv/ConcatTwoStr.srv</span></code>
+in the method <code class="docutils literal notranslate"><span class="pre">rosidl_generate_interfaces()</span></code>.</p>
+<p>Finally, build the changed package by running
+<code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">–packages-select</span> <span class="pre">my_interface</span></code> in the workspace root
+directory.</p>
+<p><strong>2. ROS 2 action server</strong></p>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">my_sum_action_server.py</span></code> in the folder where
+<code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code> is located, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">ch17/mySumActionServer</span></code>:</p>
+<p><strong>ch17/mySumActionServer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionServer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_interfaces.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">MySum</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MySumActionServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;my_sum_action_server&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_server</span> <span class="o">=</span> <span class="n">ActionServer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">MySum</span><span class="p">,</span> <span class="s1">&#39;my_sum&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_callback</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal_handle</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Executing goal...&#39;</span><span class="p">)</span>
+        <span class="n">feedback_msg</span> <span class="o">=</span> <span class="n">MySum</span><span class="o">.</span><span class="n">Feedback</span><span class="p">()</span>
+        <span class="n">feedback_msg</span><span class="o">.</span><span class="n">sum_so_far</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+            <span class="n">feedback_msg</span><span class="o">.</span><span class="n">sum_so_far</span> <span class="o">+=</span> <span class="n">elm</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Feedback: </span><span class="si">{</span><span class="n">feedback_msg</span><span class="o">.</span><span class="n">sum_so_far</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">goal_handle</span><span class="o">.</span><span class="n">publish_feedback</span><span class="p">(</span><span class="n">feedback_msg</span><span class="p">)</span>
+        <span class="n">goal_handle</span><span class="o">.</span><span class="n">succeed</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">MySum</span><span class="o">.</span><span class="n">Result</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">sum</span> <span class="o">=</span> <span class="n">feedback_msg</span><span class="o">.</span><span class="n">sum_so_far</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">my_sum_action_server</span> <span class="o">=</span> <span class="n">MySumActionServer</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">my_sum_action_server</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Similarly, create an action server object in its initialization method
+for this action server node class. Specify the defined <code class="docutils literal notranslate"><span class="pre">MySum</span></code> as the
+information interface type, <code class="docutils literal notranslate"><span class="pre">my_sum</span></code> as the action name, and the
+<code class="docutils literal notranslate"><span class="pre">self.execute_callback</span></code> method as the callback function for action
+execution.</p>
+<p>Next, define the action when a new target is received in the
+<code class="docutils literal notranslate"><span class="pre">self.execute_callback()</span></code> method. Here, you can treat a target as the
+<code class="docutils literal notranslate"><span class="pre">request</span></code> part of the defined <code class="docutils literal notranslate"><span class="pre">MySum</span></code> information interface. This is
+because the target here is the structure that contains the information
+related to the purpose of the action request, that is, the part defined
+by the <code class="docutils literal notranslate"><span class="pre">request</span></code> part.</p>
+<p>When you receive a target, first create a feedback message object
+<code class="docutils literal notranslate"><span class="pre">feedback_msg</span></code> from <code class="docutils literal notranslate"><span class="pre">MySum</span></code> and use the <code class="docutils literal notranslate"><span class="pre">sum_so_far</span></code> item as an
+accumulator. Then traverse the data in the <code class="docutils literal notranslate"><span class="pre">list</span></code> item in the target
+request and accumulate the data item by item. Each time an item is
+accumulated, a feedback message is sent via the
+<code class="docutils literal notranslate"><span class="pre">goal_handle.publish_feedback()</span></code> method. Finally, when the computation
+is complete, use <code class="docutils literal notranslate"><span class="pre">goal_handle.succeed()</span></code> to indicate that the action
+has been successfully performed. In addition, create a new result object
+through <code class="docutils literal notranslate"><span class="pre">MySum</span></code>, fill in the result value, and return it.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function, create an instance of the action server node
+class and call <code class="docutils literal notranslate"><span class="pre">rclpy.spin()</span></code> to add the instance to the event loop.</p>
+<p>Finally, add <code class="docutils literal notranslate"><span class="pre">main()</span></code> as an entry point by adding the following line
+in the appropriate position in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;my_sum_action_server = my_hello_world.my_sum_action_server:main&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="action-client">
+<h2><span class="section-number">13.3.6. </span>Action Client<a class="headerlink" href="#action-client" title="Permalink to this heading">¶</a></h2>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">my_sum_action_client.py</span></code> in the folder where
+<code class="docutils literal notranslate"><span class="pre">hello_world_node.py</span></code> is located, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">ch17/mySumActionClient</span></code>:</p>
+<p><strong>ch17/mySumActionClient</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_interfaces.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">MySum</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MySumActionClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;my_sum_action_client&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_client</span> <span class="o">=</span> <span class="n">ActionClient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">MySum</span><span class="p">,</span> <span class="s1">&#39;my_sum&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_goal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">goal_msg</span> <span class="o">=</span> <span class="n">MySum</span><span class="o">.</span><span class="n">Goal</span><span class="p">()</span>
+        <span class="n">goal_msg</span><span class="o">.</span><span class="n">list</span> <span class="o">=</span> <span class="nb">list</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_client</span><span class="o">.</span><span class="n">wait_for_server</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_goal_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_client</span><span class="o">.</span><span class="n">send_goal_async</span><span class="p">(</span>
+            <span class="n">goal_msg</span><span class="p">,</span> <span class="n">feedback_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_callback</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_goal_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_response_callback</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">goal_response_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="n">goal_handle</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">accepted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Goal rejected...&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Goal accepted.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_result_future</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">get_result_async</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_result_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_result_callback</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_result_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Result: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">sum</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">feedback_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback_msg</span><span class="p">):</span>
+        <span class="n">feedback</span> <span class="o">=</span> <span class="n">feedback_msg</span><span class="o">.</span><span class="n">feedback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Received feedback: </span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">sum_so_far</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">action_client</span> <span class="o">=</span> <span class="n">MySumActionClient</span><span class="p">()</span>
+    <span class="n">action_client</span><span class="o">.</span><span class="n">send_goal</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span> <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">action_client</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This action client node class is slightly more complex than the server
+node class introduced earlier, because you need to send requests,
+receive feedback, and process results.</p>
+<p>First, create an action client object in the initialization method of
+the action client node class and specify <code class="docutils literal notranslate"><span class="pre">MySum</span></code> as the message
+interface type and <code class="docutils literal notranslate"><span class="pre">my_sum</span></code> as the action name.</p>
+<p>Then, declare the <code class="docutils literal notranslate"><span class="pre">self.send_goal()</span></code> method to generate and send a
+target/request. Specifically, create a target object from <code class="docutils literal notranslate"><span class="pre">MySum</span></code> and
+assign the received <code class="docutils literal notranslate"><span class="pre">list</span></code> parameter to the <code class="docutils literal notranslate"><span class="pre">list</span></code> attribute of the
+target object. After the action server is ready, send the target
+asynchronously and specify <code class="docutils literal notranslate"><span class="pre">self.feedback_callback</span></code> as the feedback
+callback function. Finally, set <code class="docutils literal notranslate"><span class="pre">self.goal_response_callback</span></code> as the
+callback function for the asynchronous operation that sends the target
+information.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">self.goal_response_callback()</span></code>, check whether the target request
+is accepted and log the result. If the target request is accepted,
+obtain the <code class="docutils literal notranslate"><span class="pre">future</span></code> object of the asynchronous operation through
+<code class="docutils literal notranslate"><span class="pre">goal_handle.get_result_async()</span></code>, and set <code class="docutils literal notranslate"><span class="pre">self.get_result_callback</span></code>
+as the callback function of the final result through the <code class="docutils literal notranslate"><span class="pre">future</span></code>
+object.</p>
+<p>In the callback function <code class="docutils literal notranslate"><span class="pre">self.get_result_callback()</span></code> of the final
+result, obtain the accumulation result and log it. Finally, call
+<code class="docutils literal notranslate"><span class="pre">rclpy.shutdown()</span></code> to end the current node.</p>
+<p>In the feedback message callback function <code class="docutils literal notranslate"><span class="pre">self.feedback_callback()</span></code>,
+obtain the feedback message and log it. Because the callback function
+for the feedback message may be executed multiple times, you are advised
+to keep it as lightweight as possible by simplifying the process logic.</p>
+<p>Finally, in the <code class="docutils literal notranslate"><span class="pre">main()</span></code> method, create an instance of the action
+client node class that converts the parameters of the command line into
+the target number sequence that needs to be summed. Call the
+<code class="docutils literal notranslate"><span class="pre">send_goal()</span></code> method of the action client node class instance and
+transfer the target sum number sequence to initiate the sum request.</p>
+<p>Similarly, add <code class="docutils literal notranslate"><span class="pre">main()</span></code> as an entry point by adding the following line
+in the appropriate position in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;my_sum_action_client = my_hello_world.my_sum_action_client:main&#39;</span>
+</pre></div>
+</div>
+<p>Now that the action server and action client are ready, you can rebuild
+the package <code class="docutils literal notranslate"><span class="pre">my_hello_world</span></code> in the workspace root directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>openmlsys-ros2
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>my_hello_world<span class="w"> </span>--symlink-install
+</pre></div>
+</div>
+<p>Then, run the following commands in the respective terminal windows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in terminal 1</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>my_sum_action_client<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span>
+<span class="c1"># in terminal 2</span>
+ros2<span class="w"> </span>run<span class="w"> </span>my_hello_world<span class="w"> </span>my_sum_action_server
+</pre></div>
+</div>
+<p>Information similar to the following will be shown if all goes well:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in terminal 1</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561740</span>.000499500<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_client<span class="o">]</span>:<span class="w"> </span>Goal<span class="w"> </span>accepted.
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561740</span>.001171900<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_client<span class="o">]</span>:<span class="w"> </span>Received<span class="w"> </span>feedback:<span class="w"> </span><span class="m">1</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561740</span>.001644000<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_client<span class="o">]</span>:<span class="w"> </span>Received<span class="w"> </span>feedback:<span class="w"> </span><span class="m">3</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561740</span>.002327500<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_client<span class="o">]</span>:<span class="w"> </span>Received<span class="w"> </span>feedback:<span class="w"> </span><span class="m">6</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561740</span>.002761600<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_client<span class="o">]</span>:<span class="w"> </span>Result:<span class="w"> </span><span class="m">6</span>
+<span class="c1"># in terminal 2</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561739</span>.988907200<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_server<span class="o">]</span>:<span class="w"> </span>Executing<span class="w"> </span>goal...
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561739</span>.989213900<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_server<span class="o">]</span>:<span class="w"> </span>Feedback:<span class="w"> </span><span class="m">1</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561739</span>.989549000<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_server<span class="o">]</span>:<span class="w"> </span>Feedback:<span class="w"> </span><span class="m">3</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">1653561739</span>.989855400<span class="o">]</span><span class="w"> </span><span class="o">[</span>my_sum_action_server<span class="o">]</span>:<span class="w"> </span>Feedback:<span class="w"> </span><span class="m">6</span>
+</pre></div>
+</div>
+<p>Congratulations, you have now created the custom interface type, action
+server node, and action client node in the ROS 2 framework!</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">13.3. Case Study: Using ROS</a><ul>
+<li><a class="reference internal" href="#node-creation">13.3.1. Node Creation</a></li>
+<li><a class="reference internal" href="#parameter-reading">13.3.2. Parameter Reading</a></li>
+<li><a class="reference internal" href="#server-client-service-mode">13.3.3. Server-Client Service Mode</a></li>
+<li><a class="reference internal" href="#client">13.3.4. Client</a></li>
+<li><a class="reference internal" href="#action-mode">13.3.5. Action Mode</a></li>
+<li><a class="reference internal" href="#action-client">13.3.6. Action Client</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Robot_Operating_System.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>13.2. Robot Operating System</div>
+         </div>
+     </a>
+     <a id="button-next" href="Modern_Robot_Learning.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>13.4. Modern Robot Learning</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

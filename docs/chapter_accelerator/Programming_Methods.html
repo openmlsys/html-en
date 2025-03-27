@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>7.3. Programming Methods &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.4. Performance Optimization Methods" href="Performance_Optimization_Methods.html" />
+    <link rel="prev" title="7.2. Components of Hardware Accelerators" href="Components_of_Hardware_Accelerators.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">7. </span>Hardware Accelerator</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">7.3. </span>Programming Methods</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_accelerator/Programming_Methods.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Hardware Accelerator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Hardware Accelerator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="programming-methods">
+<span id="programming-principles-for-hardware-accelerators"></span><h1><span class="section-number">7.3. </span>Programming Methods<a class="headerlink" href="#programming-methods" title="Permalink to this heading">¶</a></h1>
+<p>The first two sections of this chapter primarily discuss the
+significance, ideas, and basic principles behind the design of hardware
+accelerators. Co-optimization of software and hardware, as an important
+guiding principle for building efficient AI systems, requires mutual
+influence and close coupling between software algorithms/stacks and
+hardware architectures in neural network applications. In order to fully
+leverage the advantages of accelerators, it is necessary to design a set
+of programming methods based on the hardware system architecture.</p>
+<div class="section" id="method-classification">
+<h2><span class="section-number">7.3.1. </span>Method Classification<a class="headerlink" href="#method-classification" title="Permalink to this heading">¶</a></h2>
+<p>Programming methods for hardware accelerators are categorized into three
+approaches: using high-level computation operators, harnessing
+primitives for specialized hardware units, and employing low-level
+assembly languages:</p>
+<ol class="arabic simple">
+<li><p><strong>High-level computation operators</strong>: Hardware accelerators often
+come equipped with high-level, hardware-accelerated implementations
+of operators extensively used in numerical computing and deep
+learning. For instance, NVIDIA provides cuBLAS (CUDA Basic Linear
+Algebra Subprograms) and cuDNN (CUDA Deep Neural Network library).
+These libraries offer developers an accessible way to harness the
+power of NVIDIA GPUs without delving into low-level code. These
+operators are optimized for efficiency and automatically exploit
+specific GPU features, such as Tensor Cores.</p></li>
+<li><p><strong>Primitives for task-specific hardware units:</strong>: Hardware
+accelerators typically feature task-specific hardware units (like the
+Tensor Cores in NVIDIA GPUs) engineered to execute mixed-precision
+matrix multiplication operations at high speed. These units have
+associated programming primitives, such as CUDA’s Warp Matrix
+Multiply Accumulate (WMMA) and primitives for loading/unloading
+tensors on the units.</p></li>
+<li><p><strong>Low-level assembly languages</strong>: Hardware accelerators also have
+low-level assembly language interfaces. For instance, NVIDIA GPUs
+offer the PTX ISA (Parallel Thread Execution Instruction Set
+Architecture). It provides explicit control over all aspects of GPU
+behavior, but it requires a deep understanding of the GPU
+architecture and is more challenging to use correctly and effectively
+than the high-level interfaces provided by cuBLAS and cuDNN. PTX code
+is typically generated by a compiler from a high-level language like
+CUDA C++.</p></li>
+</ol>
+<p>In essence, the above three methods operate at different levels of
+abstraction. High-level operators like cuBLAS and cuDNN provide
+easy-to-use interfaces to powerful hardware-accelerated operations,
+while the primitives provided by task-specific hardware units provide a
+more detailed interface to hardware operations, and low-level assembly
+languages like PTX ISA provide the most detailed, low-level control over
+accelerator behavior.</p>
+</div>
+<div class="section" id="programming-examples">
+<h2><span class="section-number">7.3.2. </span>Programming Examples<a class="headerlink" href="#programming-examples" title="Permalink to this heading">¶</a></h2>
+<p>We exemplify different programming methods by implementing the General
+Matrix Multiplication (GEMM) with each approach. The implementation
+targets an NVIDIA Volta GPU. GEMM follows the equation
+<span class="math notranslate nohighlight">\(\bf{C} = \alpha \bf{A}\times \bf{B} + \beta \bf{C}\)</span>, where
+<span class="math notranslate nohighlight">\(\bf{A}\in\mathbb{R}^{M\times K}, \bf{B}\in\mathbb{R}^{K\times N}, \bf{C}\in\mathbb{R}^{M\times N}\)</span>,
+and <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> are parameters provided by users.</p>
+<div class="section" id="high-level-computation-operators">
+<span id="sec-accelerator-use-cublas"></span><h3><span class="section-number">7.3.2.1. </span>High-level Computation Operators<a class="headerlink" href="#high-level-computation-operators" title="Permalink to this heading">¶</a></h3>
+<p>Using an operator acceleration library directly is the most
+straightforward method. NVIDIA offers two types of operator libraries:
+cuBLAS and cuDNN. cuBLAS provides an interface for leveraging Tensor
+Cores to accelerate GEMM operations, while cuDNN offers an interface to
+hasten neural network operations. To utilize Tensor Cores via cuBLAS
+doing GEMM, we can use function <code class="docutils literal notranslate"><span class="pre">cublasGemmEx</span></code>, its signature is shown
+in Code <code class="docutils literal notranslate"><span class="pre">lst:cublasGemmEx</span></code>.</p>
+<p><strong>lst:cublasGemmEx</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasStatus_t</span><span class="w"> </span><span class="n">cublasGemmEx</span><span class="p">(</span><span class="n">cublasHandle_t</span><span class="w"> </span><span class="n">handle</span><span class="p">,</span><span class="w"> </span><span class="n">cublasOperation_t</span><span class="w"> </span><span class="n">transa</span><span class="p">,</span><span class="w"> </span><span class="n">cublasOperation_t</span><span class="w"> </span><span class="n">transb</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">cudaDataType_t</span><span class="w"> </span><span class="n">Atype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">lda</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">cudaDataType_t</span><span class="w"> </span><span class="n">Btype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">cudaDataType_t</span><span class="w"> </span><span class="n">Ctype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ldc</span><span class="p">,</span><span class="w"> </span><span class="n">cublasComputeType_t</span><span class="w"> </span><span class="n">computeType</span><span class="p">,</span><span class="w"> </span><span class="n">cublasGemmAlgo_t</span><span class="w"> </span><span class="n">algo</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">handle</span></code> is the cuBLAS handle, which is created using the
+<code class="docutils literal notranslate"><span class="pre">cublasCreate</span></code> function. <code class="docutils literal notranslate"><span class="pre">transa</span></code> denotes whether the matrices
+<span class="math notranslate nohighlight">\(\bf{A}\)</span> and <span class="math notranslate nohighlight">\(\bf{C}\)</span> are transposed, while <code class="docutils literal notranslate"><span class="pre">transb</span></code>
+denotes whether the matrix <span class="math notranslate nohighlight">\(\bf{B}\)</span> is transposed. <code class="docutils literal notranslate"><span class="pre">m</span></code>, <code class="docutils literal notranslate"><span class="pre">n</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">k</span></code> are used to describe the shape of the matrices. <code class="docutils literal notranslate"><span class="pre">alpha</span></code> and
+<code class="docutils literal notranslate"><span class="pre">beta</span></code> are used to scale the matrix multiplication results. <code class="docutils literal notranslate"><span class="pre">A</span></code>,
+<code class="docutils literal notranslate"><span class="pre">B</span></code>, and <code class="docutils literal notranslate"><span class="pre">C</span></code> are pointers to the starting addresses of the matrices.
+<code class="docutils literal notranslate"><span class="pre">Atype</span></code>, <code class="docutils literal notranslate"><span class="pre">Btype</span></code>, and <code class="docutils literal notranslate"><span class="pre">Ctype</span></code> describe the data type of the
+matrices. For example, <code class="docutils literal notranslate"><span class="pre">CUDA_R_16F</span></code> indicates that the data is stored
+in real 16-bit floating point type. <code class="docutils literal notranslate"><span class="pre">lda</span></code>, <code class="docutils literal notranslate"><span class="pre">ldb</span></code>, and <code class="docutils literal notranslate"><span class="pre">ldc</span></code>
+represent the leading dimensions of the matrices. <code class="docutils literal notranslate"><span class="pre">computeType</span></code> is the
+data type used in computation. For instance, <code class="docutils literal notranslate"><span class="pre">CUBLAS_COMPUTE_16F</span></code>
+implies the use of Tensor Cores for computation in 16-bit floating
+point. Notably, if the input data type is 32-bit float, we can use
+<code class="docutils literal notranslate"><span class="pre">CUBLAS_COMPUTE_32F_FAST_16F</span></code> to perform the computation in 16-bit
+floating point and achieve acceleration using Tensor Cores. <code class="docutils literal notranslate"><span class="pre">algo</span></code> is
+the algorithm used in computation, and <code class="docutils literal notranslate"><span class="pre">CUBLAS_GEMM_DEFAULT</span></code> is
+commonly used to select the default algorithm.</p>
+</div>
+<div class="section" id="primitives-for-hardware-units">
+<h3><span class="section-number">7.3.2.2. </span>Primitives for Hardware Units<a class="headerlink" href="#primitives-for-hardware-units" title="Permalink to this heading">¶</a></h3>
+<p>The second approach to accelerator programming involves the use of
+programming primitives, such as invoking the CUDA Warp Matrix Multiply
+Accumulate (WMMA) API on a device. This approach hinges on the
+collaborative design of software and hardware, meaning that the design
+of programming APIs at this level is architecture-dependent. For
+instance, in the Volta architecture, the control object of WMMA is a
+<span class="math notranslate nohighlight">\(16\times16\)</span> matrix block, processed by two Tensor Cores at a
+time. This notion is tightly linked to the integration of Tensor Cores
+into a SM.</p>
+<p>In the Volta architecture, NVIDIA offers three distinct sizes of WMMA
+multiply-accumulate computing interfaces for FP16 input data:
+<span class="math notranslate nohighlight">\(16\times16\times16\)</span>, <span class="math notranslate nohighlight">\(32\times8\times16\)</span>, and
+<span class="math notranslate nohighlight">\(8\times32\times16\)</span>.</p>
+<p>The basic control unit of the WMMA API is a fragment, which refers to a
+template class that specifies information such as the meaning of
+matrices (multiplier or accumulator), matrix shape
+(<code class="docutils literal notranslate"><span class="pre">WMMA_M,</span> <span class="pre">WMMA_N,</span> <span class="pre">or</span> <span class="pre">WMMA_K</span></code>), data type (FP16, FP32, etc.), and
+layout (<code class="docutils literal notranslate"><span class="pre">row_major</span> <span class="pre">or</span> <span class="pre">col_major</span></code>). Code <code class="docutils literal notranslate"><span class="pre">lst:frament</span></code> shows the
+fragment types.</p>
+<p><strong>lst:frament</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wmma</span><span class="p">::</span><span class="n">fragment</span><span class="o">&lt;</span><span class="n">wmma</span><span class="p">::</span><span class="n">matrix_a</span><span class="p">,</span> <span class="n">WMMA_M</span><span class="p">,</span> <span class="n">WMMA_N</span><span class="p">,</span> <span class="n">WMMA_K</span><span class="p">,</span> <span class="n">half</span><span class="p">,</span> <span class="n">wmma</span><span class="p">::</span><span class="n">row_major</span><span class="o">&gt;</span> <span class="n">a_frag</span><span class="p">;</span>
+<span class="n">wmma</span><span class="p">::</span><span class="n">fragment</span><span class="o">&lt;</span><span class="n">wmma</span><span class="p">::</span><span class="n">matrix_b</span><span class="p">,</span> <span class="n">WMMA_M</span><span class="p">,</span> <span class="n">WMMA_N</span><span class="p">,</span> <span class="n">WMMA_K</span><span class="p">,</span> <span class="n">half</span><span class="p">,</span> <span class="n">wmma</span><span class="p">::</span><span class="n">col_major</span><span class="o">&gt;</span> <span class="n">b_frag</span><span class="p">;</span>
+<span class="n">wmma</span><span class="p">::</span><span class="n">fragment</span><span class="o">&lt;</span><span class="n">wmma</span><span class="p">::</span><span class="n">accumulator</span><span class="p">,</span> <span class="n">WMMA_M</span><span class="p">,</span> <span class="n">WMMA_N</span><span class="p">,</span> <span class="n">WMMA_K</span><span class="p">,</span> <span class="nb">float</span><span class="o">&gt;</span> <span class="n">acc_frag</span><span class="p">;</span>
+<span class="n">wmma</span><span class="p">::</span><span class="n">fragment</span><span class="o">&lt;</span><span class="n">wmma</span><span class="p">::</span><span class="n">accumulator</span><span class="p">,</span> <span class="n">WMMA_M</span><span class="p">,</span> <span class="n">WMMA_N</span><span class="p">,</span> <span class="n">WMMA_K</span><span class="p">,</span> <span class="nb">float</span><span class="o">&gt;</span> <span class="n">c_frag</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The data of the matrix block required by multiplication operations needs
+to be loaded to the register as a fragment. Fragments are initialized or
+cleared after multiply-accumulate operations performed by Tensor Cores,
+the fragments are stored back in global memory. NVIDIA provides the
+<code class="docutils literal notranslate"><span class="pre">wmma.load_matrix_sync()</span> <span class="pre">and</span> <span class="pre">wmma.store_matrix_sync()</span></code> interfaces to
+load or write the submatrix blocks. The <code class="docutils literal notranslate"><span class="pre">wmma.fill_fragment()</span></code>
+interface is used to initialize the data of the corresponding fragments,
+and the <code class="docutils literal notranslate"><span class="pre">wmma.mma_sync()</span></code> interface is used to perform
+multiply-accumulate operations on fragments.</p>
+</div>
+<div class="section" id="low-level-assembly-language-interface">
+<h3><span class="section-number">7.3.2.3. </span>Low-level Assembly Language Interface<a class="headerlink" href="#low-level-assembly-language-interface" title="Permalink to this heading">¶</a></h3>
+<p>The PTX ISA offers another programming interface, for example, the
+<code class="docutils literal notranslate"><span class="pre">mma.sync.aligned.m8n8k4</span></code> instruction in the Volta architecture. This
+instruction uses the shape configuration of <span class="math notranslate nohighlight">\(M=8, N=8, K=4\)</span> to
+perform multiply-add operations. The basic control unit of the API is
+the data element. The matrix size (modifier <code class="docutils literal notranslate"><span class="pre">.m8n8k4</span></code>), data format
+(modifier <code class="docutils literal notranslate"><span class="pre">.row</span></code> or <code class="docutils literal notranslate"><span class="pre">.col</span></code>) and data formats of input accumulator D,
+matrix A, matrix B, and output accumulator C (modifier <code class="docutils literal notranslate"><span class="pre">.f32</span></code> or
+<code class="docutils literal notranslate"><span class="pre">.f16</span></code>) need to be specified. NVIDIA’s documentation provides
+information about using the PTX instruction set, helping programmers
+compile code based on the corresponding syntax rules, as shown in
+Code <code class="docutils literal notranslate"><span class="pre">lst:ptx</span></code>.</p>
+<p><strong>lst:ptx</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">half_t</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">D</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="k">const</span><span class="o">*</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="k">const</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="k">const</span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="k">const</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">asm</span><span class="w"> </span><span class="k">volatile</span><span class="p">(</span>
+<span class="w">        </span><span class="s">&quot;mma.sync.aligned.m8n8k4.row.row.f32.f16.f16.f32 &quot;</span>
+<span class="w">        </span><span class="s">&quot;{%0,%1,%2,%3,%4,%5,%6,%7}, {%8,%9}, {%10,%11}, &quot;</span>
+<span class="w">        </span><span class="s">&quot;{%12,%13,%14,%15,%16,%17,%18,%19};</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+<span class="w">        </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;=f&quot;</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="w">        </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+<span class="w">        </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="w"> </span><span class="s">&quot;f&quot;</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">7</span><span class="p">]));</span>
+</pre></div>
+</div>
+<p>Data elements are directly used as the input (<code class="docutils literal notranslate"><span class="pre">unsigned</span></code> type is used
+for containing FP16 data elements). Moreover, NVIDIA provides the
+<code class="docutils literal notranslate"><span class="pre">ldmatrix</span></code> instruction to load data from the shared memory to
+fragments.</p>
+<p>A finer-grained instruction, <code class="docutils literal notranslate"><span class="pre">mma</span></code>, can form a warp-level WMMA API of
+more diversified shapes to control the mapping between threads and data
+in the warp. The PTX instructions offer greater flexibility than
+directly using CUDA C++ codes.</p>
+</div>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">7.3. Programming Methods</a><ul>
+<li><a class="reference internal" href="#method-classification">7.3.1. Method Classification</a></li>
+<li><a class="reference internal" href="#programming-examples">7.3.2. Programming Examples</a><ul>
+<li><a class="reference internal" href="#high-level-computation-operators">7.3.2.1. High-level Computation Operators</a></li>
+<li><a class="reference internal" href="#primitives-for-hardware-units">7.3.2.2. Primitives for Hardware Units</a></li>
+<li><a class="reference internal" href="#low-level-assembly-language-interface">7.3.2.3. Low-level Assembly Language Interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Components_of_Hardware_Accelerators.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>7.2. Components of Hardware Accelerators</div>
+         </div>
+     </a>
+     <a id="button-next" href="Performance_Optimization_Methods.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>7.4. Performance Optimization Methods</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

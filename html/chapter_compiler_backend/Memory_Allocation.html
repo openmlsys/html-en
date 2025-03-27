@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>6.4. Memory Allocation &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6.5. Operator Compiler" href="Operator_Compiler.html" />
+    <link rel="prev" title="6.3. Operator Selection" href="Operator_Selection.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">6. </span>AI Compiler Backend</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">6.4. </span>Memory Allocation</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_compiler_backend/Memory_Allocation.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. AI Compiler Backend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. AI Compiler Backend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="memory-allocation">
+<h1><span class="section-number">6.4. </span>Memory Allocation<a class="headerlink" href="#memory-allocation" title="Permalink to this heading">¶</a></h1>
+<p>Memory allocation is a crucial aspect of conventional computer memory
+hierarchy, acting as a link between cache and disk storage. It provides
+more storage capacity than the cache and enables faster access compared
+to disk storage. With the progress of deep learning, accommodating large
+deep neural networks within the memory of hardware accelerators or AI
+processors has become increasingly challenging. To overcome this
+obstacle, various solutions have been developed, including memory reuse,
+contiguous memory allocation, and in-place memory allocation. Proper
+implementation of contiguous memory allocation and in-place memory
+allocation can enhance the execution efficiency of operators and further
+optimize performance.</p>
+<div class="section" id="device-memory">
+<h2><span class="section-number">6.4.1. </span>Device Memory<a class="headerlink" href="#device-memory" title="Permalink to this heading">¶</a></h2>
+<p>In a deep learning architecture, the memory closest to the hardware
+accelerator (such as the GPU or AI processor) is usually referred to as
+the device memory, and that closest to the CPU is referred to as the
+host memory. As shown in Figure
+<a class="reference internal" href="#ch07-ch07-compiler-backend-memory-01"><span class="std std-numref">Fig. 6.4.1</span></a>, the CPU can directly
+access the host memory but not the device memory. Similarly, the AI
+processor can directly access the device memory but not the host memory.
+In a typical network training process, data needs to be loaded from disk
+storage to the host memory, where it is then processed. After that, the
+data is copied from the host memory to the device memory, so that the
+device can directly access the data. When the computation is finished,
+the user can obtain the training result once the result data is copied
+from the device memory back to the host memory.</p>
+<div class="figure align-default" id="id1">
+<span id="ch07-ch07-compiler-backend-memory-01"></span><img alt="../_images/host-device-memory.png" src="../_images/host-device-memory.png" />
+<p class="caption"><span class="caption-number">Fig. 6.4.1 </span><span class="caption-text">Host memory and devicememory</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="process-of-memory-allocation">
+<h2><span class="section-number">6.4.2. </span>Process of Memory Allocation<a class="headerlink" href="#process-of-memory-allocation" title="Permalink to this heading">¶</a></h2>
+<p>The memory allocation module allocates device memory to the input and
+output of each operator in a graph. The compiler frontend interprets the
+user script into an IR, based on which the compiler backend performs
+operator selection and optimization to determine information such as the
+shape, data type, and format of each input/output tensor of each
+operator. With this information, the size of each input/output tensor of
+each operator can be calculated using Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch05/equation-04</span></code>:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-backend-memory-allocation-0">
+<span class="eqno">(6.4.1)<a class="headerlink" href="#equation-chapter-compiler-backend-memory-allocation-0" title="Permalink to this equation">¶</a></span>\[\text{size}=\prod_{i=0}^{\text{dimension }}\text{shape}_i \times \text{sizeof}\left ( \text{datatype} \right )\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equation:ch05/equation-04</span></code></p>
+<p>Unaligned memory access can be time-consuming, because the transfer of
+data to and from memory is most efficient in chunks of 4, 8, or 16
+bytes. When the size of the data to be transferred is not a multiple of
+any of these sizes, one or more empty bytes are padded to align the data
+in memory.</p>
+<p>Figure <a class="reference internal" href="#ch07-ch07-compiler-backend-memory-02"><span class="std std-numref">Fig. 6.4.2</span></a> illustrates an
+example of memory allocation.</p>
+<div class="figure align-default" id="id2">
+<span id="ch07-ch07-compiler-backend-memory-02"></span><img alt="../_images/memory_allocate.png" src="../_images/memory_allocate.png" />
+<p class="caption"><span class="caption-number">Fig. 6.4.2 </span><span class="caption-text">Memory allocationexample</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>In this example, memory addresses are assigned to the input tensor,
+Conv2D’s weight, and Conv2D’s output. Subsequently, a memory address is
+allocated to the input of BatchNorm. Since the input of BatchNorm is the
+same as the output of Conv2D, which already has a allocated memory
+address, the output address of Conv2D can be shared with the input of
+BatchNorm. This approach avoids redundant memory allocation and
+unnecessary memory copies. The entire training process in this example
+involves allocating memory for three types based on their data lifetime:
+the initial input of the graph, the weights or attributes of operators,
+and the output tensor of the final operator.</p>
+<p>Frequent allocations and deallocations of memory blocks of various sizes
+using functions like <code class="docutils literal notranslate"><span class="pre">malloc</span></code> can significantly degrade performance.
+To mitigate this issue, memory pools can be employed. Memory pools
+involve pre-allocating a specific amount of memory, allowing memory
+blocks to be dynamically allocated from the pool as needed and returned
+for reuse.</p>
+<p>Memory pools are widely utilized in AI frameworks to manage frequent
+allocations of device memory and ensure consistent memory lifetime for
+tensors. Different AI frameworks adopt similar memory pool designs.
+Figure <a class="reference internal" href="#ch07-ch07-compiler-backend-memory-03"><span class="std std-numref">Fig. 6.4.3</span></a> presents an
+example of memory allocation in an AI framework. In this case, each
+tensor’s memory is allocated from a pre-allocated device memory space
+using double pointers to offset the start and end addresses. Weight
+tensors of operators are allocated memory by offsetting from the start
+address (with a lifetime lasting throughout the training process). The
+output tensor of each operator is allocated memory by offsetting from
+the end address (with a shorter lifetime that terminates when the tensor
+is no longer needed in the computation process). This approach allows
+operator memory to be allocated using offset pointers from pre-allocated
+device memory, significantly reducing the time required compared to
+direct memory allocations from the device.</p>
+<div class="figure align-default" id="id3">
+<span id="ch07-ch07-compiler-backend-memory-03"></span><img alt="../_images/device_malloc.png" src="../_images/device_malloc.png" />
+<p class="caption"><span class="caption-number">Fig. 6.4.3 </span><span class="caption-text">Memory allocation using double offsetpointers</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="memory-reuse">
+<h2><span class="section-number">6.4.3. </span>Memory Reuse<a class="headerlink" href="#memory-reuse" title="Permalink to this heading">¶</a></h2>
+<p>In a machine learning system, memory reuse is achieved by analyzing the
+lifespan of a tensor and, once it reaches the end of its lifespan,
+releasing its device memory back to the memory pool for future reuse by
+other tensors. The objective of memory reuse is to enhance memory
+utilization and enable the accommodation of larger models within the
+constraints of limited device memory. By reusing memory instead of
+continuously allocating new memory for tensors, the system can optimize
+memory utilization and mitigate the memory limitations inherent in deep
+learning computations.</p>
+<p>Figure <a class="reference internal" href="#ch07-ch07-compiler-backend-memory-02"><span class="std std-numref">Fig. 6.4.2</span></a> provides an
+example, where output 1 becomes unused once the computation of the
+BatchNorm operator is complete. In this case, the device memory of
+output 1 can be reclaimed and reused for output 3 (if output 3 does not
+require a larger memory size than output 1).</p>
+<p>Figure <a class="reference internal" href="#ch07-ch07-compiler-backend-memory-04"><span class="std std-numref">Fig. 6.4.4</span></a> depicts memory
+lifetime using coordinate charts. The horizontal axes represent the
+tensor lifetime, and the vertical axes represent the memory sizes.
+During its lifetime, a tensor occupies a specific amount of device
+memory. The objective of memory allocation is to find an optimal
+solution that accommodates the maximum number of non-conflicting
+rectangular blocks (each denoting a tensor’s lifetime and memory size)
+in the same memory. In Figure
+<a class="reference internal" href="#ch07-ch07-compiler-backend-memory-04"><span class="std std-numref">Fig. 6.4.4</span></a>, the memory can
+accommodate only four rectangular blocks (i.e., tensors T0, T1, T2, and
+T3) when no memory reuse policy is applied, as shown in the left chart.</p>
+<div class="figure align-default" id="id4">
+<span id="ch07-ch07-compiler-backend-memory-04"></span><img alt="../_images/combine_memory_resue_and_no_reuse_cn.png" src="../_images/combine_memory_resue_and_no_reuse_cn.png" />
+<p class="caption"><span class="caption-number">Fig. 6.4.4 </span><span class="caption-text">Memory lifetimecharts</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>To determine an appropriate memory reuse policy, we face an NP-complete
+problem. AI frameworks often employ greedy algorithms, such as best-fit,
+which allocate memory by searching for the smallest available block in
+the memory pool one at a time. However, this approach only yields a
+locally optimal solution rather than a globally optimal one. To
+approximate a globally optimal solution, a method called Safe Optimized
+Memory Allocation Solver (SOMAS) can be considered.</p>
+<p>SOMAS addresses the computational graph by conducting aggregative
+analysis on parallel streams and data dependencies. This analysis
+reveals the ancestor-descendant relationships between operators. By
+generating a global set of mutually exclusive constraints concerning the
+lifetime of each tensor, SOMAS combines multiple heuristic algorithms to
+achieve an optimal solution for static memory planning. Through SOMAS,
+an optimized memory reuse outcome is obtained, resulting in increased
+reusable memory.</p>
+<p>As shown in the right chart of Figure
+<a class="reference internal" href="#ch07-ch07-compiler-backend-memory-04"><span class="std std-numref">Fig. 6.4.4</span></a>, with the SOMAS
+algorithm, the number of tensors allowed in the same memory is increased
+to seven.</p>
+</div>
+<div class="section" id="optimization-techniques-for-memory-allocation">
+<h2><span class="section-number">6.4.4. </span>Optimization Techniques for Memory Allocation<a class="headerlink" href="#optimization-techniques-for-memory-allocation" title="Permalink to this heading">¶</a></h2>
+<p>In the following, we describe the typical optimization techniques for
+memory allocation.</p>
+<div class="section" id="memory-fusion">
+<h3><span class="section-number">6.4.4.1. </span>Memory Fusion<a class="headerlink" href="#memory-fusion" title="Permalink to this heading">¶</a></h3>
+<p>Commonly used memory allocation methods operate at the tensor level,
+often resulting in discontinuous device addresses across tensors.
+However, certain specialized operators, like AllReduce for
+communication, require contiguous memory allocation. Executing a
+communication operator involves waiting for communication, which is a
+significant performance bottleneck in large-scale distributed systems.
+It includes data transfer and computation. To minimize communication
+time, we can fuse multiple communication operators into a composite
+operator. This allows for contiguous memory allocation of the operator
+input, as depicted in Figure
+<a class="reference internal" href="#ch07-ch07-compiler-backend-memory-06"><span class="std std-numref">Fig. 6.4.5</span></a>.</p>
+<p>Additionally, the time spent in communication can be reduced during the
+weight initialization task in distributed neural network training. This
+task involves broadcasting the initialized weight from one process to
+all processes. If a network contains multiple weights (which is often
+the case), these broadcasts are repeated. To minimize communication time
+in this scenario, a typical approach is to allocate contiguous memory
+addresses to all weights on the network and then perform a single
+broadcast operation.</p>
+<div class="figure align-default" id="id5">
+<span id="ch07-ch07-compiler-backend-memory-06"></span><img alt="../_images/memory_fusion.png" src="../_images/memory_fusion.png" />
+<p class="caption"><span class="caption-number">Fig. 6.4.5 </span><span class="caption-text">Memory fusion of communicationoperators</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="in-place-operators">
+<h3><span class="section-number">6.4.4.2. </span>In-place Operators<a class="headerlink" href="#in-place-operators" title="Permalink to this heading">¶</a></h3>
+<p>In the memory allocation process depicted in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch07/ch07-compiler-backend-memory-02</span></code>, the input and
+output of each operator are assigned different memory addresses.
+However, this approach can lead to memory waste and performance
+degradation for several other operators. Examples include optimizer
+operators used to update neural network weights, Python’s <code class="docutils literal notranslate"><span class="pre">+=</span></code> or
+<code class="docutils literal notranslate"><span class="pre">*=</span></code> operators that modify variable values, and the <code class="docutils literal notranslate"><span class="pre">a[0]=b</span></code>
+operator that updates the value of <code class="docutils literal notranslate"><span class="pre">a[0]</span></code> with <code class="docutils literal notranslate"><span class="pre">b</span></code>. These operators
+share a common purpose: updating the input value. The concept of
+in-place can be illustrated using the <code class="docutils literal notranslate"><span class="pre">a[0]=b</span></code> operator.</p>
+<p>In the original implementation shown on the left of Figure
+<a class="reference internal" href="#ch07-ch07-compiler-backend-memory-08"><span class="std std-numref">Fig. 6.4.6</span></a>, the operator involves
+three steps: copying tensor <code class="docutils literal notranslate"><span class="pre">a</span></code> to tensor <code class="docutils literal notranslate"><span class="pre">a’</span></code>, assigning tensor
+<code class="docutils literal notranslate"><span class="pre">b</span></code> to tensor <code class="docutils literal notranslate"><span class="pre">a’</span></code>, and then copying tensor <code class="docutils literal notranslate"><span class="pre">a’</span></code> back to tensor
+<code class="docutils literal notranslate"><span class="pre">a</span></code>. However, by performing the operation in-place, as depicted on the
+right of Figure <a class="reference internal" href="#ch07-ch07-compiler-backend-memory-08"><span class="std std-numref">Fig. 6.4.6</span></a>, this
+process is simplified to a single step: copying tensor <code class="docutils literal notranslate"><span class="pre">b</span></code> to the
+position corresponding to tensor <code class="docutils literal notranslate"><span class="pre">a</span></code>. This reduces data copy time by
+eliminating two copies and eliminates the need to allocate memory for
+tensor <code class="docutils literal notranslate"><span class="pre">a’</span></code>.</p>
+<div class="figure align-default" id="id6">
+<span id="ch07-ch07-compiler-backend-memory-08"></span><img alt="../_images/inplace-op.png" src="../_images/inplace-op.png" />
+<p class="caption"><span class="caption-number">Fig. 6.4.6 </span><span class="caption-text">Memory allocation of an in-placeoperator</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="data-compression">
+<h2><span class="section-number">6.4.5. </span>Data Compression<a class="headerlink" href="#data-compression" title="Permalink to this heading">¶</a></h2>
+<p>Deep neural networks (DNNs) in modern training heavily rely on GPUs to
+effectively train intricate networks with hundreds of layers. A
+prominent challenge faced by both researchers and industry professionals
+is the constraint imposed by the available GPU main memory as networks
+become deeper. This limitation restricts the size of networks that can
+be trained. To address this issue, researchers have recognized the value
+of employing DNN-layer-specific encoding schemes. Consequently, they
+have directed their attention towards storing encoded representations of
+the intermediate layer outputs (feature maps) that are required for the
+backward pass. These encoded representations are stored during the
+temporal gap between their uses and are decoded only when needed for the
+backward pass. The full-fidelity feature maps are promptly discarded
+after use, resulting in a noteworthy reduction in memory consumption.</p>
+</div>
+<div class="section" id="memory-swap">
+<h2><span class="section-number">6.4.6. </span>Memory Swap<a class="headerlink" href="#memory-swap" title="Permalink to this heading">¶</a></h2>
+<p>Machine learning frameworks frequently necessitate users to optimize
+their memory utilization to guarantee that the DNN can be accommodated
+within the memory capacity of the GPU. This constraint restricts
+researchers from thoroughly investigating diverse machine learning
+algorithms, compelling them to make concessions either in terms of
+network architecture or by distributing the computational load across
+multiple GPUs. One feasible approach is to incorporate DRAM to
+facilitate memory swapping. By transferring temporarily inactive data to
+DRAM, we can optimize GPU utilization. In recent studies, researchers
+have implemented a cautious approach to allocating GPU memory for the
+immediate computational needs of a specific layer. This strategy
+effectively reduces both the maximum and average memory usage, enabling
+researchers to train more extensive networks. To elaborate further, the
+researchers promptly release feature maps from GPU memory in the absence
+of any potential reuse. Alternatively, if there is a possibility of
+future reuse but no immediate requirement, the feature maps are
+offloaded to CPU memory and subsequently prefetched back to GPU memory.</p>
+<p>The fundamental concept behind memory swapping is straightforward and
+inherent. However, its implementation remains challenging and
+necessitates prior expertise in our compiler frontend. One such
+expertise involves maximizing the overlap between computation and data
+swapping time. A precise cost model is essential for evaluating the
+estimated time required for data movement and the time cost associated
+with each layer in DNN (Deep Neural Network). Additionally, there are
+numerous strategies to explore in auto scheduling and auto tuning.
+Fortunately, there is an abundance of literature available that
+addresses these issues. For additional information, please refer to the
+Further Readings section.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">6.4. Memory Allocation</a><ul>
+<li><a class="reference internal" href="#device-memory">6.4.1. Device Memory</a></li>
+<li><a class="reference internal" href="#process-of-memory-allocation">6.4.2. Process of Memory Allocation</a></li>
+<li><a class="reference internal" href="#memory-reuse">6.4.3. Memory Reuse</a></li>
+<li><a class="reference internal" href="#optimization-techniques-for-memory-allocation">6.4.4. Optimization Techniques for Memory Allocation</a><ul>
+<li><a class="reference internal" href="#memory-fusion">6.4.4.1. Memory Fusion</a></li>
+<li><a class="reference internal" href="#in-place-operators">6.4.4.2. In-place Operators</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-compression">6.4.5. Data Compression</a></li>
+<li><a class="reference internal" href="#memory-swap">6.4.6. Memory Swap</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Operator_Selection.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>6.3. Operator Selection</div>
+         </div>
+     </a>
+     <a id="button-next" href="Operator_Compiler.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>6.5. Operator Compiler</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

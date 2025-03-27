@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>9.5. Model Inference &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9.6. Security Protection of Models" href="Security_Protection_of_Models.html" />
+    <link rel="prev" title="9.4. Advanced Efficient Techniques" href="Advanced_Efficient_Techniques.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">9. </span>Model Deployment</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">9.5. </span>Model Inference</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_model_deployment/Model_Inference.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">9. Model Deployment</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">9. Model Deployment</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="model-inference">
+<h1><span class="section-number">9.5. </span>Model Inference<a class="headerlink" href="#model-inference" title="Permalink to this heading">¶</a></h1>
+<p>After conversion and compression, a trained model needs to be deployed
+on the computation hardware in order to execute inference. Such
+execution involves the following steps:</p>
+<ol class="arabic simple">
+<li><p>Preprocessing: Process raw data to suit the network input.</p></li>
+<li><p>Inference execution: Deploy the model resulting from offline
+conversion on the device to execute inference and compute the output
+based on the input.</p></li>
+<li><p>Postprocessing: Further process the output of the model, for example,
+by threshold filtering.</p></li>
+</ol>
+<div class="section" id="preprocessing-and-postprocessing">
+<h2><span class="section-number">9.5.1. </span>Preprocessing and Postprocessing<a class="headerlink" href="#preprocessing-and-postprocessing" title="Permalink to this heading">¶</a></h2>
+<p><strong>1. Preprocessing</strong></p>
+<p>Raw data, such as images, voices, and texts, is so disordered that
+machine learning models cannot identify or extract useful information
+from it. Preprocessing is intended to convert such into tensors that
+work for machine learning networks, eliminate irrelevant information,
+restore useful true information, enhance the detectability of relevant
+information, and simplify the data as much as possible. In this way,
+reliability indicators related to feature extraction, image
+segmentation, matching, and recognition of the models can be improved.</p>
+<p>The following techniques are often used in data preprocessing:</p>
+<ol class="arabic simple">
+<li><p>Feature encoding: Encode the raw data that describes features into
+numbers and input them to machine learning models which can process
+only numerical values. Common encoding approaches include
+discretization, ordinal encoding, one-hot encoding, and binary
+encoding.</p></li>
+<li><p>Normalization: Modify features to be on the same scale without
+changing the correlation between them, eliminating the impact of
+dimensions between data indicators. Common approaches include Min-Max
+normalization that normalizes the data range, and Z-score
+normalization that normalizes data distribution.</p></li>
+<li><p>Outliner processing: An outlier is a data point that is distant from
+all others in distribution. Elimination of outliers can improve the
+accuracy of a model.</p></li>
+</ol>
+<p><strong>2. Postprocessing</strong></p>
+<p>After model inference, the output data is transferred to users for
+postprocessing. Common postprocessing techniques include:</p>
+<ol class="arabic simple">
+<li><p>Discretization of contiguous data: Assume we expect to predict
+discrete data, such as the quantity of a good, using a model, but a
+regression model only provides contiguous prediction values, which
+have to be rounded or bounded.</p></li>
+<li><p>Data visualization: This technique uses graphics and tables to
+represent data so that we can find relationships in the data in order
+to support analysis strategy selection.</p></li>
+<li><p>Prediction range widening: Most values predicted by a regression
+model are concentrated in the center, and few are in the tails. For
+example, abnormal values of hospital laboratory data are used to
+diagnose diseases. To increase the accuracy of prediction, we can
+enlarge the values in both tails by widening the prediction range and
+multiplying the values that deviate from the normal range by a
+coefficient to</p></li>
+</ol>
+</div>
+<div class="section" id="parallel-computing">
+<span id="ch-deploy-parallel-inference"></span><h2><span class="section-number">9.5.2. </span>Parallel Computing<a class="headerlink" href="#parallel-computing" title="Permalink to this heading">¶</a></h2>
+<p>Most inference models have a multi-thread mechanism that leverages the
+capabilities of multiple cores in order to achieve performance
+improvements. In this mechanism, the input data of operators is
+partitioned, and multiple threads are used to process different data
+partitions. This allows operators to be computed in parallel, thereby
+multiplying the operator performance.</p>
+<div class="figure align-default" id="id1">
+<span id="ch09-parallel"></span><img alt="../_images/ch09-parallel.png" src="../_images/ch09-parallel.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.1 </span><span class="caption-text">Data partitioning for matrixmultiplication</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>In Figure <a class="reference internal" href="#ch09-parallel"><span class="std std-numref">Fig. 9.5.1</span></a>, the matrix in the multiplication
+can be partitioned according to the rows of matrix A. Three threads can
+then be used to compute A1 * B, A2 * B, and A3 * B (one thread per
+computation), implementing multi-thread parallel execution of the matrix
+multiplication.</p>
+<p>To facilitate parallel computing of operators and avoid the overhead of
+frequent thread creation and destruction, inference frameworks usually
+have a thread pooling mechanism. There are two common practices:</p>
+<ol class="arabic simple">
+<li><p>Open Multi-Processing (OpenMP) API: OpenMP is an API that supports
+concurrency through memory sharing across multiple platforms. It
+provides interfaces that are commonly used to implement operator
+parallelism. An example of such an interface is <code class="docutils literal notranslate"><span class="pre">parallel</span> <span class="pre">for</span></code>,
+which allows <code class="docutils literal notranslate"><span class="pre">for</span></code> loops to be concurrently executed by multiple
+threads.</p></li>
+<li><p>Framework-provided thread pools: Such pools are more lightweight and
+targeted at the AI domain compared with OpenMP interfaces, and can
+deliver better performance.</p></li>
+</ol>
+</div>
+<div class="section" id="operator-optimization">
+<span id="ch-deploy-kernel-optimization"></span><h2><span class="section-number">9.5.3. </span>Operator Optimization<a class="headerlink" href="#operator-optimization" title="Permalink to this heading">¶</a></h2>
+<p>When deploying an AI model, we want model training and inference to be
+performed as fast as possible in order to obtain better performance. For
+a deep learning network, the scheduling of the framework takes a short
+period of time, whereas operator execution is often a bottleneck for
+performance. This section introduces how to optimize operators from the
+perspectives of hardware instructions and algorithms.</p>
+<p><strong>1. Hardware instruction optimization</strong></p>
+<p>Given that most devices have CPUs, the time that CPUs spend processing
+operators has a direct impact on the performance. Here we look at the
+methods for optimizing hardware instructions on ARM CPUs.</p>
+<p><strong>1) Assembly language</strong></p>
+<p>High-level programming languages such as C++ and Java are compiled as
+machine instruction code sequences by compilers, which often have a
+direct influence on which capabilities these languages offer. Assembly
+languages are close to machine code and can implement any instruction
+code sequence in one-to-one mode. Programs written in assembly languages
+occupy less memory, and are faster and more efficient than those written
+in high-level languages.</p>
+<p>In order to exploit the advantages of both types of languages, we can
+write the parts of a program that require better performance in assembly
+languages and the other parts in high-level languages. Because
+convolution and matrix multiplication operators in deep learning involve
+a large amount of computation, using assembly languages for code
+necessary to perform such computation can improve model training and
+inference performance by dozens or even hundreds of times.</p>
+<p>Next, we use ARMv8 CPUs to illustrate the optimization related to
+hardware instructions.</p>
+<p><strong>2) Registers and NEON instructions</strong></p>
+<p>Each ARMv8 CPU has 32 NEON registers, that is, v0 to v31. As shown in
+Figure <a class="reference internal" href="#ch-deploy-register"><span class="std std-numref">Fig. 9.5.2</span></a>, NEON register v0 can store 128
+bits, which is equal to the capacity of 4 float32, 8 float16, or 16
+int8.</p>
+<div class="figure align-default" id="id2">
+<span id="ch-deploy-register"></span><img alt="../_images/ch09-register.png" src="../_images/ch09-register.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.2 </span><span class="caption-text">Structure of the NEON register v0 of an ARMv8CPU</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>The single instruction multiple data (SIMD) method can be used to
+improve the data access and computing speed on this CPU. Compared with
+single data single instruction (SISD), the NEON instruction can process
+multiple data values in the NEON register at a time. For example, the
+<code class="docutils literal notranslate"><span class="pre">fmla</span></code> instruction for floating-point data is used as
+<code class="docutils literal notranslate"><span class="pre">fmla</span> <span class="pre">v0.4s,</span> <span class="pre">v1.4s,</span> <span class="pre">v2.4s</span></code>. As depicted in Figure
+<a class="reference internal" href="#ch-deploy-fmla"><span class="std std-numref">Fig. 9.5.3</span></a>, the products of the corresponding
+floating-point values in registers v1 and v2 are added to the value in
+v0.</p>
+<div class="figure align-default" id="id3">
+<span id="ch-deploy-fmla"></span><img alt="../_images/ch09-fmla.png" src="../_images/ch09-fmla.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.3 </span><span class="caption-text">fmla instructioncomputing</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p><strong>3) Assembly language optimization</strong></p>
+<p>For assembly language programs with known functions, computational
+instructions are usually fixed. In this case, non-computational
+instructions are the source the performance bottleneck. The structure of
+computer storage devices resembles a pyramid, as shown in Figure
+<a class="reference internal" href="Conversion_to_Inference_Model_and_Model_Optimization.html#ch-deploy-fusion-storage"><span class="std std-numref">Fig. 9.2.1</span></a>. The top layer has the fastest
+speed but the smallest space; conversely, the bottom layer has the
+largest space but the slowest speed. L1 to L3 are referred to as caches.
+When accessing data, the CPU first attempts to access the data from one
+of its caches. If the data is not found, the CPU then accesses an
+external main memory. Cache hit rate is introduced to measure the
+proportion of data that is accessed from the cache. In this sense, the
+cache hit rate must be maximized to improve the program performance.</p>
+<p>There are some techniques to improve the cache hit rate and optimize the
+assembly performance:</p>
+<ol class="arabic simple">
+<li><p>Loop unrolling: Use as many registers as possible to achieve better
+performance at the cost of increasing the code size.</p></li>
+<li><p>Instruction reordering: Reorder the instructions of different
+execution units to improve the pipeline utilization, thereby allowing
+instructions that incur latency to be executed first. In addition to
+reducing the latency, this method also reduces data dependency before
+and after the instruction.</p></li>
+<li><p>Register blocking: Block NEON registers appropriately to reduce the
+number of idle registers and reuse more registers.</p></li>
+<li><p>Data rearrangement: Rearrange the computational data to ensure
+contiguous memory reads and writes and improve the cache hit rate.</p></li>
+<li><p>Instruction prefetching: Load the required data from the main memory
+to the cache in advance to reduce the access latency.</p></li>
+</ol>
+<p><strong>2. Algorithm optimization</strong></p>
+<p>For most AI models, 90% or more of the inference time of the entire
+network is spent on computing convolution and matrix multiplication
+operators. This section focuses on the optimization of convolution
+operator algorithms, which can be applied to various hardware devices.
+The computation of convolution can be converted into the multiplication
+of two matrices, and we have elaborated on the optimization of the GEMM
+algorithm in Section <a class="reference internal" href="#ch-deploy-parallel-inference"><span class="std std-ref">Parallel Computing</span></a>. For
+different hardware, appropriate matrix blocking can optimize data
+load/store efficiency and instruction parallelism. This helps to
+maximize the utilization of the hardware’s computing power, thereby
+improving the inference performance.</p>
+<p><strong>(1) Img2col</strong></p>
+<p>Img2col is often used to convert convolution into matrix multiplication.
+Convolutional layers typically operate on 4D inputs in NHWC format.
+Figure <a class="reference internal" href="#ch-deploy-conv-nhwc"><span class="std std-numref">Fig. 9.5.4</span></a> is a diagram of convolution. The
+input shape is (1, IH, IW, IC), the convolution kernel shape is (OC, KH,
+KW, IC), and the output shape is (1, OH, OW, OC).</p>
+<div class="figure align-default" id="id4">
+<span id="ch-deploy-conv-nhwc"></span><img alt="../_images/ch09-conv_nhwc.png" src="../_images/ch09-conv_nhwc.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.4 </span><span class="caption-text">Generalconvolution</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>As shown in Figure <a class="reference internal" href="#ch-deploy-img2col-input"><span class="std std-numref">Fig. 9.5.5</span></a>, the Img2col
+rules for convolution are as follows: The input is reordered to obtain
+the matrix on the right. The number of rows corresponds to the number of
+OH * OW outputs. For a row vector, Img2col processes KH * KW data
+points of each input channel in sequence, from the first channel to
+channel IC.</p>
+<div class="figure align-default" id="id5">
+<span id="ch-deploy-img2col-input"></span><img alt="../_images/ch09-img2col_input.png" src="../_images/ch09-img2col_input.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.5 </span><span class="caption-text">Img2col on the convolutioninput</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>As shown in Figure <a class="reference internal" href="#ch-deploy-img2col-weight"><span class="std std-numref">Fig. 9.5.6</span></a>, the weights are
+rearranged. One convolution kernel is expanded into one column of the
+weight matrix. This means that there are OC columns in total. On each
+column vector, KH * KW data values on the first input channel are
+arranged first, and then on subsequent channels until the channel IC. In
+this manner, the convolution operation is converted into the
+multiplication of two matrices. In practice, the data rearrangement of
+Img2col and GEMM is performed simultaneously to save time.</p>
+<div class="figure align-default" id="id6">
+<span id="ch-deploy-img2col-weight"></span><img alt="../_images/ch09-img2col_weight.png" src="../_images/ch09-img2col_weight.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.6 </span><span class="caption-text">Img2col on the convolutionkernel</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p><strong>(2) Winograd</strong></p>
+<p>Convolution is essentially considered as matrix multiplication. The time
+complexity of multiplying two 2D matrices is <span class="math notranslate nohighlight">\(O(n^3)\)</span>. The
+Winograd algorithm can reduce the complexity of matrix multiplication.</p>
+<p>Assume that a 1D convolution operation is denoted as <strong>F</strong>(<span class="math notranslate nohighlight">\(m\)</span>,
+<span class="math notranslate nohighlight">\(r\)</span>), where <span class="math notranslate nohighlight">\(m\)</span> indicates the number of outputs, and
+<span class="math notranslate nohighlight">\(r\)</span> indicates the number of convolution kernels. The input is
+<span class="math notranslate nohighlight">\(\textit{\textbf{d}}=[d_0 \ d_1 \ d_2 \ d_3]\)</span>, and the convolution
+kernel is <span class="math notranslate nohighlight">\(g=[g_0 \ g_1 \ g_2]^{\rm T}\)</span>. The convolution operation
+may be written using matrices as Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/conv-matmul-one-dimension</span></code>, which contains six
+multiplications and four additions.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-0">
+<span class="eqno">(9.5.1)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-0" title="Permalink to this equation">¶</a></span>\[\begin{split}\textit{\textbf{F}}(2, 3)=
+\left[ \begin{matrix} d_0 &amp; d_1 &amp; d_2 \\ d_1 &amp; d_2 &amp; d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
+\left[ \begin{matrix} y_0 \\ y_1 \end{matrix} \right]\end{split}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/conv-matmul-one-dimension</span></code></p>
+<p>In the preceding equation, there are repeated elements <span class="math notranslate nohighlight">\(d_1\)</span> and
+<span class="math notranslate nohighlight">\(d_2\)</span> in the input matrix. As such, there is space for
+optimization for matrix multiplication converted from convolution
+compared with general matrix multiplication. The matrix multiplication
+result may be obtained by computing an intermediate variable
+<span class="math notranslate nohighlight">\(m_0-m_3\)</span>, as shown in Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/conv-2-winograd</span></code>:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-1">
+<span class="eqno">(9.5.2)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-1" title="Permalink to this equation">¶</a></span>\[\begin{split}\textit{\textbf{F}}(2, 3)=
+\left[ \begin{matrix} d_0 &amp; d_1 &amp; d_2 \\ d_1 &amp; d_2 &amp; d_3 \end{matrix} \right] \times \left[ \begin{matrix} g_0 \\ g_1 \\ g_2 \end{matrix} \right]=
+\left[ \begin{matrix} m_0+m_1+m_2 \\ m_1-m_2+m_3 \end{matrix} \right]\end{split}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/conv-2-winograd</span></code></p>
+<p>where <span class="math notranslate nohighlight">\(m_0-m_3\)</span> are computed as Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/winograd-param</span></code>:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-2">
+<span class="eqno">(9.5.3)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-2" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{aligned}
+m_0=(d_0-d_2) \times g_0 \\
+m_1=(d_1+d_2) \times (\frac{g_0+g_1+g_2}{2}) \\
+m_2=(d_0-d_2) \times (\frac{g_0-g_1+g_2}{2}) \\
+m_3=(d_1-d_3) \times g_2
+\end{aligned}\end{split}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/winograd-param</span></code></p>
+<p>The indirect computation of r1 and r2 by computing <span class="math notranslate nohighlight">\(m_0-m_3\)</span>
+involves four additions of the input <span class="math notranslate nohighlight">\(d\)</span> and four multiplications
+and four additions of the output <span class="math notranslate nohighlight">\(m\)</span>. Because the weights are
+constant during inference, the operations on the convolution kernel can
+be performed during graph compilation, which is excluded from the online
+runtime. In total, there are four multiplications and eight additions —
+fewer multiplications and more additions compared with direct
+computation (which has six multiplications and four additions). In
+computer systems, multiplications are generally more time-consuming than
+additions. Decreasing the number of multiplications while adding a small
+number of additions can accelerate computation.</p>
+<p>In a matrix form, the computation can be written as Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/winograd-matrix</span></code>, where <span class="math notranslate nohighlight">\(\odot\)</span> indicates the
+multiplication of corresponding locations, and <strong>A</strong>, <strong>B</strong>, and <strong>G</strong>
+are all constant matrices. The matrix here is used to facilitate clarity
+— in real-world use, faster computation can be achieved if the matrix
+computation is performed based on the handwritten form, as provided in
+Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/winograd-param</span></code>.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-3">
+<span class="eqno">(9.5.4)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-3" title="Permalink to this equation">¶</a></span>\[\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g) \odot (\textit{\textbf{B}}^{\rm T}d)\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/winograd-matrix</span></code></p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-4">
+<span class="eqno">(9.5.5)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-4" title="Permalink to this equation">¶</a></span>\[\begin{split}\textit{\textbf{B}}^{\rm T}=
+\left[ \begin{matrix} 1 &amp; 0 &amp; -1 &amp; 0 \\ 0 &amp; 1 &amp; 1 &amp; 0 \\ 0 &amp; -1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; -1 \end{matrix} \right]\end{split}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/winograd-matrix-bt</span></code></p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-5">
+<span class="eqno">(9.5.6)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-5" title="Permalink to this equation">¶</a></span>\[\begin{split}\textit{\textbf{G}}=
+\left[ \begin{matrix} 1 &amp; 0 &amp; 0 \\ 0.5 &amp; 0.5 &amp; 0.5 \\ 0.5 &amp; -0.5 &amp; 0.5 \\ 0 &amp; 0 &amp; 1 \end{matrix} \right]\end{split}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/winograd-matrix-g</span></code></p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-6">
+<span class="eqno">(9.5.7)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-6" title="Permalink to this equation">¶</a></span>\[\begin{split}\textit{\textbf{A}}^{\rm T}=
+\left[ \begin{matrix} 1 &amp; 1 &amp; -1 &amp; 0 \\ 0 &amp; 1 &amp; -1 &amp; -1  \end{matrix} \right] \\\end{split}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/winograd-matrix-at</span></code></p>
+<p>In deep learning, 2D convolution is typically used. When <strong>F</strong>(2, 3)
+is extended to <strong>F</strong>(2:math:<cite>times</cite>2, 3<span class="math notranslate nohighlight">\(\times\)</span>3), it can
+be written in a matrix form, as shown in Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/winograd-two-dimension-matrix</span></code>. In this case,
+Winograd has 16 multiplications, reducing the computation complexity by
+2.25 times compared with 36 multiplications of the original convolution.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-inference-7">
+<span class="eqno">(9.5.8)<a class="headerlink" href="#equation-chapter-model-deployment-model-inference-7" title="Permalink to this equation">¶</a></span>\[\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g\textit{\textbf{G}}^{\rm T}) \odot (\textit{\textbf{B}}^{\rm T}d\textit{\textbf{B}})\textit{\textbf{A}}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">equ:ch-deploy/winograd-two-dimension-matrix</span></code></p>
+<p>The logical process of Winograd can be divided into four steps, as shown
+in Figure <a class="reference internal" href="#ch-deploy-winograd"><span class="std std-numref">Fig. 9.5.7</span></a>.</p>
+<div class="figure align-default" id="id7">
+<span id="ch-deploy-winograd"></span><img alt="../_images/ch09-winograd.png" src="../_images/ch09-winograd.png" />
+<p class="caption"><span class="caption-number">Fig. 9.5.7 </span><span class="caption-text">Winogradsteps</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<p>To use Winograd of <strong>F</strong>(2:math:<cite>times</cite>2, 3<span class="math notranslate nohighlight">\(\times\)</span>3) for
+any output size, we need to divide the output into 2<span class="math notranslate nohighlight">\(\times\)</span>2
+blocks. We can then perform the preceding four steps using the
+corresponding input to obtain the corresponding output. Winograd is not
+limited to solving <strong>F</strong>(2:math:<cite>times</cite>2, 3<span class="math notranslate nohighlight">\(\times\)</span>3).
+For any <strong>F</strong>(<span class="math notranslate nohighlight">\(m \times m\)</span>, <span class="math notranslate nohighlight">\(r \times r\)</span>), appropriate
+constant matrices <strong>A</strong>, <strong>B</strong>, and <strong>G</strong> can be found to reduce the
+number of multiplications through indirect computation. However, as
+<span class="math notranslate nohighlight">\(m\)</span> and <span class="math notranslate nohighlight">\(r\)</span> increase, the number of additions involved in
+input and output and the number of multiplications of constant weights
+increase. In this case, the decrease in the computation workload brought
+by fewer multiplications is offset by additions and constant
+multiplications. Therefore, we need to evaluate the benefits of Winograd
+before using it.</p>
+<p>This section describes methods for processing data and optimizing
+performance during model inference. An appropriate data processing
+method can facilitate the input feature extraction and output
+processing. And to fully leverage the computing power of hardware, we
+can use parallel computing and operator-level hardware instruction and
+algorithm optimization. In addition, the memory usage and load/store
+rate are also important for the inference performance. Therefore, it is
+essential to design an appropriate memory overcommitment strategy for
+inference. Related methods have been discussed in the section about the
+compiler backend.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">9.5. Model Inference</a><ul>
+<li><a class="reference internal" href="#preprocessing-and-postprocessing">9.5.1. Preprocessing and Postprocessing</a></li>
+<li><a class="reference internal" href="#parallel-computing">9.5.2. Parallel Computing</a></li>
+<li><a class="reference internal" href="#operator-optimization">9.5.3. Operator Optimization</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Advanced_Efficient_Techniques.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>9.4. Advanced Efficient Techniques</div>
+         </div>
+     </a>
+     <a id="button-next" href="Security_Protection_of_Models.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>9.6. Security Protection of Models</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

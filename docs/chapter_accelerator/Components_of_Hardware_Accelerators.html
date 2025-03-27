@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>7.2. Components of Hardware Accelerators &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.3. Programming Methods" href="Programming_Methods.html" />
+    <link rel="prev" title="7.1. Overview" href="Overview.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">7. </span>Hardware Accelerator</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">7.2. </span>Components of Hardware Accelerators</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_accelerator/Components_of_Hardware_Accelerators.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Hardware Accelerator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Hardware Accelerator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="components-of-hardware-accelerators">
+<h1><span class="section-number">7.2. </span>Components of Hardware Accelerators<a class="headerlink" href="#components-of-hardware-accelerators" title="Permalink to this heading">¶</a></h1>
+<p>A hardware accelerator typically comprises multiple on-chip caches and
+various types of arithmetic units. In this section, we’ll examine the
+fundamental components of hardware accelerators, using the Nvidia Volta
+GPU architecture as a representative example.</p>
+<div class="section" id="architecture-of-accelerators">
+<h2><span class="section-number">7.2.1. </span>Architecture of Accelerators<a class="headerlink" href="#architecture-of-accelerators" title="Permalink to this heading">¶</a></h2>
+<p>Contemporary graphics processing units (GPUs) offer remarkable computing
+speed, ample memory storage, and impressive I/O bandwidth. A top-tier
+GPU frequently surpasses a conventional CPU by housing double the number
+of transistors, boasting a memory capacity of 16 GB or greater, and
+operating at frequencies reaching up to 1 GHz. The architecture of a GPU
+comprises streaming processors and a memory system, interconnected
+through an on-chip network. These components can be expanded
+independently, allowing for customized configurations tailored to the
+target market of the GPU.</p>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch06/ch06-gv100</span></code> illustrates the architecture of the
+Volta GV100 . This architecture has:</p>
+<div class="figure align-default" id="id1">
+<span id="ch06-ch06-gv100"></span><img alt="../_images/V100.png" src="../_images/V100.png" />
+<p class="caption"><span class="caption-number">Fig. 7.2.1 </span><span class="caption-text">Volta GV100</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<ol class="arabic simple">
+<li><p>6 GPU processing clusters (GPCs), each containing:</p>
+<ol class="arabic simple">
+<li><p>7 texture processing clusters (TPCs), each containing two
+streaming multiprocessors (SMs).</p></li>
+<li><p>14 SMs.</p></li>
+</ol>
+</li>
+<li><p>84 SMs, each containing:</p>
+<ol class="arabic simple">
+<li><p>64 32-bit floating-point arithmetic units</p></li>
+<li><p>64 32-bit integer arithmetic units</p></li>
+<li><p>32 64-bit floating-point arithmetic units</p></li>
+<li><p>8 Tensor Cores</p></li>
+<li><p>4 texture units</p></li>
+</ol>
+</li>
+<li><p>8 512-bit memory controllers.</p></li>
+</ol>
+<p>As shown in Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch06/ch06-gv100</span></code>, a GV100 GPU contains
+84 SMs (Streaming Multiprocessors), 5376 32-bit floating-point
+arithmetic units, 5376 32-bit integer arithmetic units, 2688 64-bit
+floating-point arithmetic units, 672 Tensor Cores, and 336 texture
+units. A pair of memory controllers controls an HBM2 DRAM stack.
+Different vendors may use different configurations (e.g., Tesla V100 has
+80 SMs).</p>
+</div>
+<div class="section" id="memory-units">
+<h2><span class="section-number">7.2.2. </span>Memory Units<a class="headerlink" href="#memory-units" title="Permalink to this heading">¶</a></h2>
+<p>The memory units of a hardware accelerator resemble a CPU’s memory
+controller. However, they encounter a bottleneck when retrieving data
+from the computer system’s DRAM, as it is slower compared to the
+processor’s computational speed. Without a cache for quick access, the
+DRAM bandwidth becomes inadequate to handle all transactions of the
+accelerator. Consequently, if program instructions or data cannot be
+swiftly retrieved from the DRAM, the accelerator’s efficiency diminishes
+due to prolonged idle time. To tackle this DRAM bandwidth issue, GPUs
+employ a hierarchical design of memory units. Each type of memory unit
+offers its own maximum bandwidth and latency. To fully exploit the
+computing power and enhance processing speed, programmers must select
+from the available memory units and optimize memory utilization based on
+varying access speeds.</p>
+<ol class="arabic simple">
+<li><p><strong>Register file</strong>: Registers serve as the swiftest on-chip memories.
+In contrast to CPUs, each SM in a GPU possesses tens of thousands of
+registers. Nevertheless, excessively utilizing registers for every
+thread can result in a reduced number of thread blocks that can be
+scheduled within the SM, leading to fewer executable threads. This
+underutilization of hardware capabilities hampers performance
+considerably. Consequently, programmers must judiciously determine
+the appropriate number of registers to employ, taking into account
+the algorithm’s demands.</p></li>
+<li><p><strong>Shared memory</strong>: The shared memory is a level-1 cache that is
+user-controllable. Each SM features a 128 KB level-1 cache, with the
+ability for programmers to manage up to 96 KB as shared memory. The
+shared memory offers a low access latency, requiring only a few dozen
+clock cycles, and boasts an impressive bandwidth of up to 1.5 TB/s.
+This bandwidth is significantly higher than the peak bandwidth of the
+global memory, which stands at 900 GB/s. In high-performance
+computing (HPC) scenarios, engineers must possess a thorough
+understanding of how to leverage shared memory effectively.</p></li>
+<li><p><strong>Global memory</strong>: Both GPUs and CPUs are capable of reading from and
+writing to global memory. Global memory is visible and accessible by
+all threads on a GPU, whereas other devices like CPUs need to
+traverse buses like PCIe and NV-Link to access the global memory. The
+global memory represents the largest memory space available in a GPU,
+with capacities reaching over 80 GB. However, it also exhibits the
+longest memory latency, with a load/store latency that can extend to
+hundreds of clock cycles.</p></li>
+<li><p><strong>Constant memory</strong>: The constant memory is a virtual address space
+in the global memory and does not occupy a physical memory block. It
+serves as a high-speed memory, specifically designed for rapid
+caching and efficient broadcasting of a single value to all threads
+within a warp.</p></li>
+<li><p><strong>Texture memory</strong>: Texture memory is a specialized form of global
+memory that is accessed through a dedicated texture cache to enhance
+performance. In earlier GPUs without caches, the texture memory on
+each SM served as the sole cache for data. However, the introduction
+of level-1 and level-2 caches in modern GPUs has rendered the texture
+memory’s role as a cache obsolete. The texture memory proves most
+beneficial in enabling GPUs to execute hardware-accelerated
+operations while accessing memory units. For instance, it allows
+arrays to be accessed using normalized addresses, and the retrieved
+data can be automatically interpolated by the hardware. Additionally,
+the texture memory supports both hardware-accelerated bilinear and
+trilinear interpolation for 2D and 3D arrays, respectively. Moreover,
+the texture memory facilitates automatic handling of boundary
+conditions based on array indices. This means that operations on
+array elements can be carried out without explicit consideration of
+boundary situations, thus avoiding the need for extra conditional
+branches in a thread.</p></li>
+</ol>
+</div>
+<div class="section" id="compute-units">
+<h2><span class="section-number">7.2.3. </span>Compute Units<a class="headerlink" href="#compute-units" title="Permalink to this heading">¶</a></h2>
+<p>Hardware accelerators offer a variety of compute units to efficiently
+handle various neural networks.
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch06/ch06-compute-unit</span></code> demonstrates how different
+layers of neural networks select appropriate compute units.</p>
+<div class="figure align-default" id="id2">
+<span id="ch06-ch06-compute-unit"></span><img alt="../_images/compute_unit.png" src="../_images/compute_unit.png" />
+<p class="caption"><span class="caption-number">Fig. 7.2.2 </span><span class="caption-text">Computeunits</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Scalar Unit</strong>: calculates one scalar element at a time, similar to
+the standard reduced instruction set computer (RISC).</p></li>
+<li><p><strong>1D Vector Unit</strong>: computes multiple elements at a time, similar to
+the SIMD used in traditional CPU and GPU architectures. It has been
+widely used in HPC and signal processing.</p></li>
+<li><p><strong>2D Matrix Unit</strong>: computes the inner product of a matrix and a
+vector or the outer product of a vector within one operation. It
+reuses data to reduce communication costs and memory footprint, which
+achieves the performance of matrix multiplication.</p></li>
+<li><p><strong>3D Cube Unit</strong>: completes matrix multiplication within one
+operation. Specially designed for neural network applications, it can
+reuse data to compensate for the gap between the data communication
+bandwidth and computing.</p></li>
+</ol>
+<p>The compute units on a GPU mostly include Scalar Units and 3D Cube
+Units. As shown in Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch06/ch06-SM</span></code>, each SM has 64
+32-bit floating-point arithmetic units, 64 32-bit integer arithmetic
+units, 32 64-bit floating-point arithmetic units, which are Scalar
+Units, and 8 Tensor Cores, which are 3D Cube Units specially designed
+for neural network applications.</p>
+<div class="figure align-default" id="id3">
+<span id="ch06-ch06-sm"></span><img alt="../_images/SM.png" src="../_images/SM.png" />
+<p class="caption"><span class="caption-number">Fig. 7.2.3 </span><span class="caption-text">Volta GV100 SM</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>A Tensor Core is capable of performing one <span class="math notranslate nohighlight">\(4\times4\)</span> matrix
+multiply-accumulate operation per clock cycle, as shown in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch06/ch06-tensorcore</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span> <span class="o">+</span> <span class="n">C</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id4">
+<span id="ch06-ch06-tensorcore"></span><img alt="../_images/tensor_core.png" src="../_images/tensor_core.png" />
+<p class="caption"><span class="caption-number">Fig. 7.2.4 </span><span class="caption-text">Tensor Core’s <span class="math notranslate nohighlight">\(4\times4\)</span> matrix multiply-accumulateoperation</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p><span class="math notranslate nohighlight">\(\bf{A}\)</span>, <span class="math notranslate nohighlight">\(\bf{B}\)</span>, <span class="math notranslate nohighlight">\(\bf{C}\)</span>, and <span class="math notranslate nohighlight">\(\bf{D}\)</span> are
+<span class="math notranslate nohighlight">\(4\times4\)</span> matrices. Input matrices <span class="math notranslate nohighlight">\(\bf{A}\)</span> and
+<span class="math notranslate nohighlight">\(\bf{B}\)</span> are FP16 matrices, and accumulation matrices
+<span class="math notranslate nohighlight">\(\bf{C}\)</span> and <span class="math notranslate nohighlight">\(\bf{D}\)</span> can be either FP16 or FP32 matrices.
+Tesla V100’s Tensor Cores are programmable matrix multiply-accumulate
+units that can deliver up to 125 Tensor Tera Floating-point Operations
+Per Second (TFLOPS) for training and inference applications, resulting
+in a ten-fold increase in computing speed when compared with common FP32
+compute units.</p>
+</div>
+<div class="section" id="domain-specific-architecture">
+<h2><span class="section-number">7.2.4. </span>Domain Specific Architecture<a class="headerlink" href="#domain-specific-architecture" title="Permalink to this heading">¶</a></h2>
+<div class="figure align-default" id="id5">
+<span id="ch06-ch06-davinci-architecture"></span><img alt="../_images/davinci_architecture.png" src="../_images/davinci_architecture.png" />
+<p class="caption"><span class="caption-number">Fig. 7.2.5 </span><span class="caption-text">Da Vinciarchitecture</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>Domain Specific Architecture (DSA) has been an area of interest in
+meeting the fast-growing demand for computing power by deep neural
+networks. As a typical DSA design targeting image, video, voice, and
+text processing, neural network processing units (or namely deep
+learning hardware accelerators) are system-on-chips (SoCs) containing
+special compute units, large memory units, and the corresponding control
+units. A neural processing unit, for example, Ascend chip, typically
+consists of a control CPU, a number of AI computing engines, multi-level
+on-chip caches or buffers, and the digital vision pre-processing (DVPP)
+module.</p>
+<p>The computing core of AI chips is composed of AI Core, which is
+responsible for executing scalar- and tensor-based arithmetic-intensive
+computing. Consider the Ascend chip as an example. Its AI Core adopts
+the Da Vinci   architecture.
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch06/ch06-davinci_architecture</span></code> shows the
+architecture of an AI Core, which can be regarded as a simplified
+version of modern microprocessor architecture from the control
+perspective. It includes three types of basic computing units: Cube
+Unit, Vector Unit, and Scalar Unit. These units are used to compute on
+tensors, vectors, and scalars, respectively, in three independent
+pipelines centrally scheduled through the system software to coordinate
+with each other for higher efficiency. Similar to GPU designs, the Cube
+Unit functions as the computational core of the AI Core and delivers
+parallel acceleration for matrix multiply-accumulate operations.
+Specifically, it can multiply two <span class="math notranslate nohighlight">\(16\times16\)</span> matrices in a
+single instruction — equivalent to completing 4096
+(=:math:<cite>16times16times16</cite>) multiply-accumulate operations within an
+extremely short time — with precision comparable to FP16 operations.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">7.2. Components of Hardware Accelerators</a><ul>
+<li><a class="reference internal" href="#architecture-of-accelerators">7.2.1. Architecture of Accelerators</a></li>
+<li><a class="reference internal" href="#memory-units">7.2.2. Memory Units</a></li>
+<li><a class="reference internal" href="#compute-units">7.2.3. Compute Units</a></li>
+<li><a class="reference internal" href="#domain-specific-architecture">7.2.4. Domain Specific Architecture</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Overview.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>7.1. Overview</div>
+         </div>
+     </a>
+     <a id="button-next" href="Programming_Methods.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>7.3. Programming Methods</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

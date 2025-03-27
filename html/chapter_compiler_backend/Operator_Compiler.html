@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>6.5. Operator Compiler &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6.6. Chapter Summary" href="Chapter_Summary.html" />
+    <link rel="prev" title="6.4. Memory Allocation" href="Memory_Allocation.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">6. </span>AI Compiler Backend</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">6.5. </span>Operator Compiler</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_compiler_backend/Operator_Compiler.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. AI Compiler Backend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">6. AI Compiler Backend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="operator-compiler">
+<span id="sec-operator-compiler"></span><h1><span class="section-number">6.5. </span>Operator Compiler<a class="headerlink" href="#operator-compiler" title="Permalink to this heading">¶</a></h1>
+<p>Operator compilers are used for compiling and optimizing operators,
+which may be part of a neural network or come from the code implemented
+in a domain-specific language (DSL). The compilation is the process of
+<em>transforming</em> the source code from one <em>representation</em> into another.</p>
+<p>The objective of an operator compiler is to improve the <em>execution
+performance</em> of operators. An operator compiler accepts tensor
+computation logic described in <em>dynamic languages</em> (e.g., Python) as the
+input and outputs executable files on <em>specific AI processors</em>.</p>
+<div class="section" id="scheduling-strategy">
+<h2><span class="section-number">6.5.1. </span>Scheduling Strategy<a class="headerlink" href="#scheduling-strategy" title="Permalink to this heading">¶</a></h2>
+<p>An operator compiler abstracts the execution of statements in an
+operator implementation into “scheduling strategies”. Since an operator
+typically consists of multiple statements, the focus lies in determining
+the scheduling strategy for the statements within the operator. This
+strategy encompasses considerations such as the calculation order, data
+block movement, and other relevant factors.</p>
+<p>If ignoring the specific processor architecture, for the best
+performance, we only need to load all input tensors to the computation
+core based on the <em>computational logic</em> of the operator and access the
+result from the core for storage. <em>Computational logic</em> refers to basic
+arithmetic operations (e.g., addition, subtraction, multiplication, and
+division) and other function expressions (e.g., convolution,
+transposition, and loss functions).</p>
+<p>Modern computer memory hierarchy looks like a pyramid structure, as
+shown in Figure <a class="reference internal" href="#ch05-ch05-memory-architecture"><span class="std std-numref">Fig. 6.5.1</span></a>. As we move up
+the pyramid, the storage elements have a higher cost but a faster access
+time.</p>
+<div class="figure align-default" id="id1">
+<span id="ch05-ch05-memory-architecture"></span><img alt="../_images/memory_architecture.png" src="../_images/memory_architecture.png" />
+<p class="caption"><span class="caption-number">Fig. 6.5.1 </span><span class="caption-text">Modern computer memoryhierarchy</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>Such hardware design leads to two basic types of locality:</p>
+<p>(1) Temporal locality: the tendency to access the same memory location
+several times in quick succession. As such, accessing the same location
+in the L1 cache several times is more efficient than accessing different
+locations in the L1 cache several times.</p>
+<p>(2) Spatial locality: the tendency to access nearby memory locations in
+quick succession. As such, accessing nearby locations in the L1 cache
+several times is more efficient than moving back and forth between the
+L1 cache and the main memory.</p>
+<p>Both types of locality help improve system performance. Specifically, in
+order to improve the data access speed, data to be repeatedly processed
+can be placed in fixed nearby memory locations when possible.</p>
+<p>For a serial computational task, it is also possible to decouple the
+data part from the logic part and generate a range of independent groups
+of data that can be executed in parallel, as shown in Figure
+<a class="reference internal" href="#ch05-ch05-parallel-computing"><span class="std std-numref">Fig. 6.5.2</span></a>.</p>
+<div class="figure align-default" id="id2">
+<span id="ch05-ch05-parallel-computing"></span><img alt="../_images/parallel_computing.png" src="../_images/parallel_computing.png" />
+<p class="caption"><span class="caption-number">Fig. 6.5.2 </span><span class="caption-text">Serial computing and parallelcomputing</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>These specific data-oriented operations performed at program runtime are
+referred to as <em>schedules</em>. A schedule defines the following aspects:</p>
+<ol class="arabic simple">
+<li><p>When and where should each value in a function be calculated?</p></li>
+<li><p>Where is data stored?</p></li>
+</ol>
+<p>(3) How long does it take to access each value between those calculated
+using preorder structure consumers? And when is independent
+recomputation performed by each such value?</p>
+<p>Simply put, a scheduling strategy is defined by a set of algorithms
+designed during compilation based on the characteristics of target
+hardware architecture to improve locality and parallelism. The purpose
+of this is to ensure that the resulting executable file delivers optimal
+performance at runtime. These algorithms have no effect on the
+computation result; instead, they only adjust the computation process in
+order to shorten the computation time.</p>
+</div>
+<div class="section" id="combining-scheduling-strategies">
+<h2><span class="section-number">6.5.2. </span>Combining Scheduling Strategies<a class="headerlink" href="#combining-scheduling-strategies" title="Permalink to this heading">¶</a></h2>
+<p>In the realm of operator compilers, a common optimization technique
+involves combining multiple abstracted scheduling strategies into a
+comprehensive and efficient scheduling set through manual template
+matching. However, this approach may not be fine-tuned and can be
+labor-intensive when applied to achieve refined optimization across
+different operators. To illustrate this, let’s consider an optimization
+algorithm implemented in the Tensor Virtual Machine (TVM). It
+accelerates and optimizes a multiply-accumulate code segment on the CPU
+by combining several fundamental scheduling strategies.</p>
+<p>In Code <code class="docutils literal notranslate"><span class="pre">lst:before_tvm</span></code>, the basic computational logic is as follows:
+Initialize tensor C, multiply tensor A by tensor B, and accumulate the
+results to tensor C.</p>
+<p><strong>lst:before_tvm</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">C</span><span class="p">[((</span><span class="n">m</span><span class="o">*</span><span class="mi">1024</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span><span class="n">f32</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">let</span> <span class="n">cse_var_2</span><span class="p">:</span> <span class="n">int32</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="mi">1024</span><span class="p">)</span>
+          <span class="n">let</span> <span class="n">cse_var_1</span><span class="p">:</span> <span class="n">int32</span> <span class="o">=</span> <span class="p">(</span><span class="n">cse_var_2</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">cse_var_1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">cse_var_1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span><span class="p">[(</span><span class="n">cse_var_2</span> <span class="o">+</span> <span class="n">k</span><span class="p">)]</span><span class="o">*</span><span class="n">B</span><span class="p">[((</span><span class="n">k</span><span class="o">*</span><span class="mi">1024</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="p">)]))</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Assuming that the data type is float and that tensors A, B, and C are of
+size 1024 <span class="math notranslate nohighlight">\(\times\)</span> 1024, then the total memory required by the
+tensors is 1024 <span class="math notranslate nohighlight">\(\times\)</span> 1024 <span class="math notranslate nohighlight">\(\times\)</span> 3 <span class="math notranslate nohighlight">\(\times\)</span>
+sizeof(float) = 12 MB. This far exceeds the capacity of common caches
+(e.g., the L1 cache is 32 KB). Therefore, if we want to compute on
+Tensor A, B, and C in a single operation, we must store them in the main
+memory. However, the main memory is distant from the compute core,
+resulting in significantly lower access efficiency compared to using the
+cache for storage.</p>
+<p>There are several scheduling strategies that can help improve
+performance: tile, reorder, and split. The size of the L1 cache is 32
+KB. To ensure that data used in every computation step is stored in the
+cache, tiling based on the factors of 32 is performed. In this way, only
+the tiny block formed by <code class="docutils literal notranslate"><span class="pre">m.inner</span></code><span class="math notranslate nohighlight">\(\times\)</span><code class="docutils literal notranslate"><span class="pre">n.inner</span></code> needs
+to be taken into account, and memory access of the innermost tiny block
+is independent of the outer loops. A tiny block will occupy only 32
+<span class="math notranslate nohighlight">\(\times\)</span> 32 <span class="math notranslate nohighlight">\(\times\)</span> 3 <span class="math notranslate nohighlight">\(\times\)</span> sizeof(float), which
+is 12 KB in the cache. The optimized code is shown in Code
+<code class="docutils literal notranslate"><span class="pre">lst:after_tvm</span></code>. We perform tiling on loops m and n based on factor 32
+as the previous analysis. Similarly, we tile the loop k based on factor
+4, then reorder the k.outer and k.inner axis as the outermost axis.</p>
+<p><strong>lst:after_tvm</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">outer</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">tiling</span> <span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mf">32.</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">outer</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+  <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">outer</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">tiling</span> <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mf">32.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">outer</span><span class="p">:</span>
+    <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">inner</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">tiling</span> <span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mf">32.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">inner</span><span class="o">.</span><span class="n">init</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">inner</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">tiling</span> <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mf">32.</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">inner</span><span class="o">.</span><span class="n">init</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">//</span> <span class="n">Obtain</span> <span class="n">the</span> <span class="n">corresponding</span> <span class="n">factors</span><span class="o">.</span>
+        <span class="n">C</span><span class="p">[((((</span><span class="n">m</span><span class="o">.</span><span class="n">outer</span><span class="o">*</span><span class="mi">32768</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">inner</span><span class="o">.</span><span class="n">init</span><span class="o">*</span><span class="mi">1024</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">outer</span><span class="o">*</span><span class="mi">32</span><span class="p">))</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">inner</span><span class="o">.</span><span class="n">init</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span><span class="n">f32</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">outer</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">splitting</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mi">4</span><span class="p">,</span> <span class="k">with</span> <span class="n">reorder</span><span class="o">.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">outer</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">outer</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">splitting</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mi">4</span><span class="p">,</span> <span class="k">with</span> <span class="n">reorder</span><span class="o">.</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">inner</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">inner</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">tiling</span> <span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mf">32.</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">inner</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+          <span class="o">//</span> <span class="n">Obtain</span> <span class="n">an</span> <span class="n">inner</span> <span class="n">loop</span> <span class="n">by</span> <span class="n">tiling</span> <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">based</span> <span class="n">on</span> <span class="n">factor</span> <span class="mf">32.</span>
+          <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">inner</span><span class="p">:</span> <span class="n">int32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">//</span> <span class="n">Outer</span> <span class="n">axis</span> <span class="n">factor</span> <span class="n">obtained</span> <span class="n">by</span> <span class="n">tiling</span> <span class="n">along</span> <span class="n">axis</span> <span class="n">n</span>
+            <span class="n">let</span> <span class="n">cse_var_3</span><span class="p">:</span> <span class="n">int32</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">outer</span><span class="o">*</span><span class="mi">32</span><span class="p">)</span>
+            <span class="o">//</span> <span class="n">Outer</span> <span class="n">axis</span> <span class="o">&amp;</span> <span class="n">inner</span> <span class="n">axis</span> <span class="n">factors</span> <span class="n">obtained</span> <span class="n">by</span> <span class="n">tiling</span> <span class="n">along</span> <span class="n">axis</span> <span class="n">m</span>
+            <span class="n">let</span> <span class="n">cse_var_2</span><span class="p">:</span> <span class="n">int32</span> <span class="o">=</span> <span class="p">((</span><span class="n">m</span><span class="o">.</span><span class="n">outer</span><span class="o">*</span><span class="mi">32768</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">inner</span><span class="o">*</span><span class="mi">1024</span><span class="p">))</span>
+            <span class="o">//</span> <span class="n">Outer</span> <span class="n">axis</span> <span class="o">&amp;</span> <span class="n">inner</span> <span class="n">axis</span> <span class="n">factors</span> <span class="n">obtained</span> <span class="n">by</span> <span class="n">tiling</span> <span class="n">along</span> <span class="n">axes</span> <span class="n">m</span> <span class="o">&amp;</span> <span class="n">n</span>
+            <span class="n">let</span> <span class="n">cse_var_1</span><span class="p">:</span> <span class="n">int32</span> <span class="o">=</span> <span class="p">((</span><span class="n">cse_var_2</span> <span class="o">+</span> <span class="n">cse_var_3</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">inner</span><span class="p">)</span>
+            <span class="o">//</span> <span class="n">Split</span> <span class="n">the</span> <span class="n">computational</span> <span class="n">logic</span> <span class="n">into</span> <span class="n">different</span> <span class="n">layers</span> <span class="n">so</span> <span class="n">that</span> <span class="n">data</span> <span class="n">involved</span> <span class="n">every</span> <span class="n">loop</span> <span class="n">can</span> <span class="n">be</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">cache</span><span class="o">.</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">cse_var_1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">cse_var_1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span><span class="p">[((</span><span class="n">cse_var_2</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">outer</span><span class="o">*</span><span class="mi">4</span><span class="p">))</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">inner</span><span class="p">)]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[((((</span><span class="n">k</span><span class="o">.</span><span class="n">outer</span><span class="o">*</span><span class="mi">4096</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">inner</span><span class="o">*</span><span class="mi">1024</span><span class="p">))</span> <span class="o">+</span> <span class="n">cse_var_3</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">inner</span><span class="p">)]))</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="finding-optimized-strategies-with-polyhedral-models">
+<h2><span class="section-number">6.5.3. </span>Finding Optimized Strategies with Polyhedral Models<a class="headerlink" href="#finding-optimized-strategies-with-polyhedral-models" title="Permalink to this heading">¶</a></h2>
+<p>Another optimization approach is to automatically select an operator
+schedule from a schedule search space. A good example of this idea is
+the polyhedral compilation. They improve the generalization of operator
+compilation at the expense of prolonged compile time.</p>
+<p>Polyhedral compilation mainly optimizes the loops in user code by
+abstracting each loop into a multidimensional space, computing instances
+into points in the space, and dependencies between the instances into
+lines in the space. The main idea of this algorithm is to model the
+memory access characteristics in code and adjust the execution order of
+each instance within each loop. In this way, it aims to enable better
+locality and parallelism of the loop code under the new schedule.</p>
+<p>Code <code class="docutils literal notranslate"><span class="pre">lst:before_poly</span></code> is used as an example to describe the
+algorithm.</p>
+<p><strong>lst:before_poly</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>As shown in Figure <a class="reference internal" href="#ch05-ch05-poly-test"><span class="std std-numref">Fig. 6.5.3</span></a>, a memory access
+structure is first modeled by using the polyhedral model algorithm, and
+then dependencies (denoted by arrows) between instances (denoted by
+nodes) are analyzed.</p>
+<div class="figure align-default" id="id3">
+<span id="ch05-ch05-poly-test"></span><img alt="../_images/poly_test.png" src="../_images/poly_test.png" />
+<p class="caption"><span class="caption-number">Fig. 6.5.3 </span><span class="caption-text">Polyhedral model of the samplecode</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>Complex dependency analysis and schedule transformation are then
+performed to obtain an optimal solution that fits the memory model.
+Using the polyhedral model algorithm, the code is optimized to that
+shown in Code <code class="docutils literal notranslate"><span class="pre">lst:after_poly</span></code>.</p>
+<p><strong>lst:after_poly</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i_new</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i_new</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i_new</span><span class="o">++</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">j_new</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j_new</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">+</span><span class="n">N</span><span class="p">;</span> <span class="n">j_new</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">i_new</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j_new</span><span class="o">-</span><span class="n">i_new</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i_new</span><span class="p">][</span><span class="n">j_new</span><span class="o">-</span><span class="n">i_new</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="n">i_new</span><span class="p">][</span><span class="n">j_new</span><span class="o">-</span><span class="n">i_new</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">i_new</span><span class="p">][</span><span class="n">j_new</span><span class="o">-</span><span class="n">i_new</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>The resulting code looks relatively complex. We can model the code (as
+shown in Figure <a class="reference internal" href="#ch05-ch05-poly"><span class="std std-numref">Fig. 6.5.4</span></a>) to determine its performance
+improvements. Through dependency analysis, we find that the loop
+dependencies present in the source code are removed in the optimized
+code, thereby increasing the opportunities for parallel computing.
+Specifically, parallel computing is possible when the loop dependencies
+are partitioned along the dashed lines based on the green blocks, as
+shown in Figure <a class="reference internal" href="#ch05-ch05-poly"><span class="std std-numref">Fig. 6.5.4</span></a>.</p>
+<div class="figure align-default" id="id4">
+<span id="ch05-ch05-poly"></span><img alt="../_images/poly.png" src="../_images/poly.png" />
+<p class="caption"><span class="caption-number">Fig. 6.5.4 </span><span class="caption-text">Optimization result with the polyhedralmodel</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>We have only introduced the Polyhedral Compilation technique in this
+section. However, there are other optimization techniques available,
+such as Ansor, which is a heuristic searching method with pruning.</p>
+</div>
+<div class="section" id="adaptation-to-instruction-sets">
+<h2><span class="section-number">6.5.4. </span>Adaptation to Instruction Sets<a class="headerlink" href="#adaptation-to-instruction-sets" title="Permalink to this heading">¶</a></h2>
+<p>We have previously explored the optimization techniques of operator
+compilers. In this section, we build on this foundation to examine how
+operator compilers adapt to instruction sets on different chips.
+Typically, a general-purpose compiler is designed to be compatible with
+as many backend architectures and instruction sets as possible. However,
+this can present challenges when the compiler must handle backends with
+different architectures and instruction sets.</p>
+<p>Two common programming models adopted by AI processors are single
+instruction, multiple data (SIMD) and single instruction, multiple
+threads (SIMT). As shown in Figures <a class="reference internal" href="#ch05-ch05-simd"><span class="std std-numref">Fig. 6.5.5</span></a> and
+<a class="reference internal" href="#ch05-ch05-simt"><span class="std std-numref">Fig. 6.5.6</span></a>, respectively, SIMD corresponds to chips with
+vector instructions, while SIMT corresponds to chips that support
+multiple threads. Recently, some chips have begun to combine both
+programming models in order to support both multithreaded parallel
+computing and vector instructions. When handling different programming
+models, an operator compiler adopts different optimization strategies,
+such as vectorization.</p>
+<div class="figure align-default" id="id5">
+<span id="ch05-ch05-simd"></span><img alt="../_images/SIMD.png" src="../_images/SIMD.png" />
+<p class="caption"><span class="caption-number">Fig. 6.5.5 </span><span class="caption-text">SIMD diagram</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id6">
+<span id="ch05-ch05-simt"></span><img alt="../_images/SIMT.png" src="../_images/SIMT.png" />
+<p class="caption"><span class="caption-number">Fig. 6.5.6 </span><span class="caption-text">SIMT diagram</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>Operator compilers place a strong emphasis on differentiated support in
+the frontend, midend, and backend. In the frontend, support for multiple
+backend instruction sets is added, allowing AI programmers to focus on
+algorithm logic without having to worry about chip differences. In the
+midend, the architectures of different chips are identified, which
+allows for specific optimization methods to be implemented for each
+chip. When generating backend code, the instruction sets of different
+chips are further identified to ensure efficient execution on target
+chips.</p>
+</div>
+<div class="section" id="expression-ability">
+<h2><span class="section-number">6.5.5. </span>Expression Ability<a class="headerlink" href="#expression-ability" title="Permalink to this heading">¶</a></h2>
+<p>The representation capability of an operator compiler is important
+because it determines how well the frontend can express the input code
+in an IR without loss of syntax information. The frontend of an operator
+compiler is often fed with code programmed in flexible languages (e.g.,
+PyTorch code written in Python). However, flexible expressions (e.g.,
+indexing and view syntax in Python) pose high requirements on the
+frontend expression ability of operator compilers. From the model
+perspective, managing the inputs of an operatorn often contain many
+control flow statements. Also, some models allow for dynamic-shape
+operators whose shapes vary with control flow decisions across
+iterations.</p>
+<p>Additionally, there are a large number of operators that may not have
+optimized implementation provided by the accelerator libraries (e.g.,
+cuDNN) directly. This phenomenon is referred to as long tail operators.
+However, the long tail operators can have highly flexible syntax or
+abundant control flow statements and sometimes support dynamic shapes,
+making it extremely difficult for the frontend of existing operator
+compilers to express, optimize, or accelerate them. Consequently, such
+operators have to be executed by the Python interpreter or slow virtual
+machines, leading to a performance bottleneck in network execution. This
+is why it is imperative to improve the expression ability of the
+operator compiler frontend.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">6.5. Operator Compiler</a><ul>
+<li><a class="reference internal" href="#scheduling-strategy">6.5.1. Scheduling Strategy</a></li>
+<li><a class="reference internal" href="#combining-scheduling-strategies">6.5.2. Combining Scheduling Strategies</a></li>
+<li><a class="reference internal" href="#finding-optimized-strategies-with-polyhedral-models">6.5.3. Finding Optimized Strategies with Polyhedral Models</a></li>
+<li><a class="reference internal" href="#adaptation-to-instruction-sets">6.5.4. Adaptation to Instruction Sets</a></li>
+<li><a class="reference internal" href="#expression-ability">6.5.5. Expression Ability</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Memory_Allocation.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>6.4. Memory Allocation</div>
+         </div>
+     </a>
+     <a id="button-next" href="Chapter_Summary.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>6.6. Chapter Summary</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

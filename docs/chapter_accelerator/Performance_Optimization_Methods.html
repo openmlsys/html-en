@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>7.4. Performance Optimization Methods &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.5. Chapter Summary" href="Chapter_Summary.html" />
+    <link rel="prev" title="7.3. Programming Methods" href="Programming_Methods.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">7. </span>Hardware Accelerator</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">7.4. </span>Performance Optimization Methods</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_accelerator/Performance_Optimization_Methods.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Hardware Accelerator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">7. Hardware Accelerator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="performance-optimization-methods">
+<h1><span class="section-number">7.4. </span>Performance Optimization Methods<a class="headerlink" href="#performance-optimization-methods" title="Permalink to this heading">¶</a></h1>
+<p>Hardware accelerators boast intricate computational and memory
+architectures. To maximize their performance, developers frequently need
+to grasp a variety of performance optimization methods. Common methods
+encompass enhancing arithmetic intensity, capitalizing effectively on
+shared memory, optimizing the memory load/store pipeline, among others.
+The subsequent sections will elucidate these methods through practical
+programming examples, all aimed towards a singular objective:
+accelerating an FP32 GEMM program.</p>
+<div class="section" id="implementing-general-matrix-multiplication">
+<h2><span class="section-number">7.4.1. </span>Implementing General Matrix Multiplication<a class="headerlink" href="#implementing-general-matrix-multiplication" title="Permalink to this heading">¶</a></h2>
+<p>Code <code class="docutils literal notranslate"><span class="pre">lst:cpu</span></code> shows a reference implementation of GEMM in C++.</p>
+<p><strong>lst:cpu</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">float</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">M</span><span class="p">][</span><span class="n">K</span><span class="p">];</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">K</span><span class="p">][</span><span class="n">N</span><span class="p">];</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">M</span><span class="p">][</span><span class="n">N</span><span class="p">];</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">c</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">n</span><span class="p">];</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">C</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">beta</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>ach element in matrix <span class="math notranslate nohighlight">\(C\)</span> is independently computed, and numerous
+GPU threads can be launched to compute the corresponding elements in
+matrix <span class="math notranslate nohighlight">\(C\)</span> in parallel. The GPU kernel function is shown in
+Code <code class="docutils literal notranslate"><span class="pre">lst:gpu</span></code>.</p>
+<p><strong>lst:gpu</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">gemmKernel</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">A</span><span class="p">,</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">C</span><span class="p">,</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">N</span><span class="p">,</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="n">K</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">M</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">N</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">c</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">alpha</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">beta</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">beta</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">C</span><span class="p">[</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">cuda_naive_gemm</span></code> shows the layout of the
+implementation. Each element in matrix <span class="math notranslate nohighlight">\(C\)</span> is computed by one
+thread. The row index <span class="math notranslate nohighlight">\(m\)</span> and column index <span class="math notranslate nohighlight">\(n\)</span> of the
+element in matrix <span class="math notranslate nohighlight">\(C\)</span> corresponding to the thread are computed in
+lines 5 and 6 of the GPU kernel. Then, in lines 9 to 11, the thread
+loads the row vector in matrix <span class="math notranslate nohighlight">\(A\)</span> according to the row index and
+the column vector in matrix <span class="math notranslate nohighlight">\(B\)</span> according to the column index,
+computes the vector inner product. The thread also stores the result
+back to <span class="math notranslate nohighlight">\(C\)</span> matrix in line 17.</p>
+<div class="figure align-default" id="id1">
+<span id="cuda-naive-gemm"></span><img alt="../_images/naive.png" src="../_images/naive.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.1 </span><span class="caption-text">Simple implementation ofGEMM</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>The method of launching the kernel function is shown in
+Code <code class="docutils literal notranslate"><span class="pre">lst:launch</span></code>.</p>
+<p><strong>lst:launch</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">gemmNaive</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">C</span><span class="p">,</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">M</span><span class="p">,</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">K</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dim3</span><span class="w"> </span><span class="n">block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
+<span class="w">    </span><span class="n">dim3</span><span class="w"> </span><span class="n">grid</span><span class="p">((</span><span class="n">M</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">block</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">block</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">gemmKernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Each thread block processes <span class="math notranslate nohighlight">\(16\times16\)</span> elements in matrix
+<span class="math notranslate nohighlight">\(C\)</span>. Therefore, <span class="math notranslate nohighlight">\((M - 1) / 16 + 1 \times (N - 1) / 16 + 1\)</span>
+thread blocks are used to compute the entire matrix <span class="math notranslate nohighlight">\(C\)</span>.</p>
+<p>Eigen is used to generate data and compute the GEMM result on the CPU.
+In addition, error computing and time profiling code are implemented for
+the GPU computing result. For details, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/first_attempt.cu">first_attempt.cu</a>.
+After the program is compiled and executed, output results are as
+follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Average</span> <span class="n">time</span><span class="p">:</span> <span class="mf">48.961</span> <span class="n">ms</span>
+<span class="n">Max</span> <span class="n">error</span><span class="p">:</span> <span class="mf">0.000092</span>
+</pre></div>
+</div>
+<p>The peak GPU throughput can be approximated by using the following
+formula: 2 <span class="math notranslate nohighlight">\(\times\)</span> Frequency <span class="math notranslate nohighlight">\(\times\)</span> Number of
+single-precision compute units. The number of single-precision compute
+units equals the number of SMs in the GPU multiplied by the number of
+single-precision compute units in each SM. The results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FP32</span> <span class="n">peak</span> <span class="n">throughput</span> <span class="mf">29767.680</span> <span class="n">GFLOPS</span>
+<span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">185.313</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>A significant gap exists between the performance that can be achieved by
+the current code and the peak device performance. In an entire computing
+process, the process with the highest computing density is matrix
+multiplication <span class="math notranslate nohighlight">\(A\times B\)</span>. Its time complexity is
+<span class="math notranslate nohighlight">\(O(M*N*K)\)</span>, whereas that time complexity of the entire computing
+process is <span class="math notranslate nohighlight">\(O(M*N*K+2*M*N)\)</span>. Therefore, optimizing matrix
+multiplication is key to improving performance.</p>
+</div>
+<div class="section" id="enhancing-arithmetic-intensity">
+<h2><span class="section-number">7.4.2. </span>Enhancing Arithmetic Intensity<a class="headerlink" href="#enhancing-arithmetic-intensity" title="Permalink to this heading">¶</a></h2>
+<p>Arithmetic intensity is the ratio of computational instructions to
+load/store instructions. Modern GPUs typically have numerous compute
+units, constrained only by a limited load/store bandwidth. This
+limitation often leaves these units waiting for data loading in a
+program. Thus, boosting arithmetic intensity is a crucial step to
+improve program performance.</p>
+<p>In the GPU kernel function discussed previously, we can approximate its
+arithmetic intensity by dividing the total number of floating-point
+operations by the number of data reads. When calculating the inner
+product within <span class="math notranslate nohighlight">\(K\)</span> loops, floating-point multiplication and
+addition operations occur each time elements from matrix <span class="math notranslate nohighlight">\(A\)</span> and
+<span class="math notranslate nohighlight">\(B\)</span> are loaded. Consequently, the arithmetic intensity is 1,
+derived from two 32-bit floating-point operations divided by two 32-bit
+data load/store instructions.</p>
+<p>In the original code, each thread handles one element in matrix
+<span class="math notranslate nohighlight">\(C\)</span>, computing the inner product of a row in matrix <span class="math notranslate nohighlight">\(A\)</span> and
+a column in matrix <span class="math notranslate nohighlight">\(B\)</span>. In essence, we can elevate the arithmetic
+intensity by amplifying the elements in matrix <span class="math notranslate nohighlight">\(C\)</span> that each
+thread can process, computing the inner product of multiple rows in
+matrix <span class="math notranslate nohighlight">\(A\)</span> and multiple columns in matrix <span class="math notranslate nohighlight">\(B\)</span>. More
+specifically, if <span class="math notranslate nohighlight">\(m\)</span> elements in matrix <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(n\)</span>
+elements in matrix <span class="math notranslate nohighlight">\(B\)</span> are loaded concurrently while calculating
+the inner product in <span class="math notranslate nohighlight">\(K\)</span> loops, there are <span class="math notranslate nohighlight">\(m+n\)</span> 32-bit
+load/store instructions and <span class="math notranslate nohighlight">\(2mn\)</span> 32-bit computational
+instructions. Hence, the arithmetic intensity becomes
+<span class="math notranslate nohighlight">\(\frac{2mn}{m+n}\)</span>. Therefore, by increasing <span class="math notranslate nohighlight">\(m\)</span> and
+<span class="math notranslate nohighlight">\(n\)</span>, we can optimize the arithmetic intensity.</p>
+<p>In the preceding section, a <code class="docutils literal notranslate"><span class="pre">float</span></code> pointer was employed to access
+global memory and store data in it, utilizing the hardware instructions
+<code class="docutils literal notranslate"><span class="pre">LDG.E</span></code> and <code class="docutils literal notranslate"><span class="pre">STG.E</span></code>. Multiple <code class="docutils literal notranslate"><span class="pre">float</span></code> elements can be loaded
+concurrently using the 128-bit wide instructions <code class="docutils literal notranslate"><span class="pre">LDG.E.128</span></code> and
+<code class="docutils literal notranslate"><span class="pre">STG.E.128</span></code>. These wide instructions can streamline the instruction
+sequence, potentially saving dozens of instruction issue cycles compared
+to four standard instructions, thereby enabling the issue of more
+computational instructions within the saved time. Wide instructions can
+also enhance the cache line hit rate. Despite these benefits, we advise
+against the blanket use of wide instructions in all code. Instead,
+programmers should prioritize direct optimization methods, such as
+parallel design and local data reuse.</p>
+<p>A specific implementation is stacking four <code class="docutils literal notranslate"><span class="pre">float</span></code> numbers to form a
+128-bit <code class="docutils literal notranslate"><span class="pre">float4</span></code> class. The load/store operations will be completed
+using a wide instruction for the <code class="docutils literal notranslate"><span class="pre">float4</span></code> class. For details about the
+code implementation, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/util.cuh">util.cuh</a>.</p>
+<p>Note that each thread needs to load four <code class="docutils literal notranslate"><span class="pre">float</span></code> numbers (instead of
+one) from matrix <span class="math notranslate nohighlight">\(A\)</span> and matrix <span class="math notranslate nohighlight">\(B\)</span>, requiring each thread
+to process <span class="math notranslate nohighlight">\(4\times 4\)</span> blocks (<code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">tile</span></code>) in matrix
+<span class="math notranslate nohighlight">\(C\)</span>. Each thread loads data from matrix <span class="math notranslate nohighlight">\(A\)</span> and matrix
+<span class="math notranslate nohighlight">\(B\)</span> from left to right and from top to bottom, computes the data,
+and stores the data to matrix <span class="math notranslate nohighlight">\(C\)</span>, as shown in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">use_float4</span></code>.</p>
+<div class="figure align-default" id="id2">
+<span id="use-float4"></span><img alt="../_images/use_float4.png" src="../_images/use_float4.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.2 </span><span class="caption-text">Enhancing arithmeticintensity</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>For details about the complete code, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_128.cu">gemm_use_128.cu</a>.
+We can further increase the amount of data processed by each thread in
+order to improve the arithmetic intensity more, as shown in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">use_tile</span></code>. For details about the code used to
+achieve this, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_tile.cu">gemm_use_tile.cu</a>.</p>
+<div class="figure align-default" id="id3">
+<span id="use-tile"></span><img alt="../_images/use_tile.png" src="../_images/use_tile.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.3 </span><span class="caption-text">Further enhancement of the arithmetic intensity by adding
+matrixblocks processed by eachthread</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>The test results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span> <span class="n">Error</span><span class="p">:</span> <span class="mf">0.000092</span>
+<span class="n">Average</span> <span class="n">Time</span><span class="p">:</span> <span class="mf">6.232</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">1378.317</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>To sample and analyze performance indicators, we will use the analysis
+tool Nsight Compute released by NVIDIA. This tool, designed for GPU
+kernel functions, samples and collects GPU activity data by hooking
+drivers. The following commands can be used to analyze the performance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bash</span>
+<span class="n">ncu</span> <span class="o">--</span><span class="nb">set</span> <span class="n">full</span> <span class="o">-</span><span class="n">o</span> <span class="o">&lt;</span><span class="n">profile_output_file</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">profile_process</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">–set</span> <span class="pre">full</span></code> indicates that all data is sampled. <code class="docutils literal notranslate"><span class="pre">-o</span></code> indicates that
+the result is output as a file. <code class="docutils literal notranslate"><span class="pre">&lt;profile_output_file&gt;</span></code> indicates the
+output file name without the file name extension. <code class="docutils literal notranslate"><span class="pre">&lt;profile_process&gt;</span></code>
+indicates the executable file to be analyzed and its arguments. For
+example, to analyze <code class="docutils literal notranslate"><span class="pre">first_attempt</span></code> and name the output result
+<code class="docutils literal notranslate"><span class="pre">first_attepmt_prof_result</span></code>, run the following instructions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncu</span> <span class="o">--</span><span class="nb">set</span> <span class="n">full</span> <span class="o">-</span><span class="n">o</span> <span class="n">first_attepmt_prof_result</span> <span class="o">./</span><span class="n">first_attempt</span>
+</pre></div>
+</div>
+<p>If the system displays a message indicating that you do not have
+permission to run this command, prefix it with <code class="docutils literal notranslate"><span class="pre">sudo</span></code> and run it
+again. After obtaining the output file, the program <code class="docutils literal notranslate"><span class="pre">nv-nsight-cu</span></code> can
+be used to view the file. We compared the profiling results of the new
+GPU kernel function and the previous one.</p>
+<p>The result shows that the number of <code class="docutils literal notranslate"><span class="pre">LDG</span></code> instructions decreases by
+84%, and the value of <code class="docutils literal notranslate"><span class="pre">Stall</span> <span class="pre">LG</span> <span class="pre">Throttle</span></code> decreases by 33%. By using
+wide instructions to increase the compute density, we are able to reduce
+the number of global load/store instructions, thereby cutting the amount
+of time needed to wait before issuing instructions. The improvement on
+<code class="docutils literal notranslate"><span class="pre">Arithmetic</span> <span class="pre">Intensity</span></code> proves that our analysis of the arithmetic
+intensity is correct. The gemm_use_tile.cu test results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span> <span class="n">Error</span><span class="p">:</span> <span class="mf">0.000092</span>
+<span class="n">Average</span> <span class="n">Time</span><span class="p">:</span> <span class="mf">3.188</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">2694.440</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>The analysis using Nsight Compute shows that the code can also improve
+other indicators, such as <code class="docutils literal notranslate"><span class="pre">Stall</span> <span class="pre">LG</span> <span class="pre">Throttle</span></code>.</p>
+</div>
+<div class="section" id="caching-data-in-shared-memory">
+<h2><span class="section-number">7.4.3. </span>Caching Data in Shared Memory<a class="headerlink" href="#caching-data-in-shared-memory" title="Permalink to this heading">¶</a></h2>
+<p>By increasing the amount of data that a thread can load in one go, we
+can improve the arithmetic intensity and performance. However, this
+method decreases the degree of parallelism because it reduces the total
+number of enabled threads. Other hardware features need to be exploited
+in order to improve performance without compromising the degree of
+parallelism. In earlier code, several thread blocks are enabled, each of
+which processes one or more matrix blocks in matrix <span class="math notranslate nohighlight">\(C\)</span>. As shown
+in Figure :numref:<code class="docutils literal notranslate"><span class="pre">duplicated_data</span></code>, thread <span class="math notranslate nohighlight">\(x\)</span> and thread
+<span class="math notranslate nohighlight">\(y\)</span> process the same row in matrix <span class="math notranslate nohighlight">\(C\)</span>, so they load the
+same data from matrix <span class="math notranslate nohighlight">\(A\)</span>. The shared memory can be used to
+improve the program throughput by enabling different threads in the same
+thread block to load unique data and reuse shared data.</p>
+<div class="figure align-default" id="id4">
+<span id="duplicated-data"></span><img alt="../_images/duplicated_data.png" src="../_images/duplicated_data.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.4 </span><span class="caption-text">Threads loading redundantdata</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>We have previously mentioned that the inner product can be computed by
+loading and accumulating data in <span class="math notranslate nohighlight">\(K\)</span> loops. Specifically, in each
+loop, threads that process the same row in matrix <span class="math notranslate nohighlight">\(C\)</span> load the
+same data from matrix <span class="math notranslate nohighlight">\(A\)</span>, and threads that process the same
+column in matrix <span class="math notranslate nohighlight">\(C\)</span> load the same data from matrix <span class="math notranslate nohighlight">\(B\)</span>.
+However, the code needs to be optimized by dividing <span class="math notranslate nohighlight">\(K\)</span> loops into
+<span class="math notranslate nohighlight">\(\frac{K}{tileK}\)</span> outer loops and <span class="math notranslate nohighlight">\(tileK\)</span> inner loops. In
+this way, an entire block of data is loaded in each outer loop and
+accumulated in each inner loop. Figure :numref:<code class="docutils literal notranslate"><span class="pre">use_smem_store</span></code>
+shows the process of moving data from the global memory to the shared
+memory. Before each inner loop starts, the entire <code class="docutils literal notranslate"><span class="pre">tiles</span></code> in matrix
+<span class="math notranslate nohighlight">\(A\)</span> and matrix <span class="math notranslate nohighlight">\(B\)</span> is stored in the shared memory.</p>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">use_smem_load</span></code> shows the process of moving data from
+the shared memory to the register. In each inner loop, data is loaded
+from the shared memory and computed. An advantage of this design is that
+each thread does not need to load all the data it requires from the
+global memory. Instead, the entire thread block loads the data required
+for all threads from the global memory and stores the data in the shared
+memory. During computational processes, each thread only needs to load
+the data it requires from the shared memory.</p>
+<div class="figure align-default" id="id5">
+<span id="use-smem-store"></span><img alt="../_images/use_smem_store.png" src="../_images/use_smem_store.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.5 </span><span class="caption-text">Writing data to the sharedmemory</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id6">
+<span id="use-smem-load"></span><img alt="../_images/use_smem_load.png" src="../_images/use_smem_load.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.6 </span><span class="caption-text">Loading data from the sharedmemory</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>For details about the complete code, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_smem.cu">gemm_use_smem.cu</a>.</p>
+<p>The test results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span> <span class="n">Error</span><span class="p">:</span> <span class="mf">0.000092</span>
+<span class="n">Average</span> <span class="n">Time</span><span class="p">:</span> <span class="mf">0.617</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">13925.168</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>Again, we use Nsight Compute to profile the kernel function and compare
+the results with the previous ones. The analysis shows some major
+improvements. Specifically, the number of <code class="docutils literal notranslate"><span class="pre">LDG</span></code> instructions decreases
+by 97%, which is consistent with this design. And the value of
+<code class="docutils literal notranslate"><span class="pre">SM</span> <span class="pre">Utilization</span></code> increases by 218%, which proves that using the shared
+memory can reduce the memory access latency and improve the memory
+utilization. Furthermore, the performance of other indicators such as
+<code class="docutils literal notranslate"><span class="pre">Pipe</span> <span class="pre">Fma</span> <span class="pre">Cycles</span> <span class="pre">Active</span></code> also improves significantly, demonstrating
+the benefits of the shared memory.</p>
+</div>
+<div class="section" id="reducing-register-usage">
+<h2><span class="section-number">7.4.4. </span>Reducing Register Usage<a class="headerlink" href="#reducing-register-usage" title="Permalink to this heading">¶</a></h2>
+<p>In previous sections, the data blocks that store matrix <span class="math notranslate nohighlight">\(A\)</span> in the
+shared memory are arranged in a row-first manner, and the shared memory
+is loaded by row. We can instead adopt a column-first manner in order to
+reduce loops and loop variables, thereby reducing the number of
+registers and improving performance.</p>
+<p>For details about the complete code, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_transpose_smem.cu">gemm_transpose_smem.cu</a>.</p>
+<p>The test results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span> <span class="n">Error</span><span class="p">:</span> <span class="mf">0.000092</span>
+<span class="n">Average</span> <span class="n">Time</span><span class="p">:</span> <span class="mf">0.610</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">14083.116</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>Analysis by Nsight Compute shows that <code class="docutils literal notranslate"><span class="pre">Occupancy</span></code> increases by 1.3%.
+This is because only 111 registers are used (17 fewer than used by the
+previous GPU kernel function). The benefit of reducing the number of
+registers varies depending on the GPU architecture. Observations have
+shown that the number of <code class="docutils literal notranslate"><span class="pre">STS</span></code> instructions increases and bank
+conflicts occur, meaning that using fewer registers may not have a
+positive impact on other GPU architectures.</p>
+</div>
+<div class="section" id="hiding-shared-memory-loading-latency">
+<h2><span class="section-number">7.4.5. </span>Hiding Shared Memory Loading Latency<a class="headerlink" href="#hiding-shared-memory-loading-latency" title="Permalink to this heading">¶</a></h2>
+<p>To load data from the shared memory, a GPU uses the <code class="docutils literal notranslate"><span class="pre">LDS</span></code> instruction.
+After issuing this instruction, the GPU will execute the following
+instructions without waiting for the data to be loaded to the register
+unless the instructions require such data. In the previous section, each
+time this instruction is issued during <span class="math notranslate nohighlight">\(tileK\)</span> inner loops, the
+mathematical operation that requires the loaded data is performed
+immediately. However, the compute unit has to wait for the data to be
+loaded from the shared memory, as shown in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">use_smem_pipeline</span></code>. Accessing the shared memory may
+take dozens of clock cycles, but computation instructions can often be
+completed within only a few clock cycles. In order to significantly
+accelerate memory access, we can hide the shared memory loading latency
+by optimizing the pipeline. Specifically, during <span class="math notranslate nohighlight">\(tileK\)</span> inner
+loops, loading instructions that prepare data in the next loop can be
+loaded at the beginning of each loop, as shown in
+Figure :numref:<code class="docutils literal notranslate"><span class="pre">hide_smem_latency</span></code>. In this way, computation
+instructions in the current operation do not require the data in the
+next loop. As such, the execution of these computation instructions will
+not be blocked by the instructions that load the data for the next loop.</p>
+<div class="figure align-default" id="id7">
+<span id="use-smem-pipeline"></span><img alt="../_images/use_smem_pipeline.png" src="../_images/use_smem_pipeline.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.7 </span><span class="caption-text">Pipeline of the previous GPU kernelfunction</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id8">
+<span id="hide-smem-latency"></span><img alt="../_images/hide_smem_latency.png" src="../_images/hide_smem_latency.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.8 </span><span class="caption-text">Pipeline that hides the shared memory loadinglatency</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+<p>For details about the complete code, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_hide_smem_latency.cu">gemm_hide_smem_latency.cu</a>.</p>
+<p>The test results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span> <span class="n">Error</span><span class="p">:</span> <span class="mf">0.000092</span>
+<span class="n">Average</span> <span class="n">Time</span><span class="p">:</span> <span class="mf">0.585</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">14686.179</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>Analysis by Nsight Compute shows that the value of
+<code class="docutils literal notranslate"><span class="pre">Stall</span> <span class="pre">Short</span> <span class="pre">Scoreboard</span></code> decreases by 67% when compared with that of
+the previous GPU kernel function. As mentioned before, after GPU memory
+load/store instructions are issued, the GPU executes the next
+instruction without waiting for the data to be landed in the register.
+However, it will set a flag on the Scoreboard and reset the flag after
+the data is landed. If instructions that require such data need to be
+executed, the GPU will execute them only after the data is landed. The
+decrease of <code class="docutils literal notranslate"><span class="pre">Stall</span> <span class="pre">Short</span> <span class="pre">Scoreboard</span></code> demonstrates that hiding the
+access latency of the shared memory is an effective method to better
+utilize the GPU.</p>
+</div>
+<div class="section" id="hiding-global-memory-loading-latency">
+<h2><span class="section-number">7.4.6. </span>Hiding Global Memory Loading Latency<a class="headerlink" href="#hiding-global-memory-loading-latency" title="Permalink to this heading">¶</a></h2>
+<p>To load data from the global memory, a GPU uses the textttLDG
+instruction, the behavior of which is similar to the <code class="docutils literal notranslate"><span class="pre">LDS</span></code> instruction
+used to load data from the shared memory as discussed in the previous
+section. At the beginning of each of the <span class="math notranslate nohighlight">\(\frac{K}{tileK}\)</span> outer
+loops, instructions that load the data tiles in matrix <span class="math notranslate nohighlight">\(A\)</span> for the
+next loop are issued. Because this data is not required by any inner
+loop in a given outer loop, the computational processes in the inner
+loop will not wait for the read instruction to be completed, thereby
+hiding the global memory loading latency. We can also enable data in
+<code class="docutils literal notranslate"><span class="pre">buffer</span></code> to be written to <code class="docutils literal notranslate"><span class="pre">tile</span></code> in the last loop in the inner loop
+after <span class="math notranslate nohighlight">\(tileK - 1\)</span> loops are executed, further reducing the latency
+of writing data to <code class="docutils literal notranslate"><span class="pre">tile</span></code>. Figure :numref:<code class="docutils literal notranslate"><span class="pre">hide_global_latency</span></code>
+shows the optimized pipeline.</p>
+<div class="figure align-default" id="id9">
+<span id="hide-global-latency"></span><img alt="../_images/hide_global_latency.png" src="../_images/hide_global_latency.png" />
+<p class="caption"><span class="caption-number">Fig. 7.4.9 </span><span class="caption-text">Pipeline that hides the global memory loadinglatency</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+<p>For details about the complete code, see
+<a class="reference external" href="https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_final.cu">gemm_final.cu</a>.</p>
+<p>The test results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span> <span class="n">Error</span><span class="p">:</span> <span class="mf">0.000092</span>
+<span class="n">Average</span> <span class="n">Time</span><span class="p">:</span> <span class="mf">0.542</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Average</span> <span class="n">Throughput</span><span class="p">:</span> <span class="mf">15838.302</span> <span class="n">GFLOPS</span>
+</pre></div>
+</div>
+<p>Similar to the <code class="docutils literal notranslate"><span class="pre">Stall</span> <span class="pre">Short</span> <span class="pre">Scoreboard</span></code> results obtained in the
+previous section, analysis by Nsight Compute shows that the value of
+<code class="docutils literal notranslate"><span class="pre">Stall</span> <span class="pre">Long</span> <span class="pre">Scoreboard</span></code> (a global memory indicator) decreases by 67%.
+Such a significant decrease demonstrates that prefetching data can hide
+the global memory to reduce the loading latency.</p>
+</div>
+<div class="section" id="performance-optimization-principles">
+<h2><span class="section-number">7.4.7. </span>Performance Optimization Principles<a class="headerlink" href="#performance-optimization-principles" title="Permalink to this heading">¶</a></h2>
+<p>So far, we have discussed various methods to enhance the performance of
+an accelerator. Even though other methods exist, the principles of
+performance optimization generally adhere to the following:</p>
+<ul class="simple">
+<li><p>Increasing parallelism through resource mapping: Multi-level parallel
+resources (<code class="docutils literal notranslate"><span class="pre">blocks</span></code>, <code class="docutils literal notranslate"><span class="pre">warps</span></code>, and <code class="docutils literal notranslate"><span class="pre">threads</span></code>) are mapped to the
+data needing computation and transfer to enhance program parallelism.</p></li>
+<li><p>Reducing memory access latency through memory structure optimization:
+Based on the recognition of data reuse within the same <code class="docutils literal notranslate"><span class="pre">block</span></code>
+during computation, the reused data is stored in local memory (like
+shared memory and registers) to increase locality.</p></li>
+<li><p>Reducing the instruction issue overhead through optimizing
+instruction execution: The <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">unroll</span></code> function is used to
+unroll loops in order to improve the degree of parallelism at the
+instruction level and reduce logic judgment. The vectorized load
+instruction is used to increase bandwidth. For the Ampere
+architecture, the maximum vectorized load instruction is
+<code class="docutils literal notranslate"><span class="pre">LDG.E.128</span></code>, and the data type for data loading is <code class="docutils literal notranslate"><span class="pre">float4</span></code>.</p></li>
+<li><p>Hiding load/store latency by optimizing the memory access pipeline:
+In instances where the in-memory data undergoes modifications (such
+as the movement of matrix data), we can optimize the memory access
+pipeline. This way, the accelerator performs computations during the
+intervals between data movement, thereby concealing the latency
+associated with data movement.</p></li>
+</ul>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">7.4. Performance Optimization Methods</a><ul>
+<li><a class="reference internal" href="#implementing-general-matrix-multiplication">7.4.1. Implementing General Matrix Multiplication</a></li>
+<li><a class="reference internal" href="#enhancing-arithmetic-intensity">7.4.2. Enhancing Arithmetic Intensity</a></li>
+<li><a class="reference internal" href="#caching-data-in-shared-memory">7.4.3. Caching Data in Shared Memory</a></li>
+<li><a class="reference internal" href="#reducing-register-usage">7.4.4. Reducing Register Usage</a></li>
+<li><a class="reference internal" href="#hiding-shared-memory-loading-latency">7.4.5. Hiding Shared Memory Loading Latency</a></li>
+<li><a class="reference internal" href="#hiding-global-memory-loading-latency">7.4.6. Hiding Global Memory Loading Latency</a></li>
+<li><a class="reference internal" href="#performance-optimization-principles">7.4.7. Performance Optimization Principles</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Programming_Methods.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>7.3. Programming Methods</div>
+         </div>
+     </a>
+     <a id="button-next" href="Chapter_Summary.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>7.5. Chapter Summary</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

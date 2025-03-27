@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <title>
+   12.5. Multi-agent Reinforcement Learning — Machine Learning Systems: Design and Implementation 1.0.0 documentation
+  </title>
+  <link href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/sphinx_materialdesign_theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/fontawesome/all.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/fonts.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/basic.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/d2l.css" rel="stylesheet" type="text/css"/>
+  <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js">
+  </script>
+  <script src="../_static/jquery.js">
+  </script>
+  <script src="../_static/underscore.js">
+  </script>
+  <script src="../_static/_sphinx_javascript_frameworks_compat.js">
+  </script>
+  <script src="../_static/doctools.js">
+  </script>
+  <script src="../_static/sphinx_highlight.js">
+  </script>
+  <script src="../_static/d2l.js">
+  </script>
+  <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <link href="../_static/favicon.png" rel="shortcut icon"/>
+  <link href="../genindex.html" rel="index" title="Index"/>
+  <link href="../search.html" rel="search" title="Search"/>
+  <link href="Multi-agent_Reinforcement_Learning_System.html" rel="next" title="12.6. Multi-agent Reinforcement Learning System"/>
+  <link href="Distributed_Reinforcement_Learning_System.html" rel="prev" title="12.4. Distributed Reinforcement Learning System"/>
+ </head>
+ <body>
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
+   <header class="mdl-layout__header mdl-layout__header--waterfall">
+    <div class="mdl-layout__header-row">
+     <nav class="mdl-navigation breadcrumb">
+      <a class="mdl-navigation__link" href="index.html">
+       <span class="section-number">
+        12.
+       </span>
+       Reinforcement Learning System
+      </a>
+      <i class="material-icons">
+       navigate_next
+      </i>
+      <a class="mdl-navigation__link is-active">
+       <span class="section-number">
+        12.5.
+       </span>
+       Multi-agent Reinforcement Learning
+      </a>
+     </nav>
+     <div class="mdl-layout-spacer">
+     </div>
+     <nav class="mdl-navigation">
+      <form action="../search.html" class="form-inline pull-sm-right" method="get">
+       <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label class="mdl-button mdl-js-button mdl-button--icon" for="waterfall-exp" id="quick-search-icon">
+         <i class="material-icons">
+          search
+         </i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+         <input class="mdl-textfield__input" id="waterfall-exp" name="q" placeholder="Search" type="text"/>
+         <input name="check_keywords" type="hidden" value="yes"/>
+         <input name="area" type="hidden" value="default"/>
+        </div>
+       </div>
+       <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+        Quick search
+       </div>
+      </form>
+      <a class="mdl-button mdl-js-button mdl-button--icon" href="../_sources/chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.rst.txt" id="button-show-source" rel="nofollow">
+       <i class="material-icons">
+        code
+       </i>
+      </a>
+      <div class="mdl-tooltip" data-mdl-for="button-show-source">
+       Show Source
+      </div>
+     </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+     <div class="mdl-layout-spacer">
+     </div>
+     <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+       <i class="fab fa-github">
+       </i>
+       GitHub
+      </a>
+      <a class="mdl-navigation__link" href="https://openmlsys.github.io/">
+       <i class="fas fa-external-link-alt">
+       </i>
+       中文版
+      </a>
+     </nav>
+    </div>
+   </header>
+   <header class="mdl-layout__drawer">
+    <!-- Title -->
+    <span class="mdl-layout-title">
+     <a class="title" href="../index.html">
+      <img alt="Machine Learning Systems: Design and Implementation" class="logo" src="../_static/logo-with-text.png"/>
+     </a>
+    </span>
+    <div class="globaltoc">
+     <span class="mdl-layout-title toc">
+      Table Of Contents
+     </span>
+     <nav class="mdl-navigation">
+      <ul class="current">
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_preface/index.html">
+         1. Preface
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_introduction/index.html">
+         2. Introduction
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">
+           2.1. Machine Learning Applications
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">
+           2.2. Design Objectives of Machine Learning Frameworks
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">
+           2.3. Machine Learning Framework Architecture
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">
+           2.4. Application Scenarios of Machine Learning Systems
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">
+           2.5. Book Organization and Intended Audience
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_preface_basic/index.html">
+         3. Part I Framework Design
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_programming_model/index.html">
+         4. Programming Model
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_programming_model/Overview.html">
+           4.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">
+           4.2. Machine Learning Workflow
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">
+           4.3. Neural Network Programming
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">
+           4.4. Functional Programming
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">
+           4.5. Bridging Python and C/C++ Functions
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">
+           4.6. Chapter Summary
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_compiler_frontend/index.html">
+         5. AI Compiler Frontend
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">
+           5.1. Overview of AI Compilers
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">
+           5.2. Overview of AI Compiler Frontends
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">
+           5.3. Intermediate Representation
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">
+           5.4. Automatic Differentiation
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">
+           5.5. Type Systems and Static Analysis
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">
+           5.6. Frontend Compilation Optimization
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">
+           5.7. Chapter Summary
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">
+           5.8. Further Reading
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_compiler_backend/index.html">
+         6. AI Compiler Backend
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Overview.html">
+           6.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">
+           6.2. Graph Optimization
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">
+           6.3. Operator Selection
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">
+           6.4. Memory Allocation
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">
+           6.5. Operator Compiler
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">
+           6.6. Chapter Summary
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">
+           6.7. Further Reading
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_accelerator/index.html">
+         7. Hardware Accelerator
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_accelerator/Overview.html">
+           7.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">
+           7.2. Components of Hardware Accelerators
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">
+           7.3. Programming Methods
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">
+           7.4. Performance Optimization Methods
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">
+           7.5. Chapter Summary
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_distributed/index.html">
+         8. Distributed Training
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Overview.html">
+           8.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">
+           8.2. Parallelism Methods
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">
+           8.3. Pipeline Parallelism with Micro-Batching
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">
+           8.4. Architecture of Machine Learning Clusters
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Collective_Communication.html">
+           8.5. Collective Communication
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Parameter_Server.html">
+           8.6. Parameter Server
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Federated_Learning.html">
+           8.7. Federated Learning
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">
+           8.8. Training Large Language Models
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">
+           8.9. Chapter Summary
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_distributed/Further_Reading.html">
+           8.10. Further Reading
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_model_deployment/index.html">
+         9. Model Deployment
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Overview.html">
+           9.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">
+           9.2. Conversion to Inference Model and Model Optimization
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">
+           9.3. Model Compression
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">
+           9.4. Advanced Efficient Techniques
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">
+           9.5. Model Inference
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">
+           9.6. Security Protection of Models
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">
+           9.7. Chapter Summary
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">
+           9.8. Further Reading
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_preface_extension/index.html">
+         10. Part II Application Scenarios
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_recommender_system/index.html">
+         11. Recommender System
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/Overview.html">
+           11.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/System_Components.html">
+           11.2. System Components
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">
+           11.3. Recommendation Pipeline
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/Model_Update.html">
+           11.4. Model Update
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">
+           11.5. Supporting Real-time Machine Learning
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">
+           11.6. Chapter Summary
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">
+           11.7. Further Reading
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1 current">
+        <a class="reference internal" href="index.html">
+         12. Reinforcement Learning System
+        </a>
+        <ul class="current">
+         <li class="toctree-l2">
+          <a class="reference internal" href="Overview.html">
+           12.1. Overview
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="Introduction_to_Reinforcement_Learning.html">
+           12.2. Introduction to Reinforcement Learning
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="Single-Node_Reinforcement_Learning_System.html">
+           12.3. Single-Node Reinforcement Learning System
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="Distributed_Reinforcement_Learning_System.html">
+           12.4. Distributed Reinforcement Learning System
+          </a>
+         </li>
+         <li class="toctree-l2 current">
+          <a class="current reference internal" href="#">
+           12.5. Multi-agent Reinforcement Learning
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="Multi-agent_Reinforcement_Learning_System.html">
+           12.6. Multi-agent Reinforcement Learning System
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="Chapter_Summary.html">
+           12.7. Chapter Summary
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../chapter_robot/index.html">
+         13. Robotic System
+        </a>
+        <ul>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">
+           13.1. Overview of Robotic Systems
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">
+           13.2. Robot Operating System
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_robot/Case_Study.html">
+           13.3. Case Study: Using ROS
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">
+           13.4. Modern Robot Learning
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="../chapter_robot/Chapter_Summary.html">
+           13.5. Chapter Summary
+          </a>
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </nav>
+    </div>
+   </header>
+   <main class="mdl-layout__content" tabindex="0">
+    <script src="../_static/sphinx_materialdesign_theme.js " type="text/javascript">
+    </script>
+    <header class="mdl-layout__drawer">
+     <!-- Title -->
+     <span class="mdl-layout-title">
+      <a class="title" href="../index.html">
+       <img alt="Machine Learning Systems: Design and Implementation" class="logo" src="../_static/logo-with-text.png"/>
+      </a>
+     </span>
+     <div class="globaltoc">
+      <span class="mdl-layout-title toc">
+       Table Of Contents
+      </span>
+      <nav class="mdl-navigation">
+       <ul class="current">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_preface/index.html">
+          1. Preface
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_introduction/index.html">
+          2. Introduction
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">
+            2.1. Machine Learning Applications
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">
+            2.2. Design Objectives of Machine Learning Frameworks
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">
+            2.3. Machine Learning Framework Architecture
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">
+            2.4. Application Scenarios of Machine Learning Systems
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">
+            2.5. Book Organization and Intended Audience
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_preface_basic/index.html">
+          3. Part I Framework Design
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_programming_model/index.html">
+          4. Programming Model
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_programming_model/Overview.html">
+            4.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">
+            4.2. Machine Learning Workflow
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">
+            4.3. Neural Network Programming
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">
+            4.4. Functional Programming
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">
+            4.5. Bridging Python and C/C++ Functions
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">
+            4.6. Chapter Summary
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_compiler_frontend/index.html">
+          5. AI Compiler Frontend
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">
+            5.1. Overview of AI Compilers
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">
+            5.2. Overview of AI Compiler Frontends
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">
+            5.3. Intermediate Representation
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">
+            5.4. Automatic Differentiation
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">
+            5.5. Type Systems and Static Analysis
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">
+            5.6. Frontend Compilation Optimization
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">
+            5.7. Chapter Summary
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">
+            5.8. Further Reading
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_compiler_backend/index.html">
+          6. AI Compiler Backend
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Overview.html">
+            6.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">
+            6.2. Graph Optimization
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">
+            6.3. Operator Selection
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">
+            6.4. Memory Allocation
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">
+            6.5. Operator Compiler
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">
+            6.6. Chapter Summary
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">
+            6.7. Further Reading
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_accelerator/index.html">
+          7. Hardware Accelerator
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_accelerator/Overview.html">
+            7.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">
+            7.2. Components of Hardware Accelerators
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">
+            7.3. Programming Methods
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">
+            7.4. Performance Optimization Methods
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">
+            7.5. Chapter Summary
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_distributed/index.html">
+          8. Distributed Training
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Overview.html">
+            8.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">
+            8.2. Parallelism Methods
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">
+            8.3. Pipeline Parallelism with Micro-Batching
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">
+            8.4. Architecture of Machine Learning Clusters
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Collective_Communication.html">
+            8.5. Collective Communication
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Parameter_Server.html">
+            8.6. Parameter Server
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Federated_Learning.html">
+            8.7. Federated Learning
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">
+            8.8. Training Large Language Models
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">
+            8.9. Chapter Summary
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_distributed/Further_Reading.html">
+            8.10. Further Reading
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_model_deployment/index.html">
+          9. Model Deployment
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Overview.html">
+            9.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">
+            9.2. Conversion to Inference Model and Model Optimization
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">
+            9.3. Model Compression
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">
+            9.4. Advanced Efficient Techniques
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">
+            9.5. Model Inference
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">
+            9.6. Security Protection of Models
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">
+            9.7. Chapter Summary
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">
+            9.8. Further Reading
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_preface_extension/index.html">
+          10. Part II Application Scenarios
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_recommender_system/index.html">
+          11. Recommender System
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/Overview.html">
+            11.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/System_Components.html">
+            11.2. System Components
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">
+            11.3. Recommendation Pipeline
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/Model_Update.html">
+            11.4. Model Update
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">
+            11.5. Supporting Real-time Machine Learning
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">
+            11.6. Chapter Summary
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">
+            11.7. Further Reading
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1 current">
+         <a class="reference internal" href="index.html">
+          12. Reinforcement Learning System
+         </a>
+         <ul class="current">
+          <li class="toctree-l2">
+           <a class="reference internal" href="Overview.html">
+            12.1. Overview
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="Introduction_to_Reinforcement_Learning.html">
+            12.2. Introduction to Reinforcement Learning
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="Single-Node_Reinforcement_Learning_System.html">
+            12.3. Single-Node Reinforcement Learning System
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="Distributed_Reinforcement_Learning_System.html">
+            12.4. Distributed Reinforcement Learning System
+           </a>
+          </li>
+          <li class="toctree-l2 current">
+           <a class="current reference internal" href="#">
+            12.5. Multi-agent Reinforcement Learning
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="Multi-agent_Reinforcement_Learning_System.html">
+            12.6. Multi-agent Reinforcement Learning System
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="Chapter_Summary.html">
+            12.7. Chapter Summary
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../chapter_robot/index.html">
+          13. Robotic System
+         </a>
+         <ul>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">
+            13.1. Overview of Robotic Systems
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">
+            13.2. Robot Operating System
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_robot/Case_Study.html">
+            13.3. Case Study: Using ROS
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">
+            13.4. Modern Robot Learning
+           </a>
+          </li>
+          <li class="toctree-l2">
+           <a class="reference internal" href="../chapter_robot/Chapter_Summary.html">
+            13.5. Chapter Summary
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </nav>
+     </div>
+    </header>
+    <div class="document">
+     <div class="page-content" role="main">
+      <div class="section" id="multi-agent-reinforcement-learning">
+       <h1>
+        <span class="section-number">
+         12.5.
+        </span>
+        Multi-agent Reinforcement Learning
+        <a class="headerlink" href="#multi-agent-reinforcement-learning" title="Permalink to this heading">
+         ¶
+        </a>
+       </h1>
+       <p>
+        Previous sections discussed reinforcement learning involving only one
+agent. However, researchers are becoming increasingly interested in
+multiagent reinforcement learning. Consider the framework of
+single-agent reinforcement learning shown in Figure
+        <a class="reference internal" href="Introduction_to_Reinforcement_Learning.html#ch011-ch11-rl">
+         <span class="std std-numref">
+          Fig. 12.2.1
+         </span>
+        </a>
+        . This framework considers the impact of only a
+single agent’s action on the environment, and the reward feedback from
+the environment applies only to this agent. If we extend the
+single-agent mode to multiple agents, we have at least two multiagent
+reinforcement learning frameworks, as shown in Figure
+        <a class="reference internal" href="#ch011-ch11-marl">
+         <span class="std std-numref">
+          Fig. 12.5.1
+         </span>
+        </a>
+        . Figure
+        <a class="reference internal" href="#ch011-ch11-marl">
+         <span class="std std-numref">
+          Fig. 12.5.1
+         </span>
+        </a>
+        (a)
+shows a scenario where multiple agents perform actions at the same time.
+The agents are unable to observe actions of other agents, and their
+actions have an overall impact on the environment. Each agent receives
+an individual reward for its actions. Figure
+        <a class="reference internal" href="#ch011-ch11-marl">
+         <span class="std std-numref">
+          Fig. 12.5.1
+         </span>
+        </a>
+        (b) shows a scenario where multiple agents
+perform actions in sequence. Each agent can observe the actions of its
+previous agents. Their actions have an overall impact on the
+environment. Each agent receives an individual or team reward. Aside
+from these two frameworks, other frameworks may involve a more complex
+mechanism of observations, communications, cooperation, and competition
+among agents. The simplest situation is to assume that the agent
+observations are the environment states. However, this is the least
+possible in the real world. In practice, agents usually have different
+observations on the environment.
+       </p>
+       <div class="figure align-default" id="id5">
+        <span id="ch011-ch11-marl">
+        </span>
+        <img alt="../_images/ch11-marl.pdf" src="../_images/ch11-marl.pdf"/>
+        <p class="caption">
+         <span class="caption-number">
+          Fig. 12.5.1
+         </span>
+         <span class="caption-text">
+          Two possible multiagent reinforcement learning frameworks:
+(a)Synchronous multiagent decision-making; (b) Asynchronous
+multiagentdecision-making
+         </span>
+         <a class="headerlink" href="#id5" title="Permalink to this image">
+          ¶
+         </a>
+        </p>
+       </div>
+       <div class="section" id="multi-agent-rl">
+        <h2>
+         <span class="section-number">
+          12.5.1.
+         </span>
+         Multi-agent RL
+         <a class="headerlink" href="#multi-agent-rl" title="Permalink to this heading">
+          ¶
+         </a>
+        </h2>
+        <p>
+         Based on the Markov decision process used in single-agent reinforcement
+learning, we can define that used in multiagent reinforcement learning
+as a tuple
+         <span class="math notranslate nohighlight">
+          \((\mathcal{S}, N, \boldsymbol{\mathcal{A}}, \mathbf{R}, \mathcal{T}, \gamma)\)
+         </span>
+         .
+In the tuple,
+         <span class="math notranslate nohighlight">
+          \(N\)
+         </span>
+         indicates the number of agents, and
+         <span class="math notranslate nohighlight">
+          \(\mathcal{S}\)
+         </span>
+         and
+         <span class="math notranslate nohighlight">
+          \(\boldsymbol{\mathcal{A}}=(\mathcal{A}_1, \mathcal{A}_2, ..., \mathcal{A}_N)\)
+         </span>
+         are the environment state space and the multiagent action space,
+respectively, where
+         <span class="math notranslate nohighlight">
+          \(A_i\)
+         </span>
+         is the action space of the
+         <span class="math notranslate nohighlight">
+          \(i\)
+         </span>
+         th
+agent.
+         <span class="math notranslate nohighlight">
+          \(\mathbf{R}=(R_1, R_2, ..., R_N)\)
+         </span>
+         is the multiagent reward
+function.
+         <span class="math notranslate nohighlight">
+          \(\mathbf{R}(s,\mathbf{a})\)
+         </span>
+         :
+         <span class="math notranslate nohighlight">
+          \(\mathcal{S}\times \boldsymbol{\mathcal{A}}\rightarrow \mathbb{R}^N\)
+         </span>
+         denotes the reward vector with respect to the state
+         <span class="math notranslate nohighlight">
+          \(s\in\mathcal{S}\)
+         </span>
+         and multiagent action
+         <span class="math notranslate nohighlight">
+          \(\mathbf{a}\in\boldsymbol{\mathcal{A}}\)
+         </span>
+         , and
+         <span class="math notranslate nohighlight">
+          \(R_i\)
+         </span>
+         is the
+reward for the
+         <span class="math notranslate nohighlight">
+          \(i\)
+         </span>
+         th agent. The probability of transitioning
+from the current state and action to the next state is defined as
+         <span class="math notranslate nohighlight">
+          \(\mathcal{T}(s^\prime|s,\mathbf{a})\)
+         </span>
+         :
+         <span class="math notranslate nohighlight">
+          \(\mathcal{S}\times\boldsymbol{\mathcal{A}}\times\mathcal{S}\rightarrow \mathbb{R}_+\)
+         </span>
+         .
+         <span class="math notranslate nohighlight">
+          \(\gamma\in (0,1)\)
+         </span>
+         is the reward discount factor
+         <a class="footnote-reference brackets" href="#id3" id="id1">
+          1
+         </a>
+         . In addition
+to maximizing the expected cumulative reward
+         <span class="math notranslate nohighlight">
+          \(\mathbb{E}[\sum_t \gamma^t r^i_t], i\in[N]\)
+         </span>
+         for each agent,
+multiagent reinforcement learning involves other objectives such as
+reaching Nash equilibrium or maximizing the team reward — these do not
+form part of single-agent reinforcement learning.
+        </p>
+        <p>
+         We can therefore conclude that multiagent reinforcement learning is more
+complex than single-agent reinforcement learning, and that its
+complexity is not simply the accumulation of each agent’s decision
+complexity. Closely related to a classical research topic named Game
+theory, the research of multiagent systems has a long history — even
+before reinforcement learning became popular. There was significant
+research into such systems and many open theoretical problems existed. A
+typical one is that Nash equilibrium is unsolvable in a two-player
+non-zero-sum game
+         <a class="footnote-reference brackets" href="#id4" id="id2">
+          2
+         </a>
+         . We will not delve too deeply into such problems
+due to limited space. Instead, we will provide a simple example to
+explain why a multiagent learning problem cannot be directly solved
+using a single-agent reinforcement learning algorithm.
+        </p>
+       </div>
+       <div class="section" id="game-example">
+        <h2>
+         <span class="section-number">
+          12.5.2.
+         </span>
+         Game Example
+         <a class="headerlink" href="#game-example" title="Permalink to this heading">
+          ¶
+         </a>
+        </h2>
+        <p>
+         Consider the rock-paper-scissors game. In this game, the win-lose
+relationship is scissors &lt; rock &lt; paper &lt; scissors…
+         <code class="docutils literal notranslate">
+          <span class="pre">
+           &lt;
+          </span>
+         </code>
+         means that
+the latter pure strategy wins over the previous one, and a reward of –1
+or +1 is given to the two players, respectively. If both players choose
+the same pure strategy, they are rewarded 0. The payoff table of the
+game is provided in Table
+         <a class="reference internal" href="#ch11-marl">
+          <span class="std std-numref">
+           Table 12.5.1
+          </span>
+         </a>
+         . The horizontal and
+vertical headings indicate the strategies of Player 1 and Player 2,
+respectively. The arrays in the table are the players’ rewards for their
+actions.
+        </p>
+        <span id="ch11-marl">
+        </span>
+        <table class="docutils align-default" id="id6" style="margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:20px;">
+         <caption>
+          <span class="caption-number">
+           Table 12.5.1
+          </span>
+          <span class="caption-text">
+           Payoff table of the rock-paper-scissors game
+          </span>
+          <a class="headerlink" href="#id6" title="Permalink to this table">
+           ¶
+          </a>
+         </caption>
+         <colgroup>
+          <col style="width: 25%"/>
+          <col style="width: 25%"/>
+          <col style="width: 25%"/>
+          <col style="width: 25%"/>
+         </colgroup>
+         <thead>
+          <tr class="row-odd">
+           <th class="head">
+            <p>
+             Reward
+            </p>
+           </th>
+           <th class="head">
+            <p>
+             Scissors
+            </p>
+           </th>
+           <th class="head">
+            <p>
+             Rock
+            </p>
+           </th>
+           <th class="head">
+            <p>
+             Paper
+            </p>
+           </th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr class="row-even">
+           <td>
+            <p>
+             Scissors
+            </p>
+           </td>
+           <td>
+            <p>
+             (0,0)
+            </p>
+           </td>
+           <td>
+            <p>
+             (–1, +1)
+            </p>
+           </td>
+           <td>
+            <p>
+             (+1, –1)
+            </p>
+           </td>
+          </tr>
+          <tr class="row-odd">
+           <td>
+            <p>
+             Rock
+            </p>
+           </td>
+           <td>
+            <p>
+             (+1, –1)
+            </p>
+           </td>
+           <td>
+            <p>
+             (0,0)
+            </p>
+           </td>
+           <td>
+            <p>
+             (–1, +1)
+            </p>
+           </td>
+          </tr>
+          <tr class="row-even">
+           <td>
+            <p>
+             Paper
+            </p>
+           </td>
+           <td>
+            <p>
+             (–1, +1)
+            </p>
+           </td>
+           <td>
+            <p>
+             (+1, –1)
+            </p>
+           </td>
+           <td>
+            <p>
+             (0,0)
+            </p>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+        <p>
+         Due to the antisymmetric nature of this matrix, the Nash equilibrium
+strategy is the same for both players, with a strategy distribution of
+         <span class="math notranslate nohighlight">
+          \((\frac{1}{3}, \frac{1}{3}, \frac{1}{3})\)
+         </span>
+         . This means that both
+players have a
+         <span class="math notranslate nohighlight">
+          \(\frac{1}{3}\)
+         </span>
+         probability of choosing paper, rock,
+or scissors. If we treat the Nash equilibrium strategy as the objective
+of multiagent reinforcement learning, we can conclude that this strategy
+cannot be obtained simply through single-agent reinforcement learning.
+Assume that we randomly initialize two players for any two pure
+strategies. For example, Player 1 chooses scissors, and Player 2 chooses
+rock. Also assume that the strategy of Player 2 is fixed. As such, the
+strategy of Player 2 can be considered as a part of the environment.
+This allows us to use single-agent reinforcement learning to improve the
+strategy of Player 1 in order to maximize its reward. In this case,
+Player 1 converges to the pure strategy of paper. If we then fix this
+strategy for Player 1 to train Player 2, Player 2 converges to the pure
+strategy of scissors. In this way, Player 1 and Player 2 enter a cycle
+of three strategies, but neither of them can obtain the correct Nash
+equilibrium strategy.
+        </p>
+       </div>
+       <div class="section" id="self-play">
+        <h2>
+         <span class="section-number">
+          12.5.3.
+         </span>
+         Self-play
+         <a class="headerlink" href="#self-play" title="Permalink to this heading">
+          ¶
+         </a>
+        </h2>
+        <p>
+         The learning method used in the preceding example is called
+         <em>
+          self-play
+         </em>
+         ,
+as shown in Figure
+         <a class="reference internal" href="#ch011-ch11-marl-sp">
+          <span class="std std-numref">
+           Fig. 12.5.2
+          </span>
+         </a>
+         . It is one of the most
+basic among the multiagent reinforcement learning methods. In self-play,
+given the fixed strategy of Player 1, the strategy of Player 2 is
+optimized by maximizing its own reward using single-agent learning
+methods. The strategy, referred to as best response strategy, is then
+fixed for Player 2 to optimize the strategy of Player 1. In this manner,
+the cycle repeats indefinitely. In some cases, however, self-play may
+fail to converge to the objective we expect. Due to the possible
+existence of such a cycle, we need training methods that are more
+complex and methods that are designed for multiagent learning to achieve
+our objective.
+        </p>
+        <div class="figure align-default" id="id7">
+         <span id="ch011-ch11-marl-sp">
+         </span>
+         <img alt="../_images/ch11-marl-sp.png" src="../_images/ch11-marl-sp.png"/>
+         <p class="caption">
+          <span class="caption-number">
+           Fig. 12.5.2
+          </span>
+          <span class="caption-text">
+           Self-playalgorithm
+          </span>
+          <a class="headerlink" href="#id7" title="Permalink to this image">
+           ¶
+          </a>
+         </p>
+        </div>
+        <p>
+         Generally, multiagent reinforcement learning is more complex than
+single-agent reinforcement learning. In self-play, a single-agent
+reinforcement learning process may be considered as a subtask of
+multi-agent reinforcement learning. In the game discussed above, when
+the strategy of Player 1 is fixed, Player 1 plus the game environment
+constitute the learning environment of Player 2, which can maximize its
+reward using single-agent reinforcement learning. Likewise, when the
+strategy of Player 2 is fixed, Player 1 can perform single-agent
+reinforcement learning. The cycle repeats indefinitely. This is why
+single-agent reinforcement learning can be considered as subtasks of
+multiagent reinforcement learning. Another learning method is
+         <em>
+          fictitious self-play
+         </em>
+         , as shown in Figure
+         <a class="reference internal" href="#ch011-ch11-marl-fsp">
+          <span class="std std-numref">
+           Fig. 12.5.3
+          </span>
+         </a>
+         , whereby an agent needs to choose an
+optimal strategy based on its opponent’s historical average strategies,
+and vice versa. In this manner, players can converge to Nash equilibrium
+strategy in games like rock-paper-scissors.
+        </p>
+        <div class="figure align-default" id="id8">
+         <span id="ch011-ch11-marl-fsp">
+         </span>
+         <img alt="../_images/ch11-marl-fsp.pdf" src="../_images/ch11-marl-fsp.pdf"/>
+         <p class="caption">
+          <span class="caption-number">
+           Fig. 12.5.3
+          </span>
+          <span class="caption-text">
+           Fictitious self-playalgorithm
+          </span>
+          <a class="headerlink" href="#id8" title="Permalink to this image">
+           ¶
+          </a>
+         </p>
+        </div>
+        <dl class="footnote brackets">
+         <dt class="label" id="id3">
+          <span class="brackets">
+           <a class="fn-backref" href="#id1">
+            1
+           </a>
+          </span>
+         </dt>
+         <dd>
+          <p>
+           Assume that the agents use the same reward discount factor.
+          </p>
+         </dd>
+         <dt class="label" id="id4">
+          <span class="brackets">
+           <a class="fn-backref" href="#id2">
+            2
+           </a>
+          </span>
+         </dt>
+         <dd>
+          <p>
+           This is regarded as a Polynomial Parity Argument, Directed (PPAD)
+version problem. For details, see Settling the Complexity of
+Computing Two-Player Nash Equilibria. Xi Chen, et al.
+          </p>
+         </dd>
+        </dl>
+       </div>
+      </div>
+     </div>
+     <div class="side-doc-outline">
+      <div class="side-doc-outline--content">
+       <div class="localtoc">
+        <p class="caption">
+         <span class="caption-text">
+          Table Of Contents
+         </span>
+        </p>
+        <ul>
+         <li>
+          <a class="reference internal" href="#">
+           12.5. Multi-agent Reinforcement Learning
+          </a>
+          <ul>
+           <li>
+            <a class="reference internal" href="#multi-agent-rl">
+             12.5.1. Multi-agent RL
+            </a>
+           </li>
+           <li>
+            <a class="reference internal" href="#game-example">
+             12.5.2. Game Example
+            </a>
+           </li>
+           <li>
+            <a class="reference internal" href="#self-play">
+             12.5.3. Self-play
+            </a>
+           </li>
+          </ul>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="clearer">
+     </div>
+    </div>
+    <div class="pagenation">
+     <a accesskey="P" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" href="Distributed_Reinforcement_Learning_System.html" id="button-prev" role="botton">
+      <i class="pagenation-arrow-L fas fa-arrow-left fa-lg">
+      </i>
+      <div class="pagenation-text">
+       <span class="pagenation-direction">
+        Previous
+       </span>
+       <div>
+        12.4. Distributed Reinforcement Learning System
+       </div>
+      </div>
+     </a>
+     <a accesskey="N" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" href="Multi-agent_Reinforcement_Learning_System.html" id="button-next" role="botton">
+      <i class="pagenation-arrow-R fas fa-arrow-right fa-lg">
+      </i>
+      <div class="pagenation-text">
+       <span class="pagenation-direction">
+        Next
+       </span>
+       <div>
+        12.6. Multi-agent Reinforcement Learning System
+       </div>
+      </div>
+     </a>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

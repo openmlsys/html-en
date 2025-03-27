@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>Computational Graph Basics &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link is-active">Computational Graph Basics</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_computatioinal_graph/Computational_Graph_Basics.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="computational-graph-basics">
+<h1>Computational Graph Basics<a class="headerlink" href="#computational-graph-basics" title="Permalink to this heading">¶</a></h1>
+<p>A computational graph contains operators (as units of operations) and
+tensors (as units of data). The operator nodes in a graph are connected
+with directed edges, which indicate the state of each tensor and
+dependencies between operators. Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-simpleDAG</span></code>
+shows a computational graph example of
+<span class="math notranslate nohighlight">\(\bf{Z}\)</span>=ReLU<span class="math notranslate nohighlight">\((\bf{X}\times\bf{Y})\)</span>.</p>
+<div class="figure align-default" id="id1">
+<span id="ch04-ch04-simpledag"></span><img alt="../_images/simple-graph.png" src="../_images/simple-graph.png" />
+<p class="caption"><span class="caption-text">Simple computationalgraph</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="tensors-and-operators">
+<h2>Tensors and Operators<a class="headerlink" href="#tensors-and-operators" title="Permalink to this heading">¶</a></h2>
+<p>In mathematics, tensors are a generalization of scalars and vectors.
+Machine learning defines multidimensional data as tensors. The rank of a
+tensor refers to the number of axes (or dimensions) the tensor has. A
+scalar is a rank-0 tensor containing a single value, without axes; a
+vector is a rank-1 tensor with one axis; and a three-channel RGB color
+image is a rank-3 tensor with three axes. See Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-tensor</span></code>.</p>
+<div class="figure align-default" id="id2">
+<span id="ch04-ch04-tensor"></span><img alt="../_images/tensor.png" src="../_images/tensor.png" />
+<p class="caption"><span class="caption-text">Tensors</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>In a machine learning framework, a tensor stores not only data itself
+but also attributes such as the data type, data shape, rank, and
+gradient transfer status. Table <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch4-tensor</span></code> describes
+the main attributes of a tensor.</p>
+<span id="ch04-ch4-tensor"></span><table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Tensor attributes</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tensor
+Attribute</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>shape</p></td>
+<td><p>Length of each dimension, for example, [3,3,3].</p></td>
+</tr>
+<tr class="row-odd"><td><p>dim</p></td>
+<td><p>Number of axes (or dimensions). The value is 0 for a
+scalar and 1 for a vector.</p></td>
+</tr>
+<tr class="row-even"><td><p>dtype</p></td>
+<td><p>Data type, such as bool, uint8, int16, float32, and
+float64.</p></td>
+</tr>
+<tr class="row-odd"><td><p>device</p></td>
+<td><p>Target device, such as a CPU or GPU.</p></td>
+</tr>
+<tr class="row-even"><td><p>name</p></td>
+<td><p>Tensor name.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In the following, we explore each tensor attribute with image data as an
+example. Assume that our machine learning framework loads a 96-pixel by
+96-pixel RGB (3-channel) image and converts the image data into a tensor
+for storage. A <em>rank</em>-3 tensor of <em>shape</em> [96,96,3] is generated, with
+the three dimensions representing the image height, image width, and
+number of channels, respectively. The pixels in the RGB image are
+represented by unsigned integers ranging from 0 to 255. Therefore, the
+<em>dtype</em> of the resulting tensor is uint8. The image data is normalized
+before it is fed into a CNN for training. Specifically, its data type is
+reformatted to float32 so that it is compatible with the default data
+type of common machine learning frameworks.</p>
+<p>Before training, the machine learning framework determines the compute
+device (i.e., CPU, GPU, or other hardware) and stores the data and
+weight parameters necessary for training in the memory of the
+corresponding hardware — as specified by the <em>device</em> attribute.
+Typically, the device attribute of a tensor is automatically assigned by
+the machine learning framework based on the hardware environment.
+Tensors are either mutable or immutable. Mutable tensors store weight
+parameters and are updated based on gradient information, for example,
+convolution kernel tensors that participate in convolution operations.
+Immutable tensors store initial user data or data input to models, for
+example, the image data tensor mentioned above.</p>
+<p>What does a tensor look like in machine learning settings? Most tensors,
+like image data and convolution kernel tensors, are “rectangular” or
+“cubic” in shape. That is, such a tensor has the same number of elements
+along each of its axes. However, there are specialized tensors that have
+different shapes: ragged and sparse tensors. As shown in Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-tensor1</span></code>, a tensor is ragged if it has variable
+numbers of elements along some axes. Ragged tensors enable efficient
+storage and processing of irregularly shaped data, such as
+variable-length texts in natural language processing (NLP) applications.
+Sparse tensors often handle graph data of graph neural networks (GNNs)
+and are encoded using special formats such as the coordinate list (COO)
+to improve storage efficiency.</p>
+<div class="figure align-default" id="id4">
+<span id="ch04-ch04-tensor1"></span><img alt="../_images/tensor-class.png" src="../_images/tensor-class.png" />
+<p class="caption"><span class="caption-text">Types of tensors</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>Operators are the basic compute units of neural networks. They process
+tensor data and implement common computational logic in machine
+learning, including data transformation, conditional control,
+mathematical calculation, etc. Based on their functionalities, operators
+are classified into tensor operators, neural network operators, data
+flow operators, and control flow operators.</p>
+<ol class="arabic simple">
+<li><p><strong>Tensor operators</strong> involve tensor structure and mathematical
+operations. Typical tensor structure operations include reshaping
+tensors, permuting tensor dimensions, concatenating tensors, etc. For
+example, we may need to change the dimension order (between “channels
+first” and “channels last”) of image data tensors in CNN
+applications. Mathematical operations are tensor-based and include
+matrix multiplication, norm calculation, determinant calculation,
+eigenvalue calculation, etc. They are often seen in the gradient
+computation of machine learning models.</p></li>
+<li><p><strong>Neural network operators</strong>, the foundation of neural network
+models, are the most common operators, including feature extraction,
+activation functions, loss functions, optimization algorithms, etc.
+Feature extraction refers to extracting feature tensors from input
+data in CNN tasks. With the nonlinear ability introduced by
+activation functions, neural networks can model highly complex
+relationships and patterns in data. Optimization algorithms are used
+to update model parameters so that the loss function is minimized.</p></li>
+<li><p><strong>Data flow operators</strong> cover data preprocessing and loading. Data
+preprocessing mainly refers to data resizing, padding, normalization,
+and argumentation of mostly visual and textual data, whereas data
+loading involves operations such as shuffling, batching, and
+pre-fetching of the dataset. Data flow operators transform raw input
+data into a format meaningful to the machine learning framework and
+efficiently load the data to the network for training or inference
+according to the defined number of iterations, reducing memory usage
+and wait time.</p></li>
+<li><p><strong>Control flow operators</strong>, usually found in flexible and complex
+models, are used to control data flows in computational graphs.
+Typical control flow operators are conditional operators and loop
+operators. They are provided by either the machine learning framework
+or the frontend language. Control flow operations affect data flows
+in both forward and backward computation of neural networks.</p></li>
+</ol>
+</div>
+<div class="section" id="computational-dependencies">
+<h2>Computational Dependencies<a class="headerlink" href="#computational-dependencies" title="Permalink to this heading">¶</a></h2>
+<p>In a computational graph, the dependencies between operators influence
+the execution sequence and parallelism of operators. The computational
+graphs involved in machine learning algorithms are directed acyclic
+graphs, where data flows must not lead to circular dependencies. With a
+circular dependency, the training program will run into an infinite loop
+and never terminate by itself. Data stuck in an infinite loop tends to
+either infinity or 0, yielding invalid results. To analyze the execution
+sequence and facilitate model topology design, the following describes
+the dependencies between the compute nodes in a computational graph.</p>
+<p>As shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-dependence</span></code>, if the Matmul1
+operator is removed from the graph, there will be no input to the
+downstream activation function, and the data flow will be interrupted.
+We can therefore conclude that the operators in this computational graph
+depend on each other with transitive relations.</p>
+<div class="figure align-default" id="id5">
+<span id="ch04-ch04-dependence"></span><img alt="../_images/dependence.png" src="../_images/dependence.png" />
+<p class="caption"><span class="caption-text">Computationaldependencies</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>Three types of dependencies are available.</p>
+<ol class="arabic simple">
+<li><p><strong>Direct dependency</strong>: For example, the ReLU1 node is directly
+dependent on the Matmul1 node. That is, ReLU1 can run properly only
+when it receives a direct output from Matmul1.</p></li>
+<li><p><strong>Indirect dependency</strong>: For example, the Add node indirectly depends
+on the Matmul1 node. Specifically, Matmul1’s output is processed by
+one or more intermediate nodes and then transmitted to the Add node.
+The Add node directly or indirectly depends on the intermediate
+nodes.</p></li>
+<li><p><strong>Mutual independence</strong>: For example, the graph shows no input/output
+dependency between Matmul1 and Matmul2, meaning that the two nodes
+are independent of each other.</p></li>
+</ol>
+<p>In the computational graph shown in Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-recurrent</span></code>, the Add node indirectly depends on the
+Matmul node; conversely, the Matmul node directly depends on the Add
+node. The two nodes are stuck waiting for each other’s output to start
+their computation. When input data is manually assigned to the two nodes
+at the same time, they will compute endlessly, and the training process
+can never terminate by itself. A circular dependency produces a positive
+feedback data flow, where data values overflow to positive infinity,
+underflow to negative infinity, or tend to 0. These all lead to
+unexpected training results. As such, we should avoid circular
+dependencies between operators when designing deep learning models.</p>
+<div class="figure align-default" id="id6">
+<span id="ch04-ch04-recurrent"></span><img alt="../_images/recurrent.png" src="../_images/recurrent.png" />
+<p class="caption"><span class="caption-text">Circulardependency</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>In machine learning frameworks, the <em>unrolling</em> method is used to
+represent loop iterations. Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-recurrent-1</span></code>
+shows a computational graph involving three loop iterations. The
+subgraph of the loop body is replicated to three (according to the
+number of iterations) to produce an unrolled loop, where the resulting
+subgraphs are concatenated in the iteration sequence. The subgraph of
+one iteration has a direct dependency on that of the previous iteration.
+In one computational graph, tensors and operators are uniquely
+identified across the loop iterations, even for the same operation.
+Unlike circular dependencies, loop iterations do not involve mutual
+dependencies between operators with unique identifiers. When a subgraph
+is replicated to produce an unrolled loop, the replicated tensors and
+operators are assigned new identifiers to avoid circular dependencies.</p>
+<div class="figure align-default" id="id7">
+<span id="ch04-ch04-recurrent-1"></span><img alt="../_images/unroll.png" src="../_images/unroll.png" />
+<p class="caption"><span class="caption-text">Unrolled loop</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="control-flows">
+<h2>Control Flows<a class="headerlink" href="#control-flows" title="Permalink to this heading">¶</a></h2>
+<p>A control flow maintains the sequence of computation tasks, thereby
+facilitating the design of flexible and complex models. By introducing a
+control flow to a model, we can execute a node iteratively any number of
+times or skip a node based on specific conditions. Many deep learning
+models rely on control flows for training and inference. For example,
+models built on recurrent neural networks (RNNs) and reinforcement
+learning rely on recurrence relations and input status conditions to
+complete the computation.</p>
+<p>Popular machine learning frameworks provide two major types of control
+flows:</p>
+<ol class="arabic simple">
+<li><p><strong>Frontend control flows</strong>: Python control flow statements are used
+to implement control decision-making in a computational graph.
+Frontend control flows are easy to use in model building. However,
+because the computation process of the machine learning framework
+runs on the backend hardware and the control flow is decoupled from
+the data flow, the computational graph cannot run entirely on the
+backend hardware. As such, control flow implementations using the
+frontend language are referred to as the <em>out-of-graph approach</em>.</p></li>
+<li><p><strong>Framework control primitives</strong>: Machine learning frameworks come
+with built-in low-level fine-grained control primitive operators.
+Such operators are executable on compute hardware. When they are
+introduced to a model, the computational graph can run entirely on
+the backend hardware. This type of control flow implementations are
+referred to as the <em>in-graph approach</em>.</p></li>
+</ol>
+<p>To explain why we need these different approaches to implement control
+flows, let’s look at the differences between the two approaches.</p>
+<p>The out-of-graph approach is familiar to Python programmers. This
+flexible, intuitive approach allows direct use of Python commands such
+as <code class="docutils literal notranslate"><span class="pre">if-else</span></code>, <code class="docutils literal notranslate"><span class="pre">while</span></code>, and <code class="docutils literal notranslate"><span class="pre">for</span></code> in building control flows.</p>
+<p>The in-graph approach, by contrast, is more complicated. TensorFlow
+provides a range of in-graph control flow operators (such as <code class="docutils literal notranslate"><span class="pre">tf.cond</span></code>
+for conditional control, <code class="docutils literal notranslate"><span class="pre">tf.while_loop</span></code> for loop control, and
+<code class="docutils literal notranslate"><span class="pre">tf.case</span></code> for branch control). These operators are composites of
+lower-level primitive operators. The control flow representations
+adopted by the in-graph approach are in a different style from common
+programming — this improves computing performance but comes at the
+expense of usability.</p>
+<p>The out-of-graph approach is easier to use. However, not all backend
+compute hardware is compatible with the frontend runtime environment,
+and extra efforts may be needed to execute the frontend control flows.
+Nevertheless, control flows implemented using the in-graph approach are
+directly executable on hardware independent of the frontend environment,
+improving efficiency throughout the model building, optimization, and
+execution process.</p>
+<p>The two approaches serve different application scenarios. To run tasks
+such as model training, inference, and deployment on compute hardware
+independent of the frontend environment, the in-graph approach is
+recommended for building control flows. For model validation purposes,
+the out-of-graph approach allows for higher efficiency in generating
+model code from the model algorithm.</p>
+<p>Major machine learning frameworks support both the out-of-graph and
+in-graph approaches. In the following illustrations about the impact of
+control flows on forward and backward computation, we adopt the
+out-of-graph approach for control flow implementations, given that
+frontend control flows are more popular in practice. The most common
+control flows include conditional branches and loops. For a model
+containing control flow operations, the control flow is replicated to
+the gradient computational graph during backpropagation, so that the
+required tensor gradients can be accurately calculated.</p>
+<p>Code <code class="docutils literal notranslate"><span class="pre">ch04/code1</span></code> shows an example of simple conditional control,
+where <code class="docutils literal notranslate"><span class="pre">matmul</span></code> indicates the matrix multiplication operator.</p>
+<p><strong>ch04/code1</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">control</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">conditional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">conditional</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-if</span></code> depicts the forward and backward
+computational graphs of Code <code class="docutils literal notranslate"><span class="pre">ch04/code1</span></code>. When running a model
+containing <code class="docutils literal notranslate"><span class="pre">if</span></code> conditions, the program needs to know which branch of
+each condition is taken so that it can apply the gradient computation
+logic to the right branch. In the forward computational graph, tensor
+<span class="math notranslate nohighlight">\(\bf{C}\)</span> does not participate in computation due to conditional
+control. Similarly, in the backward computational graph, tensor
+<span class="math notranslate nohighlight">\(\bf{C}\)</span> is skipped in gradient computation.</p>
+<div class="figure align-default" id="id8">
+<span id="ch04-ch04-if"></span><img alt="../_images/if.png" src="../_images/if.png" />
+<p class="caption"><span class="caption-text">Computational graphs of conditionalcontrol</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+<p>A control loop allows us to execute an operation in a loop zero or
+multiple times. When the loop is unrolled, each operation is assigned a
+unique identifier to identify different calls to the same operation.
+Each iteration directly depends on the result of the previous one.
+Therefore, one or more lists of tensors need to be maintained in the
+control loop for storing per-iteration intermediate results used in the
+forward pass and gradient computation. Code <code class="docutils literal notranslate"><span class="pre">ch04/code2</span></code> shows a
+control loop example. In its unrolled loop, <span class="math notranslate nohighlight">\(\bf{X_i}\)</span> and
+<span class="math notranslate nohighlight">\(\bf{W_i}\)</span> are the lists of intermediate result tensors to be
+maintained.</p>
+<p><strong>ch04/code2</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">recurrent_control</span><span class="p">(</span><span class="n">X</span> <span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">W</span> <span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">cur_num</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cur_num</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">X</span>
+<span class="c1"># Unroll the loop to obtain an equivalent representation.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">recurrent_control</span><span class="p">(</span><span class="n">X</span> <span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">W</span> <span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]):</span>
+    <span class="n">X1</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>   <span class="c1"># Let W = W[0], W1 = W[1], and W2 = W[2].</span>
+    <span class="n">X2</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">W1</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">W2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Y</span>
+</pre></div>
+</div>
+<p>The forward and backward computational graphs of Code <code class="docutils literal notranslate"><span class="pre">ch04/code2</span></code> are
+shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-while</span></code>. The gradient of the control
+loop is also a loop, with the same number of iterations as the forward
+loop. The gradient value output by one iteration serves as the input
+value for calculating the gradient of the next iteration until the loop
+ends.</p>
+<div class="figure align-default" id="id9">
+<span id="ch04-ch04-while"></span><img alt="../_images/while.png" src="../_images/while.png" />
+<p class="caption"><span class="caption-text">Computational graphs of loopcontrol</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="gradient-computation-using-the-chain-rule">
+<h2>Gradient Computation Using the Chain Rule<a class="headerlink" href="#gradient-computation-using-the-chain-rule" title="Permalink to this heading">¶</a></h2>
+<p>In the loop unrolling example in Section 3.2.3, when input tensor
+<span class="math notranslate nohighlight">\(\bf{X}\)</span> is fed into the neural network, the data is propagated
+forward one layer at a time in the computational graph, and the
+intermediate variables are calculated and stored until <span class="math notranslate nohighlight">\(\bf{Y}\)</span> is
+output after multilayer computation. In DNN training, the loss function
+result is calculated based on the output result of forward propagation
+and the label value. The model backpropagates the loss function
+information through the computational graph and updates the training
+parameters based on computed gradients. Typically, backpropagation works
+by computing the gradients of the loss function with respect to each
+parameter. Backpropagation based on other information can also work but
+is not discussed here.</p>
+<p>The chain rule method is used to calculate the gradients with respect to
+each parameter during backpropagation. In calculus, the chain rule
+provides a technique for finding the derivatives of composite functions.
+The derivative of a composite function at a given point is the product
+of the derivatives of each individual function at the corresponding
+point. Assume that <em>f</em> and <em>g</em> are functions mapped from the real number
+<em>x</em>. If <span class="math notranslate nohighlight">\(y=g(x)\)</span> and <span class="math notranslate nohighlight">\(z=f(y)=f(g(x))\)</span>, the derivative of <em>z</em>
+with respect to <em>x</em> is</p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-0">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-0" title="Permalink to this equation">¶</a></span>\[\frac{\partial z}{\partial x}=\frac{\partial z}{\partial y}\frac{\partial y}{\partial x}.\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule</span></code></p>
+<p>The backpropagation algorithm of neural networks executes the chain rule
+in the sequence defined by the backward computational graph. Generally,
+neural networks accept 3D tensor inputs and output 1D vectors.
+Therefore, we can generalize the gradient computation Equations
+<code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule</span></code> of composite functions with respect to scalars
+as follows: Assuming that <span class="math notranslate nohighlight">\(\bf{X}\)</span> is an <em>m</em>-dimensional tensor,
+<span class="math notranslate nohighlight">\(\bf{Y}\)</span> is an <em>n</em>-dimensional tensor, <span class="math notranslate nohighlight">\(\bf{z}\)</span> is a 1D
+vector, <span class="math notranslate nohighlight">\(\bf{Y}=g(\bf{X})\)</span>, and <span class="math notranslate nohighlight">\(\bf{z}=f(\bf{Y})\)</span>, the
+partial derivative of <span class="math notranslate nohighlight">\(\bf{z}\)</span> with respect to each element of
+<span class="math notranslate nohighlight">\(\bf{X}\)</span> is</p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-1">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-1" title="Permalink to this equation">¶</a></span>\[\frac{\partial z}{\partial x_i}=\sum_j\frac{\partial z}{\partial y_j}\frac{ \partial y_j}{ \partial x_i}.\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule-1</span></code></p>
+<p>The equivalent form of Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-1</span></code> is</p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-2">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-2" title="Permalink to this equation">¶</a></span>\[\nabla_{\bf{X}}\bf{z} = (\frac{\partial \bf{Y}}{\partial\bf{X}})^{\top}\nabla_{\bf{Y}}\bf{z},\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule-2</span></code></p>
+<p>where, <span class="math notranslate nohighlight">\(\nabla_{\bf{X}}z\)</span> represents the gradient matrix of
+<span class="math notranslate nohighlight">\(z\)</span> with respect to <span class="math notranslate nohighlight">\(\bf{X}\)</span>.</p>
+<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-chain</span></code> shows the application of the chain
+rule in neural networks, illustrating both forward and backward passes
+in a single graph. The neural network performs matrix multiplication
+twice to obtain the predicted value <span class="math notranslate nohighlight">\(\bf{Y}\)</span>, and then performs
+gradient backpropagation based on the error between the output value and
+label value to update the weight parameters to minimize the error. The
+weight parameters to be updated include <span class="math notranslate nohighlight">\(\bf{W}\)</span> and
+<span class="math notranslate nohighlight">\(\bf{W_1}\)</span>.</p>
+<div class="figure align-default" id="id10">
+<span id="ch04-ch04-chain"></span><img alt="../_images/chain.png" src="../_images/chain.png" />
+<p class="caption"><span class="caption-text">Backpropagation computationalgraph</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+<p>The mean square error (MSE) is selected as the loss function in this
+example. Two important questions arise here: How does the loss function
+transfer the gradient information to <span class="math notranslate nohighlight">\(\bf{W}\)</span> and <span class="math notranslate nohighlight">\(\bf{W_1}\)</span>
+using the chain rule method? And why do we need to calculate the
+gradients of non-parameter data <span class="math notranslate nohighlight">\(\bf{X}\)</span> and <span class="math notranslate nohighlight">\(\bf{X_1}\)</span>? To
+answer these questions, let’s analyze the computation details of forward
+and backward propagation. First, the loss value is calculated through
+forward propagation in three steps: (1) <span class="math notranslate nohighlight">\(\bf{X_1}=\bf{XW}\)</span>; (2)
+<span class="math notranslate nohighlight">\(\bf{Y}=\bf{X_1W_1}\)</span>; and (3)
+<span class="math notranslate nohighlight">\(Loss=\frac{1}{2} (\bf{Y}-Label)^2\)</span>.</p>
+<p>The loss function is calculated to minimize the distance between the
+prediction value and the label value. According to the chain rule,
+backpropagation is performed through Equations
+<code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-3</span></code> and <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-4</span></code> to calculate
+the gradients of the loss function with respect to parameters
+<span class="math notranslate nohighlight">\(\bf{W}\)</span> and <span class="math notranslate nohighlight">\(\bf{W_1}\)</span>:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-3">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-3" title="Permalink to this equation">¶</a></span>\[\frac{\partial {\rm Loss}}{\partial \bf{W_1}}=\frac{\partial \bf{Y}}{\partial \bf{W_1}}\frac{\partial {\rm Loss}}{\partial \bf{Y}}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule-3</span></code></p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-4">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-4" title="Permalink to this equation">¶</a></span>\[\frac{\partial {\rm Loss}}{\partial \bf{W}}=\frac{\partial \bf{X_1}}{\partial \bf{W}}\frac{\partial {\rm Loss}}{\partial \bf{Y}}\frac{\partial \bf{Y}}{\partial \bf{X_1}}\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule-4</span></code></p>
+<p>Both Equations <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-3</span></code> and
+<code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-4</span></code> solve
+<span class="math notranslate nohighlight">\(\frac{\partial {\rm Loss}}{\partial \bf{Y}}\)</span>, which corresponds
+to grad <span class="math notranslate nohighlight">\(\bf{Y}\)</span> in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-chain</span></code>.
+<span class="math notranslate nohighlight">\(\frac{\partial {\rm Loss}}{\partial \bf{Y}}\frac{\partial \bf{Y}}{\partial \bf{X_1}}\)</span>
+in Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-4</span></code> corresponds to grad
+<span class="math notranslate nohighlight">\(\bf{X_1}\)</span> in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-chain</span></code>. To calculate the
+gradient of model parameter <span class="math notranslate nohighlight">\(\bf{W}\)</span>, the gradient of intermediate
+result <span class="math notranslate nohighlight">\(\bf{X_1}\)</span> is calculated. This also answers the second
+question raised above. The gradients of non-parameter intermediate
+results are calculated to facilitate gradient computation with regard to
+each parameter.</p>
+<p>Because <span class="math notranslate nohighlight">\(\bf{X_1}=\bf{XW}\)</span>, <span class="math notranslate nohighlight">\(\bf{Y}=\bf{X_1W_1}\)</span>, and
+Loss=<span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>(<span class="math notranslate nohighlight">\(\bf{Y}\)</span>-Label):math:<cite>^2</cite>, Equations
+<code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-3</span></code> and <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-4</span></code> are expanded
+to <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-5</span></code> and <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-6</span></code> according
+to Equations <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-2</span></code>, respectively. Then, we can
+analyze how variables participate in gradient computation when the
+machine learning framework uses the chain rule to build a backward
+computational graph.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-5">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-5" title="Permalink to this equation">¶</a></span>\[\frac{\partial {\rm Loss}}{\partial \bf{W_1}}=\frac{\partial \bf{Y}}{\partial \bf{W_1}}\frac{\partial {\rm Loss}}{\partial \bf{Y}}=\bf{X_1}^\top(\bf{Y}-{\rm Label})\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule-5</span></code></p>
+<div class="math notranslate nohighlight" id="equation-chapter-computatioinal-graph-computational-graph-basics-6">
+<span class="eqno">()<a class="headerlink" href="#equation-chapter-computatioinal-graph-computational-graph-basics-6" title="Permalink to this equation">¶</a></span>\[\frac{\partial {\rm Loss}}{\partial \bf{W}}=\frac{\partial \bf{X_1}}{\partial \bf{W}}\frac{\partial {\rm Loss}}{\partial \bf{Y}}\frac{\partial \bf{Y}}{\partial \bf{X_1}}=\bf{X}^\top(\bf{Y}-{\rm Label})\bf{W_1}^\top\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">eq:ch04/chainrule-6</span></code></p>
+<p>Equation <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-5</span></code> uses intermediate result
+<span class="math notranslate nohighlight">\(\bf{X_1}\)</span> in the forward computational graph when calculating the
+gradient of <span class="math notranslate nohighlight">\(\bf{W_1}\)</span>. In equation <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-6</span></code>,
+both input <span class="math notranslate nohighlight">\(\bf{X}\)</span> and parameter <span class="math notranslate nohighlight">\(\bf{W_1}\)</span> are used for
+calculating the gradient of parameter <span class="math notranslate nohighlight">\(\bf{W}\)</span>. This answers the
+first question. The gradient information transferred backward from
+downstream network layers, and the intermediate results and parameter
+values in forward computation, all have roles to play in calculating the
+gradient of each parameter in the graph.</p>
+<p>Based on Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-chain</span></code> and Equations
+<code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-3</span></code>, <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-4</span></code>,
+<code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-5</span></code> and <code class="xref eq docutils literal notranslate"><span class="pre">ch04/chainrule-6</span></code>, when the
+chain rule is used to construct a backward computational graph, the
+computation process is analyzed and the intermediate results and
+gradient transfer status in the model are stored. The machine learning
+framework improves the backpropagation efficiency by reusing buffered
+computation results.</p>
+<p>We can generalize the chain rule to wider applications. With flexible
+control flows, the machine learning framework can quickly analyze the
+computation processes of the forward data flow and backward gradient
+flow by using computational graph technology, effectively manage the
+lifetime of each intermediate result in memory, and improve the overall
+computation efficiency.</p>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Computational Graph Basics</a><ul>
+<li><a class="reference internal" href="#tensors-and-operators">Tensors and Operators</a></li>
+<li><a class="reference internal" href="#computational-dependencies">Computational Dependencies</a></li>
+<li><a class="reference internal" href="#control-flows">Control Flows</a></li>
+<li><a class="reference internal" href="#gradient-computation-using-the-chain-rule">Gradient Computation Using the Chain Rule</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>9.3. Model Compression &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9.4. Advanced Efficient Techniques" href="Advanced_Efficient_Techniques.html" />
+    <link rel="prev" title="9.2. Conversion to Inference Model and Model Optimization" href="Conversion_to_Inference_Model_and_Model_Optimization.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">9. </span>Model Deployment</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">9.3. </span>Model Compression</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_model_deployment/Model_Compression.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">9. Model Deployment</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">9. Model Deployment</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="model-compression">
+<span id="ch-deploy-model-compression"></span><h1><span class="section-number">9.3. </span>Model Compression<a class="headerlink" href="#model-compression" title="Permalink to this heading">¶</a></h1>
+<p>The previous section briefly described the purpose of model conversion
+and focused on some common model optimization methods for model
+deployment. Hardware restrictions differ depending on where models are
+deployed. For instance, smartphones are more sensitive to the model
+size, usually supporting models only at the MB level. Larger models need
+to be compressed using compression techniques before they can be
+deployed on different computing hardware.</p>
+<div class="section" id="quantization">
+<h2><span class="section-number">9.3.1. </span>Quantization<a class="headerlink" href="#quantization" title="Permalink to this heading">¶</a></h2>
+<p>Model quantization is a technique that approximates floating-point
+weights of contiguous values (usually float32 or many possibly discrete
+values) at the cost of slightly reducing accuracy to a limited number of
+discrete values (usually int8). As shown in Figure
+<a class="reference internal" href="#ch-deploy-quant-minmax"><span class="std std-numref">Fig. 9.3.1</span></a>, <span class="math notranslate nohighlight">\(T\)</span> represents the data range
+before quantization. In order to reduce the model size, model
+quantization represents floating-point data with fewer bits. As such,
+the memory usage during inference can be reduced, and the inference on
+processors that are good at processing low-precision operations can be
+accelerated.</p>
+<div class="figure align-default" id="id1">
+<span id="ch-deploy-quant-minmax"></span><img alt="../_images/ch09-quant-minmax.png" src="../_images/ch09-quant-minmax.png" />
+<p class="caption"><span class="caption-number">Fig. 9.3.1 </span><span class="caption-text">Principles ofquantization</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>The number of bits and the range of data represented by different data
+types in a computer are different. Based on service requirements, a
+model may be quantized into models with different number of bits based
+on service requirements. Generally, single-precision floating-point
+numbers are used to represent a deep neural network. If signed integers
+can be used to approximate parameters, the size of the quantized weight
+parameters may be reduced to a quarter of the original size. Using fewer
+bits to quantize a model results in a higher compression rate — 8-bit
+quantization is the mostly used in the industry. The lower limit is
+1-bit quantization, which can compress a model to 1/32 of its original
+size. During inference, efficient XNOR and BitCount bit-wise operations
+can be used to accelerate the inference.</p>
+<p>According to the uniformity of the original ranges represented by the
+quantized data, quantization can be further divided into linear
+quantization and non-linear quantization. Because the weights and
+activations of a deep neural network are usually not uniform in
+practice, non-linear quantization can theoretically achieve a smaller
+loss of accuracy. In real-world inference, however, non-linear
+quantization typically involves higher computation complexity, meaning
+that linear quantization is more commonly used. The following therefore
+focuses on the principles of linear quantization.</p>
+<p>In Equation <a class="reference internal" href="#equation-ch-deploy-quantization-q">(9.3.1)</a>, assume that <span class="math notranslate nohighlight">\(r\)</span>
+represents the floating-point number before quantization. We are then
+able to obtain the integer <span class="math notranslate nohighlight">\(q\)</span> after quantization.</p>
+<div class="math notranslate nohighlight" id="equation-ch-deploy-quantization-q">
+<span class="eqno">(9.3.1)<a class="headerlink" href="#equation-ch-deploy-quantization-q" title="Permalink to this equation">¶</a></span>\[q=clip(round(\frac{r}{s}+z),q_{min},q_{max})\]</div>
+<p><span class="math notranslate nohighlight">\(clip(\cdot)\)</span> and <span class="math notranslate nohighlight">\(round(\cdot)\)</span> indicate the truncation and
+rounding operations, and <span class="math notranslate nohighlight">\(q_{min}\)</span> and <span class="math notranslate nohighlight">\(q_{max}\)</span> indicate
+the minimum and maximum values after quantization, respectively.
+<span class="math notranslate nohighlight">\(s\)</span> is the quantization interval, and <span class="math notranslate nohighlight">\(z\)</span> is the bias
+representing the data offset. The quantization is symmetric if the bias
+(<span class="math notranslate nohighlight">\(z\)</span>) used in the quantization is 0, or asymmetric in other cases.
+Symmetric quantization reduces the computation complexity during
+inference because it avoids computation related to <span class="math notranslate nohighlight">\(z\)</span>. In
+contrast, asymmetric quantization determines the minimum and maximum
+values based on the actual data distribution, and the information about
+the quantized data is more effectively used. As such, asymmetric
+quantization reduces the loss of accuracy caused by quantization.</p>
+<p>According to the shared range of quantization parameters <span class="math notranslate nohighlight">\(s\)</span> and
+<span class="math notranslate nohighlight">\(z\)</span>, quantization methods may be classified into layer-wise
+quantization and channel-wise quantization. In the former, separate
+quantization parameters are defined for each layer. Whereas the latter
+involves defining separate quantization parameters for each channel.
+Finer-grained channel-wise quantization yields higher quantization
+precision, but increases the computation complexity.</p>
+<p>Model quantization can also be classified into quantization aware
+training (QAT) and post-training quantization (PTQ) based on whether
+training is involved. In QAT, fake-quantization operators are added, and
+statistics on the input and output ranges before and after quantization
+are collected during training to improve the accuracy of the quantized
+model. This method is therefore suitable for scenarios that place strict
+requirements on accuracy. In PTQ, models are directly quantized after
+training, requiring only a small amount of calibration data. This method
+is therefore suitable for scenarios that place strict requirements on
+usability and have limited training resources.</p>
+<p><strong>1. Quantization aware training</strong></p>
+<p>QAT simulates quantization during training by including the accuracy
+loss introduced by fake-quantization operators. In this way, the
+optimizer can minimize the quantization error during training, leading
+to higher model accuracy. QAT involves the following steps:</p>
+<ol class="arabic simple">
+<li><p>Initialization: Set initial values for the
+<span class="math notranslate nohighlight">\(q_{min}\)</span>/<span class="math notranslate nohighlight">\(q_{max}\)</span> ranges of weights and activations.</p></li>
+<li><p>Building a network for simulated quantization: Insert
+fake-quantization operators after weights and activations that
+require quantization.</p></li>
+<li><p>Running QAT: Compute the range (i.e., <span class="math notranslate nohighlight">\(q_{min}\)</span> and
+<span class="math notranslate nohighlight">\(q_{max}\)</span>) for each weight and activation of the quantized
+network layer. Then, perform forward computation with the
+quantization loss considered, so that the loss can be involved in
+subsequent backpropagation and network parameter update.</p></li>
+<li><p>Exporting the quantized network: Obtain <span class="math notranslate nohighlight">\(q_{min}\)</span> and
+<span class="math notranslate nohighlight">\(q_{max}\)</span>, and compute the quantization parameters <span class="math notranslate nohighlight">\(s\)</span>
+and <span class="math notranslate nohighlight">\(z\)</span>. Substitute the quantization parameters into the
+quantized formula to transform the network weights into quantized
+integer values. Then, delete the fake-quantization operators, and add
+quantization and dequantization operators before and after the
+quantization network layer, respectively.</p></li>
+</ol>
+<p><strong>2. Post-training quantization</strong></p>
+<p>PTQ can be divided into two types: weight quantization and full
+quantization. Weight quantization quantizes only the weights of a model
+to compress its size, and then the weights are dequantized to the
+original float32 format during inference. The subsequent inference
+process is the same as that of a common float32 model. The advantage of
+weight quantization is that calibration dataset and quantized operators
+are not required, and that the accuracy loss is small. However, it does
+not improve the inference performance, because the operators used during
+inference are still float32. Full quantization quantizes both the
+weights and activations of a model, and the quantized operators are
+executed to accelerate model inference. The quantization of activations
+requires a small number of calibration datasets (training dataset or
+inputs of real scenarios) to collect the distribution of the activations
+at each layer and calibrate the quantized operators. Calibration
+datasets are used as the input during the quantization of activations.
+After the inference, the distribution of activations at each layer is
+collected to obtain quantization parameters. The process is summarized
+as follows:</p>
+<ol class="arabic simple">
+<li><p>Use a histogram to represent the distribution <span class="math notranslate nohighlight">\(P_f\)</span> of the
+original float32 data.</p></li>
+<li><p>Select several <span class="math notranslate nohighlight">\(q_{min}\)</span> and <span class="math notranslate nohighlight">\(q_{max}\)</span> values from a
+given search space, quantize the activations, and obtain the
+quantized data <span class="math notranslate nohighlight">\(Q_q\)</span>.</p></li>
+<li><p>Use a histogram to represent the distribution of <span class="math notranslate nohighlight">\(Q_q\)</span>.</p></li>
+<li><p>Compute the distribution difference between <span class="math notranslate nohighlight">\(Q_q\)</span> and
+<span class="math notranslate nohighlight">\(P_f\)</span>, and find the <span class="math notranslate nohighlight">\(q_{min}\)</span> and <span class="math notranslate nohighlight">\(q_{max}\)</span> values
+corresponding to the smallest difference between <span class="math notranslate nohighlight">\(Q_q\)</span> and
+<span class="math notranslate nohighlight">\(P_f\)</span> in order to compute the quantization parameters. Common
+indicators used to measure the distribution differences include
+symmetric Kullback-Leibler divergence and Jenson-Shannon divergence.</p></li>
+</ol>
+<p>In addition, the inherent error of quantization requires calibration
+during quantization. Take the matrix multiplication
+<span class="math notranslate nohighlight">\(a=\sum_{i=1}^Nw_ix_i+b\)</span> as an example. <span class="math notranslate nohighlight">\(w\)</span> denotes the
+weight, <span class="math notranslate nohighlight">\(x\)</span> the activation, and <span class="math notranslate nohighlight">\(b\)</span> the bias. To overcome
+the quantization error, we first calibrate the quantized mean value, and
+then obtain the mean value of each channel output by the float32
+operator and the quantized operator. Assume that the mean value output
+by the float32 operator of channel <span class="math notranslate nohighlight">\(i\)</span> is <span class="math notranslate nohighlight">\(a_i\)</span>, and that
+output by the quantized operator after dequantization is <span class="math notranslate nohighlight">\(a_{qi}\)</span>.
+From this, we can obtain the final mean value by adding the mean value
+difference <span class="math notranslate nohighlight">\(a_i-a_q\)</span> of the two channels to the corresponding
+channel. In this manner, the final mean value is consistent with that
+output by the float32 operator. We also need to ensure that the
+distribution after quantization is the same as that before quantization.
+Assume that the mean value and variance of the weight of a channel are
+<span class="math notranslate nohighlight">\(E(w_c)\)</span> and <span class="math notranslate nohighlight">\(||w_c-E(w_c)||\)</span>, and the mean value and
+variance after quantization are <span class="math notranslate nohighlight">\(E(\hat{w_c})\)</span> and
+<span class="math notranslate nohighlight">\(||\hat{w_c}-E(\hat{w_c})||\)</span>, respectively. Equation
+<code class="xref eq docutils literal notranslate"><span class="pre">ch-deploy/post-quantization</span></code> is the calibration of the weight:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-compression-0">
+<span class="eqno">(9.3.2)<a class="headerlink" href="#equation-chapter-model-deployment-model-compression-0" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{aligned}
+\hat{w_c}\leftarrow\zeta_c(\hat{w_c}+u_c) \\
+u_c=E(w_c)-E(\hat{w_c})   \\
+\zeta_c=\frac{||w_c-E(w_c)||}{||\hat{w_c}-E(\hat{w_c})||}
+\end{aligned}
+:label: ch-deploy/post-quantization\end{split}\]</div>
+<p>As a general model compression method, quantization can significantly
+improve the memory and compression efficiency of neural networks, and
+has been widely used.</p>
+</div>
+<div class="section" id="model-sparsification">
+<h2><span class="section-number">9.3.2. </span>Model Sparsification<a class="headerlink" href="#model-sparsification" title="Permalink to this heading">¶</a></h2>
+<p>Model sparsification reduces the memory and computation overheads by
+removing some components (such as weights, feature maps, and convolution
+kernels) from a neural network. It is a type of strong inductive bias
+introduced to reduce the computation complexity of the model, just like
+weight quantization, weight sharing, and pooling.</p>
+<p><strong>1. Motivation of model sparsification</strong></p>
+<p>Convolution on a convolutional neural network can be considered as a
+weighted linear combination of the input and the weights of the
+convolution kernel. In this sense, tiny weights have a relatively small
+impact on the output. Model sparsification can be justified based on two
+assumptions:</p>
+<ol class="arabic simple">
+<li><p>Most neural network models have over-parameterized weights. The
+number of weight parameters can reach tens or even hundreds of
+millions.</p></li>
+<li><p>For most computer vision tasks such as detection, classification, and
+segmentation, useful information accounts for only a small proportion
+in an activation feature map generated during inference.</p></li>
+</ol>
+<p>As such, model sparsification can be classified into two types according
+to the source of sparsity: weight sparsification and activation
+sparsification. Both types reduce the computation workload and model
+storage requirements by reducing redundant components in a model. In
+model sparsification, some weak connections are pruned based on the
+absolute value of weights or activations (i.e. the weight or activation
+of such connections is set to 0), with the goal of improving the model
+performance. The sparsity of a model is measured by the proportion of
+zero-value weights or activation tensors. Because the accuracy of a
+model typically decreases as its sparsity increases, we hope to minimize
+such loss when increasing the sparsity.</p>
+<p>Neurobiology was the inspiration for inventing neural networks — it has
+also inspired the sparsification of neural network models.
+Neurobiologists found that most mammalian brains, including humans, have
+a process called synapse pruning, which occurs between infancy and
+adulthood. During synapse pruning, neuron axons and dendrites decay and
+die off, and the neuron connections are continuously simplified and
+reconstructed. This process allows brains to work more efficiently and
+consume less energy.</p>
+<p><strong>2. Structured and unstructured sparsification</strong></p>
+<p>Let’s first look at weight sparsification. It can be classified into
+structured and unstructured sparsification. Structured sparsification
+involves pruning channels or convolution kernels in order to generate
+regular and smaller weight matrices that are more likely to obtain
+speedup on CPUs and GPUs. However, this mode is coarse-grained, meaning
+that it severely reduces the model accuracy.</p>
+<p>In contrast, unstructured sparsification allows a weight at any location
+to be pruned, meaning it is a fine-grained mode that causes less loss to
+the model accuracy. However, the unstructured mode limits the speedup of
+sparse models on hardware for a number of reasons:</p>
+<ol class="arabic simple">
+<li><p>The irregular layout of weights requires many control flow
+instructions. For instance, the presence of zero values introduces
+many <code class="docutils literal notranslate"><span class="pre">if-else</span></code> instructions for decision-making, which inevitably
+reduces instruction-level parallelism.</p></li>
+<li><p>The computation of convolution kernels is typically multi-threaded.
+However, the irregular layout of weight matrices on memory causes
+thread divergence and load imbalance, which therefore affects
+thread-level parallelism.</p></li>
+<li><p>The irregular layout of weight matrices on the memory hinders data
+locality and reduces the cache hit rate. Consequently, the load/store
+efficiency is reduced.</p></li>
+</ol>
+<p>In an attempt to solve these problems, recent work combines structured
+sparsification with unstructured sparsification. This approach
+incorporates the advantages of both modes, and overcomes their
+disadvantages to an extent.</p>
+<p><strong>3. Sparsification strategies</strong></p>
+<p>Given a neural network model, after deciding to sparsify the weights or
+activations, we need to determine when and how to perform the
+sparsification. The most common sparsification process is currently
+pre-training, pruning, and fine-tuning. With this process, we need to
+sparsify and fine-tune a converged dense model obtained through
+training. Given the fact that a pre-trained model contains knowledge it
+has learned, sparsification on such models will achieve a better effect
+than directly on the initial model. In addition to pruning the
+pre-trained model, we usually interleave pruning with network training.
+Compared with one-shot pruning, iterative pruning is integrated more
+closely with training, so that redundant convolution kernels can be
+identified more efficiently. As such, iterative pruning is widely used.</p>
+<p>To illustrate how to prune a network, we will use Deep
+Compression [&#64;han2015deep] as an example. Removing most weights leads to
+a loss of accuracy of the neural network, as shown in Figure
+<a class="reference internal" href="#ch-deploy-deepcomp"><span class="std std-numref">Fig. 9.3.2</span></a>. Fine-tuning a pruned sparse neural
+network can help improve model accuracy, and the pruned network may be
+quantized to represent weights using fewer bits. In addition, using
+Huffman coding can further reduce the memory cost of the deep neural
+network.</p>
+<div class="figure align-default" id="id2">
+<span id="ch-deploy-deepcomp"></span><img alt="../_images/ch09-deepcomp.png" src="../_images/ch09-deepcomp.png" />
+<p class="caption"><span class="caption-number">Fig. 9.3.2 </span><span class="caption-text">Deep Compressionalgorithm</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>In addition to removing redundant neurons, a dictionary learning-based
+method can be used to remove unnecessary weights on a deep convolutional
+neural network. By learning the bases of convolution kernels, the
+original convolutional kernels can be transformed into the coefficient
+domain for sparsification. An example of this approach is the work by
+Bagherinezhad et al. [&#64;bagherinezhad2017lcnn], in which they proposed
+that the original convolution kernel can be decomposed into a weighted
+linear combination of the base of the convolution kernel and sparse
+coefficient.</p>
+</div>
+<div class="section" id="knowledge-distillation">
+<h2><span class="section-number">9.3.3. </span>Knowledge Distillation<a class="headerlink" href="#knowledge-distillation" title="Permalink to this heading">¶</a></h2>
+<p>Knowledge distillation (KD), also known as the teacher-student learning
+algorithm, has gained much attention in the industry. Large deep
+networks tend to deliver good performance in practice, because
+over-parameterization increases the generalization capability when it
+comes to new data. In KD, a large pre-trained network serves as the
+teacher, a deep and thin brand-new neural network serves as the student,
+supervised by the teacher network. The key to this learning algorithm is
+how to transfer knowledge converted by the teacher to the student.</p>
+<p>Hinton et al. [&#64;Distill] first proposed a teacher-student learning
+framework. It is used for the learning of deep and thin neural networks
+by minimizing the differences between the teacher and student neural
+networks. The teacher network is denoted as <span class="math notranslate nohighlight">\(\mathcal{N}_{T}\)</span> with
+parameters <span class="math notranslate nohighlight">\(\theta_T\)</span>, and the student network is denoted as
+<span class="math notranslate nohighlight">\(\mathcal{N}_{S}\)</span> with parameters <span class="math notranslate nohighlight">\(\theta_S\)</span>. In general,
+the student network has fewer parameters than the teacher network.</p>
+<p>[&#64;Distill] proposed KD, which makes the classification result of the
+student network more closely resembles the ground truth as well as the
+classification result of the teacher network, that is, Equation
+:eqref:<code class="docutils literal notranslate"><span class="pre">c2Fcn:distill</span></code>.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-model-deployment-model-compression-1">
+<span class="eqno">(9.3.3)<a class="headerlink" href="#equation-chapter-model-deployment-model-compression-1" title="Permalink to this equation">¶</a></span>\[\mathcal{L}_{KD}(\theta_S) = \mathcal{H}(o_S,\mathbf{y}) +\lambda\mathcal{H}(\tau(o_S),\tau(o_T)),\]</div>
+<p>:eqlabel:<code class="docutils literal notranslate"><span class="pre">c2Fcn:distill</span></code></p>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{H}(\cdot,\cdot)\)</span> is the cross-entropy function,
+<span class="math notranslate nohighlight">\(o_S\)</span> and <span class="math notranslate nohighlight">\(o_T\)</span> are outputs of the student network and the
+teacher network, respectively, and <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> is the label. The
+first item in Equation :eqref:<code class="docutils literal notranslate"><span class="pre">c2Fcn:distill</span></code> makes the
+classification result of the student network resemble the expected
+ground truth, and the second item aims to extract useful information
+from the teacher network and transfer the information to the student
+network, <span class="math notranslate nohighlight">\(\lambda\)</span> is a weight parameter used to balance two
+objective functions, and <span class="math notranslate nohighlight">\(\tau(\cdot)\)</span> is a soften function that
+smooths the network output.</p>
+<p>Equation :eqref:<code class="docutils literal notranslate"><span class="pre">c2Fcn:distill</span></code> only extracts useful information
+from the output of the teacher network classifier — it does not mine
+information from other intermediate layers of the teacher network.
+Romero et al. [&#64;FitNet] proposed an algorithm for transferring useful
+information from any layer of a teacher network to a small student
+network. Note that not all inputs are useful for convolutional neural
+network computing and subsequent task execution. For example, in an
+image containing an animal, it is important to classify and identify the
+region where the animal is rather than the background information.
+Therefore, it is an efficient way to select useful information from the
+teacher network. Zagoruyko and Komodakis [&#64;attentionTS] proposed a
+learning method based on an attention loss function to improve the
+performance of the student network. This method introduces an attention
+module. The attention module generates an attention map, which
+identifies the importance of different areas of an input image to the
+classification result. The attention map is then transferred from the
+teacher network to the student network, as depicted in Figure
+ <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch-deploy/attentionTS</span></code>.</p>
+<p>KD is an effective method to optimize small networks. It can be combined
+with other compression methods such as pruning and quantization to train
+efficient models with higher accuracy and less computation workload.</p>
+<figure id="fig:ch-deploy/attentionTS"><figcaption><p>Teacher-student neural network learning algorithm</p>
+</figcaption></figure></div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">9.3. Model Compression</a><ul>
+<li><a class="reference internal" href="#quantization">9.3.1. Quantization</a></li>
+<li><a class="reference internal" href="#model-sparsification">9.3.2. Model Sparsification</a></li>
+<li><a class="reference internal" href="#knowledge-distillation">9.3.3. Knowledge Distillation</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Conversion_to_Inference_Model_and_Model_Optimization.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>9.2. Conversion to Inference Model and Model Optimization</div>
+         </div>
+     </a>
+     <a id="button-next" href="Advanced_Efficient_Techniques.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>9.4. Advanced Efficient Techniques</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

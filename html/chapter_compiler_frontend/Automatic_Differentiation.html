@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>5.4. Automatic Differentiation &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.5. Type Systems and Static Analysis" href="Type_Systems_and_Static_Analysis.html" />
+    <link rel="prev" title="5.3. Intermediate Representation" href="Intermediate_Representation.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">5. </span>AI Compiler Frontend</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">5.4. </span>Automatic Differentiation</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_compiler_frontend/Automatic_Differentiation.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. AI Compiler Frontend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. AI Compiler Frontend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="automatic-differentiation">
+<h1><span class="section-number">5.4. </span>Automatic Differentiation<a class="headerlink" href="#automatic-differentiation" title="Permalink to this heading">¶</a></h1>
+<p>In the following, we describe the key methodologies applied in automatic
+differentiation.</p>
+<div class="section" id="types-of-differentiation-methods">
+<h2><span class="section-number">5.4.1. </span>Types of Differentiation Methods<a class="headerlink" href="#types-of-differentiation-methods" title="Permalink to this heading">¶</a></h2>
+<p>Differentiation constitutes a collection of methodologies enabling the
+efficient and precise evaluation of derivatives within computer
+programs. Since the 1960s and 1970s, it has been extensively utilized
+across multiple sectors including fluid mechanics, astronomy, and
+mathematical finance . Its theories and implementation have been
+rigorously studied over time.</p>
+<p>With the advancement of deep learning, which has shown remarkable
+progress across an expanding range of machine learning tasks in recent
+years, automatic differentiation has found wide-spread application in
+the field of machine learning. Given that many optimization algorithms
+employed in machine learning models necessitate derivatives of the
+models, automatic differentiation has emerged as an integral component
+within mainstream machine learning frameworks such as TensorFlow and
+PyTorch.</p>
+<p>There are four primary methods to evaluate derivatives in computer
+programs, each of which is explained in the following sections.</p>
+<div class="section" id="manual-differentiation">
+<h3><span class="section-number">5.4.1.1. </span>Manual Differentiation<a class="headerlink" href="#manual-differentiation" title="Permalink to this heading">¶</a></h3>
+<p>Manual differentiation involves the direct computation of the derivative
+expression of a function, a task which hinges upon the input values
+specified within a program. Although this method could seem appealing
+due to its simplicity and directness, it is worth noting that it comes
+with its share of limitations.</p>
+<p>A primary drawback of manual differentiation is the need to re-derive
+and re-implement the derivative every time a function changes, which can
+be laborious and time-consuming. This is especially true for complex
+functions or when working on large-scale projects where the function
+might undergo frequent updates.</p>
+<p>Moreover, manual differentiation can be prone to human errors. The
+process of deriving complex functions often involves intricate chains of
+mathematical reasoning. A slight oversight or error in any of these
+steps can lead to an incorrect derivative, which, in turn, can greatly
+affect the outcome of the computation. This susceptibility to mistakes
+can add a layer of uncertainty to the reliability of this method.</p>
+<p>Furthermore, in cases where high-order derivatives or partial
+derivatives with respect to many variables are needed, manual
+differentiation quickly becomes unfeasible due to the increase in
+complexity. The difficulty of computing these derivatives correctly
+grows exponentially with the number of variables and the order of the
+derivative.</p>
+</div>
+<div class="section" id="numerical-differentiation">
+<h3><span class="section-number">5.4.1.2. </span>Numerical Differentiation<a class="headerlink" href="#numerical-differentiation" title="Permalink to this heading">¶</a></h3>
+<p>Numerical differentiation is an approach that logically stems from the
+fundamental definition of a derivative and employs the method of
+difference approximation. The basic formula for numerical
+differentiation can be described as follows:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-0">
+<span class="eqno">(5.4.1)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-0" title="Permalink to this equation">¶</a></span>\[f^{'}(x)=\lim_{h \to 0}\frac{f(x+h)-f(x)}{h}\]</div>
+<p>In this equation, for a sufficiently small value of the step size
+<span class="math notranslate nohighlight">\(h\)</span>, the difference quotient <span class="math notranslate nohighlight">\(\frac{f(x+h)-f(x)}{h}\)</span> is used
+as an approximation of the derivative. The inherent error in this
+approximation is referred to as the truncation error, which
+theoretically diminishes as the value of <span class="math notranslate nohighlight">\(h\)</span> approaches zero. This
+suggests that a smaller step size would yield a more accurate
+approximation.</p>
+<p>However, the scenario in practice is not always so straightforward due
+to the phenomenon of round-off error. This error arises from the finite
+precision of floating-point arithmetic operations in digital computer
+systems. As the value of <span class="math notranslate nohighlight">\(h\)</span> decreases, the round-off error
+conversely increases, adding a degree of uncertainty to the computation.</p>
+<p>This creates a complex interplay between truncation error and round-off
+error. When the value of <span class="math notranslate nohighlight">\(h\)</span> is large, the truncation error
+dominates, whereas when <span class="math notranslate nohighlight">\(h\)</span> is small, the round-off error is more
+significant. Consequently, the total error of numerical differentiation
+achieves a minimum at an optimal <span class="math notranslate nohighlight">\(h\)</span> value that balances these two
+types of errors.</p>
+<p>In a nutshell, while numerical differentiation offers the advantage of
+relative simplicity in implementation, it suffers from certain
+limitations with regard to accuracy. The complexities arising from the
+interplay between truncation and round-off errors make it less reliable
+for certain tasks, particularly when high precision is required.
+Therefore, for many practical applications, more sophisticated
+techniques of automatic differentiation are preferred.</p>
+</div>
+<div class="section" id="symbolic-differentiation">
+<span id="automatic-differentiation-1"></span><h3><span class="section-number">5.4.1.3. </span>Symbolic Differentiation<a class="headerlink" href="#symbolic-differentiation" title="Permalink to this heading">¶</a></h3>
+<p>Symbolic differentiation involves the use of computer programs to
+automatically calculate derivatives. This is accomplished by recursively
+transforming function expressions in accordance with specific
+differentiation rules. These rules can be summarized as follows:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-1">
+<span class="eqno">(5.4.2)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-1" title="Permalink to this equation">¶</a></span>\[\frac{\partial}{\partial x}(f(x)+g(x))\rightsquigarrow\frac{\partial}{\partial x}f(x)+\frac{\partial }{\partial x}g(x)\]</div>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-2">
+<span class="eqno">(5.4.3)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-2" title="Permalink to this equation">¶</a></span>\[\frac{\partial}{\partial x}(f(x)g(x))\rightsquigarrow(\frac{\partial}{\partial x}f(x))g(x)+f(x)(\frac{\partial}{\partial x}g(x))\]</div>
+<p>Symbolic differentiation has been integrated into many modern algebraic
+systems such as Mathematica, as well as machine learning frameworks like
+Theano. It successfully addresses the issues related to hard-coding
+derivatives inherent in manual differentiation, thus automating the
+differentiation process and minimizing human error.</p>
+<p>Despite these advantages, symbolic differentiation has its own set of
+challenges. One of its primary limitations is its strict adherence to
+transforming and expanding expressions recursively, without the ability
+to reuse previous results of transformations. This can lead to a
+phenomenon known as expression swell , which results in highly complex
+and expanded expressions that can significantly slow down computation
+and increase memory usage.</p>
+<p>In addition, symbolic differentiation requires that the expressions to
+be differentiated are defined in closed form. This constraint largely
+restricts the use of control flow statements such as loops and
+conditional branches, which are common in programming. This lack of
+flexibility can significantly limit the design and expressivity of
+neural networks within machine learning frameworks, as these often
+require intricate control flow structures for more advanced operations.</p>
+</div>
+<div class="section" id="id1">
+<h3><span class="section-number">5.4.1.4. </span>Automatic Differentiation<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>Automatic differentiation cleverly amalgamates the strategies of
+numerical differentiation and symbolic differentiation to offer an
+efficient and precise mechanism for derivative evaluation. It breaks
+down the arithmetic operations in a program into a finite set of
+elementary operations, for each of which the rules of derivative
+evaluation are already known. Upon determining the derivative of each
+elementary operation, the chain rule is applied to synthesize these
+individual results, ultimately yielding the derivative of the entire
+program.</p>
+<p>The fundamental strength of automatic differentiation lies in its
+ability to sidestep the primary drawbacks of both numerical and symbolic
+differentiation. Unlike numerical differentiation, which suffers from
+precision issues due to truncation and round-off errors, automatic
+differentiation facilitates accurate derivative evaluations.
+Furthermore, it mitigates the issue of expression swell, a significant
+concern in symbolic differentiation, by decomposing the program into a
+series of elementary expressions. Symbolic differentiation rules are
+only applied to these simplified expressions, and the derivative results
+are reused to enhance efficiency.</p>
+<p>Automatic differentiation also surpasses symbolic differentiation in its
+capability to handle control flow statements. It has the ability to
+process branching, looping, and recursion, enhancing its flexibility and
+applicability to complex computational scenarios.</p>
+<p>In contemporary applications, automatic differentiation has found
+widespread use in deep learning frameworks for the evaluation of
+derivatives, given its blend of accuracy and efficiency. The subsequent
+sections delve into the mechanics and implementation aspects of
+automatic differentiation, elucidating its role as a crucial tool in
+computational mathematics and machine learning.</p>
+</div>
+</div>
+<div class="section" id="forward-mode-and-reverse-mode">
+<h2><span class="section-number">5.4.2. </span>Forward Mode and Reverse Mode<a class="headerlink" href="#forward-mode-and-reverse-mode" title="Permalink to this heading">¶</a></h2>
+<p>Automatic differentiation can be categorized into two modes, forward and
+reverse, based on the sequence in which the chain rule is applied.
+Consider a composite function <span class="math notranslate nohighlight">\(y=a(b(c(x)))\)</span>. The formula to
+calculate its gradient, <span class="math notranslate nohighlight">\(\frac{\partial y}{\partial x}\)</span>, is given
+as:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-3">
+<span class="eqno">(5.4.4)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-3" title="Permalink to this equation">¶</a></span>\[\frac{\partial y}{\partial x}=\frac{\partial y}{\partial a}\frac{\partial a}{\partial b}\frac{\partial b}{\partial c}\frac{\partial c}{\partial x}\]</div>
+<p>In the forward mode of automatic differentiation, the computation of the
+gradient originates from the inputs, as shown in the following
+formulation:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-4">
+<span class="eqno">(5.4.5)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-4" title="Permalink to this equation">¶</a></span>\[\frac{\partial y}{\partial x}=(\frac{\partial y}{\partial a}(\frac{\partial a}{\partial b}(\frac{\partial b}{\partial c}\frac{\partial c}{\partial x})))\]</div>
+<p>Conversely, in the reverse mode, the computation of the gradient begins
+from the outputs, represented by the equation:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-5">
+<span class="eqno">(5.4.6)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-5" title="Permalink to this equation">¶</a></span>\[\frac{\partial y}{\partial x}=(((\frac{\partial y}{\partial a}\frac{\partial a}{\partial b})\frac{\partial b}{\partial c})\frac{\partial c}{\partial x})\]</div>
+<p>To illustrate the computation methods of the two modes, let us consider
+the following function and aim to evaluate its derivative,
+<span class="math notranslate nohighlight">\(\frac{\partial y}{\partial x_1}\)</span> at the point
+<span class="math notranslate nohighlight">\((x_1, x_2)=(2,5)\)</span>:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-6">
+<span class="eqno">(5.4.7)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-6" title="Permalink to this equation">¶</a></span>\[y=f(x_1,x_2)=ln(x_1)+{x_1}{x_2}-sin(x_2)\]</div>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-calculation_graph</span></code> represents the
+computational graph of this function, providing a visual demonstration
+of how automatic differentiation processes the function in both forward
+and reverse modes. This distinction between forward and reverse modes is
+particularly important when dealing with functions of multiple
+variables, with each mode having specific use cases and efficiency
+implications.</p>
+<div class="figure align-default" id="id2">
+<span id="ch04-ch04-calculation-graph"></span><img alt="../_images/AD-example_graph.png" src="../_images/AD-example_graph.png" />
+<p class="caption"><span class="caption-number">Fig. 5.4.1 </span><span class="caption-text">Computational graph of the examplefunction</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="forward-mode">
+<h3><span class="section-number">5.4.2.1. </span>Forward Mode<a class="headerlink" href="#forward-mode" title="Permalink to this heading">¶</a></h3>
+<div class="figure align-default" id="id3">
+<span id="ch04-ch04-forward-mode-compute-function"></span><img alt="../_images/AD-forward_example.png" src="../_images/AD-forward_example.png" />
+<p class="caption"><span class="caption-number">Fig. 5.4.2 </span><span class="caption-text">Illustration of forward-mode automaticdifferentiation</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-forward-mode-compute-function</span></code> elucidates
+thecomputation process within the forward mode. The sequence of
+elementaryoperations, derived from the source program, is displayed on
+the left.Following the chain rule and using established derivative
+evaluationrules, we sequentially compute each intermediate variable
+<span class="math notranslate nohighlight">\({\dot{v}_i}=\frac{\partial v_i}{\partial x_1}\)</span> from top to
+bottom, as depicted on the right. Consequently, this leads to the
+computation ofthe final variable
+<span class="math notranslate nohighlight">\({\dot{v}_5}=\frac{\partial y}{\partial x_1}\)</span>. In the process of
+derivative evaluation of a function, we obtain a setof partial
+derivatives of any output with respect to any input of thisfunction. For
+a function <span class="math notranslate nohighlight">\(f:{\mathbf{R}^n}\to \mathbf{R}^m\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is
+the number of independent input variables <span class="math notranslate nohighlight">\(x_i\)</span>, and <span class="math notranslate nohighlight">\(m\)</span> is
+thenumber of independent output variables <span class="math notranslate nohighlight">\(y_i\)</span>, the derivative
+resultscorrespond to the following Jacobian matrix:</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-7">
+<span class="eqno">(5.4.8)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-7" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{J}_{f}=    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_1}{\partial x_n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial y_m}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_m}{\partial x_n}    \end{bmatrix}\end{split}\]</div>
+<p>Each forward pass of function <span class="math notranslate nohighlight">\(f\)</span> results in partial derivatives
+of alloutputs with respect to a single input, represented by the
+vectorsbelow. This corresponds to one column of the Jacobian matrix.
+Therefore,executing <span class="math notranslate nohighlight">\(n\)</span> forward passes gives us the full Jacobian
+matrix.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-8">
+<span class="eqno">(5.4.9)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-8" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{bmatrix}        \frac{\partial y_1}{\partial x_i} \\
+\vdots \\
+\frac{\partial y_m}{\partial x_i}    \end{bmatrix}\end{split}\]</div>
+<p>The forward mode allows us to compute Jacobian-vector products
+byinitializing <span class="math notranslate nohighlight">\(\dot{\mathbf{x}}=\mathbf{r}\)</span> to generate the
+results for asingle column. As the derivative evaluation rules for
+elementaryoperations are pre-determined, we know the Jacobian matrix for
+all theelementary operations. Consequently, by leveraging the chain rule
+toevaluate the derivatives of <span class="math notranslate nohighlight">\(f\)</span> propagated from inputs to
+outputs, wesecure one column in the Jacobian matrix of the entire
+network.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-9">
+<span class="eqno">(5.4.10)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-9" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{J}_{f}\mathbf{r}=    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_1}{\partial x_n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial y_m}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_m}{\partial x_n}    \end{bmatrix}    \begin{bmatrix}        r_1 \\
+\vdots \\
+r_n    \end{bmatrix}\end{split}\]</div>
+</div>
+<div class="section" id="reverse-mode">
+<h3><span class="section-number">5.4.2.2. </span>Reverse Mode<a class="headerlink" href="#reverse-mode" title="Permalink to this heading">¶</a></h3>
+<p>Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-backward-mode-compute</span></code> illustrates
+theautomatic differentiation process in the reverse mode. The sequence
+ofelementary operations, derived from the source program, is displayed
+onthe left. Beginning from
+<span class="math notranslate nohighlight">\(\bar{v}_5=\bar{y}=\frac{\partial y}{\partial y}=1\)</span>, we
+sequentiallycompute each intermediate variable
+<span class="math notranslate nohighlight">\({\bar{v}_i}=\frac{\partial y_j}{\partial v_i}\)</span> from bottom to
+top, leveraging the chain rule and established derivative evaluation
+rules (as depicted on the right). Thus, we can compute the final
+variables <span class="math notranslate nohighlight">\({\bar{x}_1}=\frac{\partial y}{\partial x_1}\)</span> and
+<span class="math notranslate nohighlight">\({\bar{x}_2}=\frac{\partial y}{\partial x_2}\)</span>.</p>
+<div class="figure align-default" id="id4">
+<span id="ch04-ch04-backward-mode-compute"></span><img alt="../_images/AD-backward_example.png" src="../_images/AD-backward_example.png" />
+<p class="caption"><span class="caption-number">Fig. 5.4.3 </span><span class="caption-text">Illustration of reverse-mode automaticdifferentiation</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>Every reverse pass of function <span class="math notranslate nohighlight">\(f\)</span> produces partial derivatives of
+asingle output with respect to all inputs, represented by the
+followingvectors. This corresponds to a single row of the Jacobian
+matrix.Consequently, executing <span class="math notranslate nohighlight">\(m\)</span> reverse passes gives us the
+full Jacobianmatrix.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-10">
+<span class="eqno">(5.4.11)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-10" title="Permalink to this equation">¶</a></span>\[\begin{bmatrix}        \frac{\partial y_j}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_j}{\partial x_n}    \end{bmatrix}\]</div>
+<p>Similarly, we can compute vector-Jacobian products to obtain the
+resultsfor a single row.</p>
+<div class="math notranslate nohighlight" id="equation-chapter-compiler-frontend-automatic-differentiation-11">
+<span class="eqno">(5.4.12)<a class="headerlink" href="#equation-chapter-compiler-frontend-automatic-differentiation-11" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{r}^{T}\mathbf{J}_{f}=    \begin{bmatrix}        r_1 &amp; \cdots &amp; r_m    \end{bmatrix}    \begin{bmatrix}        \frac{\partial y_1}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_1}{\partial x_n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial y_m}{\partial x_1} &amp; \cdots &amp; \frac{\partial y_m}{\partial x_n}    \end{bmatrix}\end{split}\]</div>
+<p>The quantity of columns and rows in a Jacobian matrix directly
+influences the number of forward and reverse passes needed to solve it
+for a given function <span class="math notranslate nohighlight">\(f\)</span>. This characteristic is particularly
+significant when determining the most efficient method of automatic
+differentiation.</p>
+<p>When the function has significantly fewer inputs than outputs
+<span class="math notranslate nohighlight">\((f:{\mathbf{R}^n}\to \mathbf{R}^m, n &lt;&lt; m)\)</span>, the forward mode
+proves to be more efficient. Conversely, when the function has
+considerably more inputs than outputs
+<span class="math notranslate nohighlight">\((f:{\mathbf{R}^n}\to \mathbf{R}^m, n &gt;&gt; m)\)</span>, the reverse mode
+becomes advantageous.</p>
+<p>For an extreme case where the function maps from <span class="math notranslate nohighlight">\(n\)</span> inputs to a
+single output <span class="math notranslate nohighlight">\(f:{\mathbf{R}^n}\to \mathbf{R}\)</span>, we can evaluate
+all the derivatives of the output with respect to the inputs
+<span class="math notranslate nohighlight">\((\frac{\partial y}{\partial x_1},\cdots,\frac{\partial y}{\partial n})\)</span>
+using a single reverse pass or <span class="math notranslate nohighlight">\(n\)</span> forward passes. This is a
+situation akin to derivative evaluation for a multi-input, single-output
+network, a structure frequently encountered in machine learning.</p>
+<p>Due to this feature, reverse-mode automatic differentiation forms the
+basis for the backpropagation algorithm, a key technique for training
+neural networks. By enabling efficient computation of gradients,
+especially in scenarios with high-dimensional input data and scalar
+output (common in many machine learning applications), reverse-mode
+automatic differentiation has become indispensable in the field.</p>
+<p>However, the reverse mode does come with certain limitations. For
+instance, once a source program is decomposed into a sequence of
+elementary operations in the forward mode, inputs can be obtained
+synchronously during the execution of these operations. This is possible
+because the sequence of derivative evaluations aligns with the sequence
+of operation execution. In contrast, in the reverse mode, the sequence
+for derivative evaluation is the inverse of the execution sequence of
+the source program, leading to a two-phased computation process. The
+initial phase entails executing the source program and storing the
+intermediate results in memory, while the subsequent phase involves
+retrieving these intermediate results to evaluate the derivatives. Due
+to the additional steps involved, the reverse mode requires more memory.</p>
+</div>
+</div>
+<div class="section" id="implementing-automatic-differentiation">
+<h2><span class="section-number">5.4.3. </span>Implementing Automatic Differentiation<a class="headerlink" href="#implementing-automatic-differentiation" title="Permalink to this heading">¶</a></h2>
+<p>This section explores typical design patterns for implementing automatic
+differentiation in machine learning frameworks. These design patterns
+can be broadly classified into three categories: elemental libraries,
+operator overloading, and source transformation.</p>
+<div class="section" id="elemental-libraries">
+<h3><span class="section-number">5.4.3.1. </span>Elemental Libraries<a class="headerlink" href="#elemental-libraries" title="Permalink to this heading">¶</a></h3>
+<p>Elemental libraries encapsulate elementary expressions and their
+differential expressions as library functions. When coding, users must
+manually decompose a program into a set of elementary expressions and
+replace them with corresponding library functions. Take the program
+<span class="math notranslate nohighlight">\(a=(x+y)/z\)</span> as an example; it needs to be manually decomposed as
+follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="n">z</span>
+</pre></div>
+</div>
+<p>Subsequently, users replace the decomposed elementary expressions with
+appropriate library functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">The</span> <span class="n">parameters</span> <span class="n">include</span> <span class="n">variables</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="ow">and</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">their</span> <span class="n">derivative</span> <span class="n">variables</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="ow">and</span> <span class="n">dt</span><span class="o">.</span>
+    <span class="n">call</span> <span class="n">ADAdd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="o">//</span> <span class="n">The</span> <span class="n">parameters</span> <span class="n">include</span> <span class="n">variables</span> <span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">their</span> <span class="n">derivative</span> <span class="n">variables</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="ow">and</span> <span class="n">da</span><span class="o">.</span>
+    <span class="n">call</span> <span class="n">ADDiv</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">da</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The library functions, ADAdd and ADDiv, use the chain rule to define the
+Add and Div differential expressions, respectively. This is illustrated
+in Code <code class="docutils literal notranslate"><span class="pre">lst:diff</span></code>.</p>
+<p><strong>lst:diff</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ADAdd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">+</span> <span class="n">dx</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ADDiv</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">y</span><span class="p">))</span> <span class="o">*</span> <span class="n">dy</span>
+</pre></div>
+</div>
+<p>Elemental libraries constitute a simple and straightforward way of
+implementing automatic differentiation for programming languages.
+However, this approach requires users to manually decompose a program
+into elementary expressions before calling library functions for
+programming. Furthermore, it is not possible to use the native
+expressions found in programming languages.</p>
+</div>
+<div class="section" id="operator-overloading">
+<h3><span class="section-number">5.4.3.2. </span>Operator Overloading<a class="headerlink" href="#operator-overloading" title="Permalink to this heading">¶</a></h3>
+<p>Leveraging the polymorphism characteristic inherent in modern
+programming languages, the Operator Overloading design pattern redefines
+the semantics of elementary operations and successfully encapsulates
+their differentiation rules. During the execution phase, it methodically
+documents the type, inputs, and outputs of every elementary operation
+within a data structure known as a ‘tape’. These tapes have the ability
+to generate a trace, serving as a pathway for applying the chain rule.
+This makes it possible to aggregate elementary operations either in a
+forward or backward direction to facilitate differentiation. As depicted
+in Code <code class="docutils literal notranslate"><span class="pre">lst:OO</span></code>, we utilize the AutoDiff code from automatic
+differentiation libraries as a case in point to overload the basic
+arithmetic operators in programming languages.</p>
+<p><strong>lst:OO</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">AutoDiff</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Term</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// To overload and call operators (`+`, `*`, and `/`),</span>
+<span class="w">            </span><span class="c1">// TermBuilder records the types, inputs, and outputs of operations in tapes.</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Term</span><span class="w"> </span><span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">Term</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">Term</span><span class="w"> </span><span class="n">right</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">TermBuilder</span><span class="p">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Term</span><span class="w"> </span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">Term</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">Term</span><span class="w"> </span><span class="n">right</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">TermBuilder</span><span class="p">.</span><span class="n">Product</span><span class="p">(</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Term</span><span class="w"> </span><span class="k">operator</span><span class="o">/</span><span class="p">(</span><span class="n">Term</span><span class="w"> </span><span class="n">numerator</span><span class="p">,</span><span class="w"> </span><span class="n">Term</span><span class="w"> </span><span class="n">denominator</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">TermBuilder</span><span class="p">.</span><span class="n">Product</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span><span class="w"> </span><span class="n">TermBuilder</span><span class="p">.</span><span class="n">Power</span><span class="p">(</span><span class="n">denominator</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Tape data structures include the following basic elements:</span>
+<span class="w">        </span><span class="c1">// 1) Arithmetic results of operations</span>
+<span class="w">        </span><span class="c1">// 2) Derivative evaluation results corresponding to arithmetic results of operations</span>
+<span class="w">        </span><span class="c1">// 3) Inputs of operations</span>
+<span class="w">        </span><span class="c1">// In addition, functions Eval and Diff are used to define the computation and differentiation rules of the arithmetic operations.</span>
+<span class="w">        </span><span class="n">internal</span><span class="w"> </span><span class="n">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TapeElement</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Value</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Adjoint</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">InputEdges</span><span class="w"> </span><span class="n">Inputs</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">abstract</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">Eval</span><span class="p">();</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">abstract</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">Diff</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Operator overloading carries the advantage of tracing the program
+through function calls and control flows, resulting in an implementation
+process that is both simple and straightforward. However, the
+requirement to trace the program during runtime introduces certain
+challenges. Specifically, operator overloading is necessitated to
+execute reverse-mode differentiation along the trace, which can
+potentially cause a drop in performance, particularly for elementary
+operations that are executed swiftly. Furthermore, due to the
+constraints of runtime, operator overloading is unable to conduct
+compile-time graph optimization prior to execution, and the unfolding of
+control flows must be based on the information available at runtime.
+Despite these challenges, operator overloading is extensively employed
+in the PyTorch framework for automatic differentiation due to its
+inherent simplicity and adaptability.</p>
+</div>
+<div class="section" id="source-transformation">
+<h3><span class="section-number">5.4.3.3. </span>Source Transformation<a class="headerlink" href="#source-transformation" title="Permalink to this heading">¶</a></h3>
+<p>Source transformation is a design pattern that enriches programming
+languages and scrutinizes a program’s source code or its Abstract Syntax
+Tree (AST) to automatically deconstruct the program into a set of
+differentiable elementary operations, each with predefined
+differentiation rules. The chain rule is then employed to amalgamate the
+differential expressions of the elementary operations, resulting in a
+novel program expression that conducts the differentiation. Source
+Transformation is integral to machine learning frameworks such as
+TensorFlow and MindSpore.</p>
+<p>Unlike operator overloading, which functions within programming
+languages, source transformation necessitates parsers and tools that
+manipulate IRs. It also requires transformation rules for function calls
+and control flow statements, such as loops and conditions. The principal
+advantage of source transformation is that the automatic differentiation
+transformation occurs only once per program, thus eliminating runtime
+overhead. Additionally, the complete differentiation program is
+available during compilation, enabling ahead-of-time optimization using
+compilers.</p>
+<p>However, source transformation presents a higher implementation
+complexity compared to the other approaches. It must support a wider
+array of data types and operations, and it necessitates preprocessors,
+compilers, or interpreters of extended languages, along with a more
+robust type-checking system. Even though source transformation does not
+manage automatic differentiation transformation at runtime, it still
+must ensure that certain intermediate variables from the forward pass
+are accessible by the adjoint in reverse mode. Two modes are available
+to facilitate this:</p>
+<ul class="simple">
+<li><p><strong>Tape-based mode</strong>: This mode requires a global tape that ensures
+the accessibility of intermediate variables. In this method, the
+primitive function is augmented so that intermediate variables are
+written to functions in the tape during the forward pass, and the
+adjoint program reads these intermediate variables from the tape
+during the backward pass. The tape used in source transformation
+primarily stores the intermediate variables, while the tape used in
+operator overloading additionally stores the executed operation
+types. Given that the tape is a data structure constructed at
+runtime, custom compiler optimizations are required. Moreover, tape
+read and write operations must be differentiable to support
+higher-order differentiation, which involves multiple applications of
+reverse mode. As most tape-based tools do not differentiate tape read
+and write operations, such tools do not support reverse-over-reverse
+automatic differentiation.</p></li>
+<li><p><strong>Closure-based mode</strong>: This mode was proposed to mitigate some of
+the limitations observed in the tape-based mode. Within functional
+programming, closures can capture the execution environment of a
+statement and identify the non-local use of intermediate variables.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">5.4. Automatic Differentiation</a><ul>
+<li><a class="reference internal" href="#types-of-differentiation-methods">5.4.1. Types of Differentiation Methods</a><ul>
+<li><a class="reference internal" href="#manual-differentiation">5.4.1.1. Manual Differentiation</a></li>
+<li><a class="reference internal" href="#numerical-differentiation">5.4.1.2. Numerical Differentiation</a></li>
+<li><a class="reference internal" href="#symbolic-differentiation">5.4.1.3. Symbolic Differentiation</a></li>
+<li><a class="reference internal" href="#id1">5.4.1.4. Automatic Differentiation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#forward-mode-and-reverse-mode">5.4.2. Forward Mode and Reverse Mode</a><ul>
+<li><a class="reference internal" href="#forward-mode">5.4.2.1. Forward Mode</a></li>
+<li><a class="reference internal" href="#reverse-mode">5.4.2.2. Reverse Mode</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementing-automatic-differentiation">5.4.3. Implementing Automatic Differentiation</a><ul>
+<li><a class="reference internal" href="#elemental-libraries">5.4.3.1. Elemental Libraries</a></li>
+<li><a class="reference internal" href="#operator-overloading">5.4.3.2. Operator Overloading</a></li>
+<li><a class="reference internal" href="#source-transformation">5.4.3.3. Source Transformation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="Intermediate_Representation.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>5.3. Intermediate Representation</div>
+         </div>
+     </a>
+     <a id="button-next" href="Type_Systems_and_Static_Analysis.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>5.5. Type Systems and Static Analysis</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

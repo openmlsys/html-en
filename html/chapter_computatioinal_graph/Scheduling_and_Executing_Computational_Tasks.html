@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>Scheduling and Executing Computational Tasks &#8212; Machine Learning Systems: Design and Implementation 1.0.0 documentation</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link is-active">Scheduling and Executing Computational Tasks</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../_sources/chapter_computatioinal_graph/Scheduling_and_Executing_Computational_Tasks.rst.txt" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://github.com/openmlsys/openmlsys-en">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://openmlsys.github.io/">
+                  <i class="fas fa-external-link-alt"></i>
+                  中文版
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="Machine Learning Systems: Design and Implementation"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">1. Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Applications.html">2.1. Machine Learning Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Design_Objectives_of_Machine_Learning_Frameworks.html">2.2. Design Objectives of Machine Learning Frameworks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Machine_Learning_Framework_Architecture.html">2.3. Machine Learning Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Application_Scenarios_of_Machine_Learning_Systems.html">2.4. Application Scenarios of Machine Learning Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_introduction/Book_Organization_and_Intended_Audience.html">2.5. Book Organization and Intended Audience</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_basic/index.html">3. Part I Framework Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_programming_model/index.html">4. Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Overview.html">4.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Machine_Learning_Workflow.html">4.2. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Neural_Network_Programming.html">4.3. Neural Network Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Functional_Programming.html">4.4. Functional Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Bridging_Python_and_C_C%2B%2B_Functions.html">4.5. Bridging Python and C/C++ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_programming_model/Chapter_Summary.html">4.6. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_frontend/index.html">5. AI Compiler Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compilers.html">5.1. Overview of AI Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Overview_of_AI_Compiler_Frontends.html">5.2. Overview of AI Compiler Frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Intermediate_Representation.html">5.3. Intermediate Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Automatic_Differentiation.html">5.4. Automatic Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Type_Systems_and_Static_Analysis.html">5.5. Type Systems and Static Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Frontend_Compilation_Optimization.html">5.6. Frontend Compilation Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Chapter_Summary.html">5.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_frontend/Further_Reading.html">5.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_compiler_backend/index.html">6. AI Compiler Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Overview.html">6.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Graph_Optimization.html">6.2. Graph Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Selection.html">6.3. Operator Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Memory_Allocation.html">6.4. Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Operator_Compiler.html">6.5. Operator Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Chapter_Summary.html">6.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_compiler_backend/Further_Reading.html">6.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_accelerator/index.html">7. Hardware Accelerator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Overview.html">7.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Components_of_Hardware_Accelerators.html">7.2. Components of Hardware Accelerators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Programming_Methods.html">7.3. Programming Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Performance_Optimization_Methods.html">7.4. Performance Optimization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_accelerator/Chapter_Summary.html">7.5. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_distributed/index.html">8. Distributed Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Overview.html">8.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parallelism_Methods.html">8.2. Parallelism Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Pipeline_Parallelism_with_Micro-Batching.html">8.3. Pipeline Parallelism with Micro-Batching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Architecture_of_Machine_Learning_Clusters.html">8.4. Architecture of Machine Learning Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Collective_Communication.html">8.5. Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Parameter_Server.html">8.6. Parameter Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Federated_Learning.html">8.7. Federated Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Training_Large_Language_Models.html">8.8. Training Large Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Chapter_Summary.html">8.9. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_distributed/Further_Reading.html">8.10. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_model_deployment/index.html">9. Model Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Overview.html">9.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Conversion_to_Inference_Model_and_Model_Optimization.html">9.2. Conversion to Inference Model and Model Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Compression.html">9.3. Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Advanced_Efficient_Techniques.html">9.4. Advanced Efficient Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Model_Inference.html">9.5. Model Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Security_Protection_of_Models.html">9.6. Security Protection of Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Chapter_Summary.html">9.7. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_model_deployment/Further_Reading.html">9.8. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface_extension/index.html">10. Part II Application Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender_system/index.html">11. Recommender System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Overview.html">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/System_Components.html">11.2. System Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Recommendation_Pipeline.html">11.3. Recommendation Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Model_Update.html">11.4. Model Update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Supporting_Real-time_Machine_Learning.html">11.5. Supporting Real-time Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Chapter_Summary.html">11.6. Chapter Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender_system/Further_Reading.html">11.7. Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement_learning/index.html">12. Reinforcement Learning System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Overview.html">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Introduction_to_Reinforcement_Learning.html">12.2. Introduction to Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Single-Node_Reinforcement_Learning_System.html">12.3. Single-Node Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Distributed_Reinforcement_Learning_System.html">12.4. Distributed Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning.html">12.5. Multi-agent Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Multi-agent_Reinforcement_Learning_System.html">12.6. Multi-agent Reinforcement Learning System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement_learning/Chapter_Summary.html">12.7. Chapter Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_robot/index.html">13. Robotic System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Overview_of_Robotic_Systems.html">13.1. Overview of Robotic Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Robot_Operating_System.html">13.2. Robot Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Case_Study.html">13.3. Case Study: Using ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Modern_Robot_Learning.html">13.4. Modern Robot Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_robot/Chapter_Summary.html">13.5. Chapter Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="scheduling-and-executing-computational-tasks">
+<h1>Scheduling and Executing Computational Tasks<a class="headerlink" href="#scheduling-and-executing-computational-tasks" title="Permalink to this heading">¶</a></h1>
+<p>Training a model is conducted by scheduling the execution of the
+operators in a computational graph. From a broad perspective, a training
+job runs a computational graph for a defined number of iterations,
+relying on optimal scheduling of tasks such as data loading and training
+(inference) execution. Within each iteration, we need to analyze
+operator-level scheduling based on the graph topology, computational
+dependencies, and control flows. We optimize the scheduling and
+execution of computational graphs to make full use of computing
+resources, improve computational efficiency, and shorten the model
+training and inference time. The following introduces the typical
+techniques of computational graph scheduling.</p>
+<p>The scheduling execution of the computation graph can be divided into
+three modes according to the graph generation method, which are operator
+scheduling, whole graph scheduling, and operator and subgraph combined
+scheduling. These three modes also correspond to the three modes of
+dynamic graph, static graph, and combination of dynamic and static in
+the calculation graph generation mechanism.</p>
+<p>Next, we will introduce the scheduling and execution of the calculation
+graph in detail.</p>
+<div class="section" id="operator-scheduling">
+<h2>Operator Scheduling<a class="headerlink" href="#operator-scheduling" title="Permalink to this heading">¶</a></h2>
+<p>Operator scheduling means that the operators contained in the algorithm
+or model are scheduled and executed one by one through the runtime of
+the Python language. This scheduling mechanism is used when the
+calculation graph is executed in dynamic graph mode, such as PyTorch’s
+default execution mode and TensorFlow’s eager mode.</p>
+<p>Operator scheduling includes two steps. In the first step, according to
+the call sequence of the model operator declaration, the dynamic
+calculation graph obtains a linear operator scheduling sequence. And the
+second is distributing the ordering of operators to instruction streams.</p>
+<p>In Figure :numref:<code class="docutils literal notranslate"><span class="pre">ch04/ch04-diaoduzhixing</span></code>, the directed acyclic
+graph on the left contains five nodes a, b, c, d, and e and four
+dependency edges a-&gt;d, b-&gt;c, c-&gt;d, and d-&gt;e (e.g., a-&gt;d indicates that d
+depends on a). According to the operator call sequence of the model
+code, such as a-&gt;b-&gt;c-&gt;d-&gt;e, all operator nodes are put into the queue
+in turn, and the scheduling ends.</p>
+<div class="figure align-default" id="id1">
+<span id="ch04-ch04-diaoduzhixing"></span><img alt="../_images/schedule.png" src="../_images/schedule.png" />
+<p class="caption"><span class="caption-text">Operator scheduling andexecution</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>With the ordering, we then prepare to distribute the operators in the
+ordering and related data to the GPU hardware for execution. Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-single-op-exec</span></code> shows the trace of operator
+scheduling. Once the Python runtime calls an operator, the machine
+learning framework initializes the operator by determining information
+such as the operator precision, type and size of each input/output, and
+target device. It then allocates memory for the operator before copying
+the memory to the specific device for execution.</p>
+<div class="figure align-default" id="id2">
+<span id="ch04-ch04-single-op-exec"></span><img alt="../_images/single_op_exec.PNG" src="../_images/single_op_exec.PNG" />
+<p class="caption"><span class="caption-text">Operator schedulingtrace</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>The operator scheduling method offers high flexibility because operators
+are directly scheduled by the Python runtime. It facilitates the
+representation of complex computational logic (such as control flows)
+and use of Python-native data structures for implementing complex
+algorithms. Operators are driven by the Python runtime to finish
+computational tasks, facilitating easy collaboration with Python’s
+large, rich ecosystem.</p>
+<p>Despite its advantages, operator scheduling also has some disadvantages.
+One is that context-based runtime optimizations such as operator fusion
+and algebraic simplification become difficult. This is because global
+information about the computational graph is unavailable. Another
+disadvantage is that computational tasks have to run in serial mode,
+rather than in parallel, due to the lack of computational topology.</p>
+</div>
+<div class="section" id="graph-scheduling">
+<h2>Graph Scheduling<a class="headerlink" href="#graph-scheduling" title="Permalink to this heading">¶</a></h2>
+<p>When the calculation graph uses the static graph mechanism for
+whole-graph scheduling execution, operators will be sent to the hardware
+for execution one by one according to a certain execution sequence.
+However, global information about the computational graph is available.
+it can analyze operator dependencies and the number of computing
+devices, and complete the scheduling and execution of the entire graph
+in the following two ways:</p>
+<ol class="arabic simple">
+<li><p><strong>Serial</strong>: executes its tasks one at a time, in the order that they
+are added to the queue.This method expands a computational graph into
+a sequence of operators, which are then run separately. Operators are
+executed in a static order using a single thread, thereby requiring
+fewer resources.</p></li>
+<li><p><strong>Parallel</strong>: executes its tasks concurrently for higher
+efficiency.This method expands a computational graph based on
+operator dependencies. Operators are executed in the order defined by
+their input dependencies, and those without input dependencies are
+executed concurrently. This method executes operators in a dynamic
+order (which may vary in each iteration) using multiple threads,
+thereby consuming more system resources.</p></li>
+</ol>
+<p>Within a computational graph, most operators are dependent on each other
+directly or indirectly. When scheduling such operators, their sequence
+must be guaranteed. Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-diaodu</span></code> shows a
+computational graph, where a forward pass is run on the input data to
+produce a predicted value and then the gradient of the loss function is
+computed for backpropagation. In general, downstream operators run
+dependently on the output from the upstream. As such, we have to
+schedule the operators in this computational graph to a serial queue in
+order to ensure that each operator receives the necessary input.</p>
+<div class="figure align-default" id="id3">
+<span id="ch04-ch04-diaodu"></span><img alt="../_images/order.png" src="../_images/order.png" />
+<p class="caption"><span class="caption-text">Serial operatorscheduling</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>A computational graph may also contain operators independent of each
+other, for example, op1 and op2 shown in Figure
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-para</span></code>. We can have each operator run on different
+hardware devices to implement parallel computing. Compared with the
+serial mode, parallel computing decreases execution time by leveraging
+more computing resources at the same time.</p>
+<div class="figure align-default" id="id4">
+<span id="ch04-ch04-para"></span><img alt="../_images/para.png" src="../_images/para.png" />
+<p class="caption"><span class="caption-text">Parallel operator scheduling</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>Serial execution and parallel execution have their own advantages and
+disadvantages, as summarized in Table <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch4-graph</span></code>.</p>
+<span id="ch04-ch4-graph"></span><table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Comparison between serial execution and parallel execution</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 30%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Execution Method</p></th>
+<th class="head"><p>Serial execution</p></th>
+<th class="head"><p>Parallel execution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Execution Order</p></td>
+<td><p>Static</p></td>
+<td><p>Dynamic</p></td>
+</tr>
+<tr class="row-odd"><td><p>Execution Threads</p></td>
+<td><p>Single thread</p></td>
+<td><p>Multiple threads</p></td>
+</tr>
+<tr class="row-even"><td><p>Resource Consumption</p></td>
+<td><p>Low</p></td>
+<td><p>High</p></td>
+</tr>
+</tbody>
+</table>
+<p>A computing environment contains more than one type of computing device,
+such as a CPU, GPU, or other. As such, a computational graph consisting
+of operators that run on more than one type of computing device is
+referred to as a heterogeneous computational graph.</p>
+<p>The graph contains the following types of operators based on the
+computing hardware.</p>
+<ul class="simple">
+<li><p><strong>CPU operators</strong>: They are C++ operators that run on the host CPU.
+The computing performance of the CPU depends on the extent to which
+the multi-core capability of the CPU is utilized.</p></li>
+<li><p><strong>GPU operators</strong>: They run on the GPU (e.g., NVIDIA GPU). GPU
+kernels are delivered to the host GPU one by one for execution. The
+GPU features ample parallel computing units that offer significant
+speedup to parallel algorithms.</p></li>
+<li><p><strong>Python operators</strong>: They run on the host CPU. Unlike CPU operators,
+Python operators are interpreted and executed by the Python runtime
+interpreter.</p></li>
+</ul>
+<p>We mentioned earlier that the dynamic graph mechanism relies on the
+Python interpreter to distribute operators and execute them serially
+according to the order of operators defined by the model code. This mode
+usually allows data to be transmitted on different computing devices.
+Communication bottlenecks may increase the time spent waiting for
+operators to execute data, reducing the overall execution efficiency of
+the calculation graph. Therefore, the first condition for the efficient
+execution of the calculation graph is to accurately identify the device
+where the operator is executed, try to avoid the transmission of data
+between different devices. Independent operators are scheduled on
+different devices in parallel. The static graph mechanism can get rid of
+the constraints of the Python interpreter. The calculation graph is sent
+to the device at one time, which reduces the number of interactions
+between the host and the computing chip, and improves computing
+efficiency and performance.</p>
+<p>The combination of operators and subgraphs for scheduling execution mode
+is a combination of the previous two execution modes. Due to the
+flexibility of the computing graph structure, the efficiency of
+computing graphs in complex scenarios may not be optimal when executed
+on the entire computing chip. For example, computing chips can
+accelerate floating-point operations, while CPUs are good at processing
+logical judgments. Therefore, the parts with low execution efficiency
+for computing chips can be separated and handed over to devices with
+higher execution efficiency such as CPU for processing, which can take
+into account both performance and flexibility.</p>
+<p>There are different levels of parallelism: operator parallelism, model
+parallelism, and data parallelism. Operator parallelism is not just
+about executing independent operators in parallel. Where applicable, we
+can further partition an operator into multiple parallel child
+operations. Model parallelism refers to partitioning a computational
+graph among several devices in order to shorten the time taken by each
+training iteration. And data parallelism involves training the same
+computational graph on different data, reducing the total number of
+iterations and improving training efficiency. We will discuss these
+three parallelism methods in Chapter Distributed Training.</p>
+</div>
+<div class="section" id="synchronous-and-asynchronous-data-loading">
+<h2>Synchronous and Asynchronous Data Loading<a class="headerlink" href="#synchronous-and-asynchronous-data-loading" title="Permalink to this heading">¶</a></h2>
+<p>As previously mentioned, a single training iteration of a computational
+graph goes through three serial tasks: data loading, data preprocessing,
+and model training. Each task is dependent on the output of the previous
+one. To schedule the three types of tasks in iterative graph training,
+we can use the synchronous and asynchronous mechanisms at the iteration
+level.</p>
+<ol class="arabic simple">
+<li><p><strong>Synchronous</strong>: Tasks are executed in order, one after the other.
+Tasks have to wait for and coordinate between each other.</p></li>
+<li><p><strong>Asynchronous</strong>: When a task is complete, the same task in the next
+iteration can be executed immediately.</p></li>
+</ol>
+<p>If the synchronous mechanism is adopted to train the computational graph
+shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-tongbu</span></code>, in each iteration, a batch
+of input data is loaded, preprocessed, and then passed to the
+computational graph for model training and parameter update. Tasks in
+the next iteration wait until the current iteration is complete. The
+synchronous mechanism wastes computation and communication resources
+because the data preprocessing and model training tasks must wait until
+a batch of data is completely loaded, and because the I/O channel for
+data loading is idle at model training time.</p>
+<div class="figure align-default" id="id6">
+<span id="ch04-ch04-tongbu"></span><img alt="../_images/sync.png" src="../_images/sync.png" />
+<p class="caption"><span class="caption-text">Synchronous mechanism</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>In the asynchronous setting shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-yibu</span></code>,
+after loading and passing a batch of input data to the subsequent data
+preprocessing task, the I/O channel immediately moves on to the next
+batch without waiting for the current iteration to complete. In contrast
+with the synchronous mechanism, the idle time between data loading, data
+preprocessing, and model training in the asynchronous mechanism is
+notably reduced, thereby shortening the overall training time with
+improved execution efficiency.</p>
+<div class="figure align-default" id="id7">
+<span id="ch04-ch04-yibu"></span><img alt="../_images/async.png" src="../_images/async.png" />
+<p class="caption"><span class="caption-text">Asynchronous mechanism</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<p>To further shorten the training time and improve the execution
+efficiency, we can combine the asynchronous mechanism with parallel
+computing, as shown in Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">ch04/ch04-yibubingxing</span></code>. On the
+one hand, the asynchronous mechanism reduces the model’s wait time for
+data loading and preprocessing, allowing the model to quickly traverse
+the entire dataset. On the other hand, parallel computing increases the
+batch size in iterative training, increasing the efficiency of computing
+resources.</p>
+<div class="figure align-default" id="id8">
+<span id="ch04-ch04-yibubingxing"></span><img alt="../_images/para-async.png" src="../_images/para-async.png" />
+<p class="caption"><span class="caption-text">Asynchronous mechanism combined with parallelcomputing</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Scheduling and Executing Computational Tasks</a><ul>
+<li><a class="reference internal" href="#operator-scheduling">Operator Scheduling</a></li>
+<li><a class="reference internal" href="#graph-scheduling">Graph Scheduling</a></li>
+<li><a class="reference internal" href="#synchronous-and-asynchronous-data-loading">Synchronous and Asynchronous Data Loading</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>
