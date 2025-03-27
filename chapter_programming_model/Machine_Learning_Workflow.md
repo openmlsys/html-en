@@ -18,29 +18,29 @@ APIs are defined to facilitate customization within the workflow
 **ch02/code2.2.1**
 ```python
 import pickle
-    from torch.utils.data import Dataset, DataLoader
-    data_path = '/path/to/data'
-    dataset = pickle.load(open(data_path, 'rb')) # Example for a pkl file
-    batch_size = ... # You can make it an argument of the script
-    
-    class CustomDataset(Dataset):
-        def __init__(self, data, labels):
-            self.data = data
-            self.labels = labels
-            
-        def __len__(self):
-            return len(self.data)
-            
-        def __getitem__(self, idx):
-            sample = self.data[idx]
-            label = self.labels[idx]
-            return sample, label
-    
-    training_dataset = CustomDataset(dataset['training_data'], dataset['training_labels'])
-    testing_dataset = CustomDataset(dataset['testing_data'], dataset['testing_labels'])
+from torch.utils.data import Dataset, DataLoader
+data_path = '/path/to/data'
+dataset = pickle.load(open(data_path, 'rb')) # Example for a pkl file
+batch_size = ... # You can make it an argument of the script
 
-    training_dataloader = DataLoader(training_dataset, batch_size=batch_size, shuffle=True)  # Create a training dataloader
-    testing_dataloader = DataLoader(testing_dataset, batch_size=batch_size, shuffle=False) # Create a testing dataloader
+class CustomDataset(Dataset):
+    def __init__(self, data, labels):
+        self.data = data
+        self.labels = labels
+        
+    def __len__(self):
+        return len(self.data)
+        
+    def __getitem__(self, idx):
+        sample = self.data[idx]
+        label = self.labels[idx]
+        return sample, label
+
+training_dataset = CustomDataset(dataset['training_data'], dataset['training_labels'])
+testing_dataset = CustomDataset(dataset['testing_data'], dataset['testing_labels'])
+
+training_dataloader = DataLoader(training_dataset, batch_size=batch_size, shuffle=True)  # Create a training dataloader
+testing_dataloader = DataLoader(testing_dataset, batch_size=batch_size, shuffle=False) # Create a testing dataloader
 ```
 
 2.  **Model Definition API:** Once the data is preprocessed, users need
@@ -53,13 +53,13 @@ import pickle
 **ch02/code2.2.2**
 ```python
 import torch.nn as nn
-    class CustomModel(nn.Module):
-        def __init__(self, input_size, output_size):
-            super(CustomModel, self).__init__()
-            self.linear = nn.Linear(input_size, output_size)  # A single linear layer
-    
-        def forward(self, x):
-            return self.linear(x)
+class CustomModel(nn.Module):
+    def __init__(self, input_size, output_size):
+        super(CustomModel, self).__init__()
+        self.linear = nn.Linear(input_size, output_size)  # A single linear layer
+
+    def forward(self, x):
+        return self.linear(x)
 ```
 
 3.  **Optimizer Definition API:** The outputs of models need to be
@@ -74,11 +74,11 @@ import torch.nn as nn
 **ch02/code2.2.3**
 ```python
 import torch.optim as optim
-    import torch.nn
-    model = CustomModel(...)
-    # Optimizer definition (Adam, SGD, etc.)
-    optimizer = optim.Adam(model.parameters(), lr=1e-4, momentum=0.9) 
-    loss = nn.CrossEntropyLoss() # Loss function definition
+import torch.nn
+model = CustomModel(...)
+# Optimizer definition (Adam, SGD, etc.)
+optimizer = optim.Adam(model.parameters(), lr=1e-4, momentum=0.9) 
+loss = nn.CrossEntropyLoss() # Loss function definition
 ```
 
 4.  **Training API:** Given a dataset, model, loss function, and
@@ -92,17 +92,17 @@ import torch.optim as optim
 **ch02/code2.2.4**
 ```python
 device = "cuda:0" if torch.cuda.is_available() else "cpu" # Select your training device
-    model.to(device) # Move the model to the training device
-    model.train() # Set the model to train mode
-    epochs = ... # You can make it an argument of the script
-    for epoch in range(epochs):
-        for batch_idx, (data, target) in enumerate(training_dataloader):
-            data, target = data.to(device), target.to(device)
-            optimizer.zero_grad() # zero the parameter gradients
-            output = model(data) # Forward pass
-            loss_value = loss(output, target) # Compute the loss
-            loss_value.backward() # Backpropagation
-            optimizer.step()
+model.to(device) # Move the model to the training device
+model.train() # Set the model to train mode
+epochs = ... # You can make it an argument of the script
+for epoch in range(epochs):
+    for batch_idx, (data, target) in enumerate(training_dataloader):
+        data, target = data.to(device), target.to(device)
+        optimizer.zero_grad() # zero the parameter gradients
+        output = model(data) # Forward pass
+        loss_value = loss(output, target) # Compute the loss
+        loss_value.backward() # Backpropagation
+        optimizer.step()
 ```
 
 5.  **Testing and Debugging APIs:** Throughout the training process,
@@ -116,13 +116,13 @@ device = "cuda:0" if torch.cuda.is_available() else "cpu" # Select your training
 **ch02/code2.2.5**
 ```python
 model.eval() # Set the model to evaluation mode
-    overall_accuracy = []
-    for batch_idx, (data, target) in enumerate(testing_dataloader):
-        data, target = data.to(device), target.to(device)
-        output = model(data) # Forward pass
-        accuracy = your_metrics(output, target) # Compute the accuracy
-        overall_accuracy.append(accuracy) # Print the accuracy
-    # For debugging, you can print logs inside the training or evaluation loop, or use python debugger.
+overall_accuracy = []
+for batch_idx, (data, target) in enumerate(testing_dataloader):
+    data, target = data.to(device), target.to(device)
+    output = model(data) # Forward pass
+    accuracy = your_metrics(output, target) # Compute the accuracy
+    overall_accuracy.append(accuracy) # Print the accuracy
+# For debugging, you can print logs inside the training or evaluation loop, or use python debugger.
 ```
 
 ![Workflow within a machine learningsystem](../img/ch03/workflow.pdf)

@@ -85,10 +85,10 @@ for distributed parallelism in PyTorch static graphs. Code
 **ch02/code2.4**
 ```
 from functorch import combine_state_for_ensemble, vmap
-    minibatches = data[:num_models]
-    models = [MLP().to(device) for _ in range(num_models)]
-    fmodel, params, buffers = combine_state_for_ensemble(models)
-    predictions1_vmap = vmap(fmodel, out_dims=1)(params, buffers, minibatches)
+minibatches = data[:num_models]
+models = [MLP().to(device) for _ in range(num_models)]
+fmodel, params, buffers = combine_state_for_ensemble(models)
+predictions1_vmap = vmap(fmodel, out_dims=1)(params, buffers, minibatches)
 ```
 
 Functorch introduces *vmap*, standing for \"vectorized map\". Its role

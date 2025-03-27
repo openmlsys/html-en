@@ -66,16 +66,16 @@ In C++:
 **ch02/code2.5.1**
 ```cpp
 //custom_add.cpp
-    #include <torch/extension.h>
-    #include <pybind11/pybind11.h>
-    
-    torch::Tensor custom_add(torch::Tensor a, torch::Tensor b) {
-        return a + b;
-    }
-    
-    PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-        m.def("custom_add", &custom_add, "A custom add function");
-    }
+#include <torch/extension.h>
+#include <pybind11/pybind11.h>
+
+torch::Tensor custom_add(torch::Tensor a, torch::Tensor b) {
+    return a + b;
+}
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+    m.def("custom_add", &custom_add, "A custom add function");
+}
 ```
 
 In Python:
@@ -83,16 +83,16 @@ In Python:
 **ch02/code2.5.2**
 ```python
 import torch
-    from torch.utils.cpp_extension import load
-    
-    # Load the C++ extension
-    custom_extension = load(
-        name='custom_extension',
-        sources=['custom_add.cpp'],
-        verbose=True
-    )
-    # Use your custom add function
-    a = torch.randn(10)
-    b = torch.randn(10)
-    c = custom_extension.custom_add(a, b)
+from torch.utils.cpp_extension import load
+
+# Load the C++ extension
+custom_extension = load(
+    name='custom_extension',
+    sources=['custom_add.cpp'],
+    verbose=True
+)
+# Use your custom add function
+a = torch.randn(10)
+b = torch.randn(10)
+c = custom_extension.custom_add(a, b)
 ```

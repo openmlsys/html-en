@@ -50,11 +50,11 @@ sequential data. Code `ch02/code2.3.1` shows some examples of NN Layers in Pytor
 **ch02/code2.3.1**
 ```python
 fc_layer = nn.Linear(16, 5) # A fully connected layer with 16 input features and 5 output features
-    relu_layer = nn.ReLU() # A ReLU activation layer
-    conv_layer = nn.Conv2d(3, 16, 3, padding=1) # A convolutional layer with 3 input channels, 16 output channels, and a 3x3 kernel
-    dropout_layer = nn.Dropout(0.2) # A dropout layer with 20% dropout rate
-    batch_norm_layer = nn.BatchNorm2d(16) # A batch normalization layer with 16 channels
-    layers = nn.Sequential(conv_layer, batch_norm_layer, relu_layer, fc_layer, dropout_layer) # A sequential container to combine layers
+relu_layer = nn.ReLU() # A ReLU activation layer
+conv_layer = nn.Conv2d(3, 16, 3, padding=1) # A convolutional layer with 3 input channels, 16 output channels, and a 3x3 kernel
+dropout_layer = nn.Dropout(0.2) # A dropout layer with 20% dropout rate
+batch_norm_layer = nn.BatchNorm2d(16) # A batch normalization layer with 16 channels
+layers = nn.Sequential(conv_layer, batch_norm_layer, relu_layer, fc_layer, dropout_layer) # A sequential container to combine layers
 ```
 
 In tasks related to natural language processing, the
@@ -81,21 +81,21 @@ and `torch.nn.Module` in PyTorch. Code
 **ch02/code2.3.2**
 ```python
 class MLP(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes, dropout_rate=0.5):
-        super(MLP, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.bn1 = nn.BatchNorm1d(hidden_size)
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(dropout_rate)
-        self.fc2 = nn.Linear(hidden_size, num_classes)
-    
-    def forward(self, x):
-        out = self.fc1(x)
-        out = self.bn1(out)
-        out = self.relu(out)
-        out = self.dropout(out)
-        out = self.fc2(out)
-        return out
+def __init__(self, input_size, hidden_size, num_classes, dropout_rate=0.5):
+    super(MLP, self).__init__()
+    self.fc1 = nn.Linear(input_size, hidden_size)
+    self.bn1 = nn.BatchNorm1d(hidden_size)
+    self.relu = nn.ReLU()
+    self.dropout = nn.Dropout(dropout_rate)
+    self.fc2 = nn.Linear(hidden_size, num_classes)
+
+def forward(self, x):
+    out = self.fc1(x)
+    out = self.bn1(out)
+    out = self.relu(out)
+    out = self.dropout(out)
+    out = self.fc2(out)
+    return out
 ```
 
 Figure :numref:`ch03/model_build` demonstrates the intricate process of
