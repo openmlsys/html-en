@@ -28,13 +28,6 @@ chapter_preface_extension/index
 chapter_recommender_system/index
 chapter_reinforcement_learning/index
 chapter_robot/index
-
-
-
-
-
-
-
 ```
 
 ```toc

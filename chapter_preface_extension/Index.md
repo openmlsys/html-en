@@ -1,4 +1,5 @@
-# Part II Application Scenarios {#part-ii-application-scenarios .unnumbered}
+# Part II Application Scenarios
+:label:`part-ii-application-scenarios`
 
 In Part II, we will introduce various scenarios of applying machine
 learning frameworks. These scenarios include federated learning systems,

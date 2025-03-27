@@ -1,4 +1,5 @@
-# Part I Framework Design {#part-i-framework-design .unnumbered}
+# Part I Framework Design
+:label:`part-i-framework-design`
 
 In Part 1, we present a top-down approach to designing a machine
 learning framework. We begin by introducing the design of programming
