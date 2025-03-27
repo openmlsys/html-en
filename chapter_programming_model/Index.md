@@ -36,3 +36,14 @@ The chapter aims to achieve the following learning objectives:
 
 4.  Understanding the support for functional programming in machine
     learning frameworks.
+
+```toc
+:maxdepth: 2
+
+Overview
+Machine_Learning_Workflow
+Neural_Network_Programming
+Functional_Programming
+Bridging_Python_and_C_C++_Functions
+Chapter_Summary
+```
