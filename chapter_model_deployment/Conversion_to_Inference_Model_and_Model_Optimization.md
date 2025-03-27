@@ -57,7 +57,10 @@ compilation is complete. However, some optimization operations can only
 be performed in their entirety during the deployment phase.
 
 ![Layered computer storagearchitecture](../img/ch08/ch09-storage.png)
-:label:`ch-deploy/fusion-storage}## Operator Fusion {#sec:ch-deploy/kernel-fusion`
+:label:`ch-deploy/fusion-storage`
+
+## Operator Fusion
+:label:`ch-deploy/kernel-fusion`
 
 Operator fusion involves combining multiple operators in a deep neural
 network (DNN) model into a new operator based on certain rules, reducing
@@ -148,8 +151,7 @@ using MindSpore Lite. We ran the sample network and mobilenet-v2 network
 for inference in dual threads on a Huawei Mate 30 smartphone to compare
 the time of running 3,000 inference epochs before and after the fusion.
 As shown in Table
-[1](#tab:ch09/ch09-conv-bn-fusion){reference-type="ref"
-reference="tab:ch09/ch09-conv-bn-fusion"}, the inference performance of
+`ch09-conv-bn-fusion`, the inference performance of
 the sample network and mobilenet-v2 network is improved considerably
 after the fusion --- by 8.5% and 11.7% respectively. Such improvements
 are achieved without bringing side effects and without requiring
